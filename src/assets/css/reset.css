@@ -1,0 +1,80 @@
+/* Box sizing rules */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+/* Remove default margin */
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+figure,
+blockquote,
+dl,
+dd {
+  margin: 0;
+}
+
+/* Remove list styles (bullets, numbers) */
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Remove default padding */
+body,
+article,
+aside,
+footer,
+header,
+nav,
+section,
+figcaption,
+figure,
+details,
+menu,
+summary {
+  padding: 0;
+}
+
+/* Set default font-size and font-family */
+body {
+  font-size: 16px;
+  font-family: Arial, sans-serif;
+}
+
+/* Remove default border */
+img,
+iframe,
+embed,
+object,
+video,
+input[type="image"] {
+  border: 0;
+}
+
+/* Remove default outline */
+:focus {
+  outline: none;
+}
+
+/* Remove text-decoration */
+a {
+  text-decoration: none;
+}
+
+/* Set default color for links */
+a {
+  color: inherit;
+}
+
+/* Set default vertical alignment for images */
+img {
+  vertical-align: middle;
+}
