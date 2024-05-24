@@ -449,6 +449,7 @@ export default {
         this.ifShowEmpty = !this.items || !this.items.length;
         this.chkBtnDisabled = !(!this.items || !this.items.length);
         this.showTable = true;
+        alert(response.data);
       })
       .catch(error => {
         console.log(error);

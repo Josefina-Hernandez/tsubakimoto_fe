@@ -7,6 +7,16 @@
   <router-view/>
 </template>
 
+<script>
+
+export default {
+  name: 'HomeView',
+  mounted() {
+    document.title = 'Hello world!!!'
+  },
+}
+</script>
+
 <style lang="less">
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

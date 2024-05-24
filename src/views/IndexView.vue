@@ -8,7 +8,7 @@
         <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
           <a class="first-link" href="#/index">What's New</a>
           <div class="dropdown-content" v-show="showDropdown">
-            <a href="#/index">Monthly Exchange</a>
+            <a href="#/exchange">Monthly Exchange</a>
             <a href="#/index">Standard Formation of Chain</a>
             <a href="#/index">Standard Packing of Chain</a>
             <a href="#/index">RPP Website</a>
@@ -16,6 +16,7 @@
           </div>
           <i class="fa fa-caret-down"></i>
         </div>
+        <a href="#/index">News</a>
         <a href="#/index">How to Order</a>
         <a href="#/index">Contact Us</a>
       </div>

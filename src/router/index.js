@@ -44,6 +44,13 @@ const routes = [
   },
 
   {
+    path: '/exchange',
+    name: 'monthlyexchange',
+
+    component: () => import('../views/MonthlyExchange.vue')
+  },
+
+  {
     path: '/admin/login',
     name: 'loginadmin',
 
