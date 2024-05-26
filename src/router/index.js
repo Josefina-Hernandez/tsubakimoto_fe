@@ -51,6 +51,27 @@ const routes = [
   },
 
   {
+    path: '/formation-chain',
+    name: 'formationchain',
+
+    component: () => import('../views/FormationChain.vue')
+  },
+
+  {
+    path: '/packing-chain',
+    name: 'packingchain',
+
+    component: () => import('../views/PackingChain.vue')
+  },
+
+  {
+    path: '/news-page',
+    name: 'newspage',
+
+    component: () => import('../views/NewsPage.vue')
+  },
+
+  {
     path: '/admin/login',
     name: 'loginadmin',
 

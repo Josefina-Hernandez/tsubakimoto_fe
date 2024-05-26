@@ -1,26 +1,8 @@
 <template>
     <div class="index">
-      <div class="logo-container">
-        <img alt="Company logo" src="../assets/logo.png" />
-      </div>
-      <div class="banner-container">
-        <div class="banner-options">
-          <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
-            <a class="first-link" href="#/index">What's New</a>
-            <div class="dropdown-content" v-show="showDropdown">
-              <a href="#/index">Monthly Exchange</a>
-              <a href="#/index">Standard Formation of Chain</a>
-              <a href="#/index">Standard Packing of Chain</a>
-              <a href="#/index">RPP Website</a>
-              <a href="#/index">Catalog</a>
-            </div>
-            <i class="fa fa-caret-down"></i>
-          </div>
-          <a href="#/index">News</a>
-          <a href="#/index">How to Order</a>
-          <a href="#/index">Contact Us</a>
-        </div>
-      </div>
+      
+      <BannerContainer :firstLabel="this.firstLabel" :ifShowBtn="true" />
+
       <div class="lower-area">
         <div class="content-container">
           <div class="title">Calculation</div>
@@ -67,18 +49,19 @@
         </div>
         <div class="btn-area">
           <button class="update">Update Current Rate</button>
-          <button class="back">Back</button>
         </div>     
       </div>
     </div>
   </template>
   
   <script>
+    import BannerContainer from '@/components/BannerContainer.vue'
     export default {
       name: 'MonthlyExchange',
       data() {
         return {
-          showDropdown: false,
+          firstLabel: 'Monthly Exchange',
+
           isOpen: false,
           selectedCurrency: 'USD',
           selectedLabel: 'USD',
@@ -101,7 +84,9 @@
           ],
         };
       },
-
+      components: {
+        BannerContainer,
+      },
       computed: {
         formattedValue: {
           get() {
@@ -117,6 +102,9 @@
       },
 
       methods: {
+        backToIndex() {
+          this.$router.push({path: '/index'});
+        },
         toggleDropdown() {
           this.isOpen = !this.isOpen;
         },
@@ -183,83 +171,7 @@
     .index {
       max-width: 100vw;
       margin: 0 auto;
-    
-  
-      .logo-container {
-        text-align: left;
-        padding: 30px;
-      }
-    
-      .banner-container {
-        height: 70px;
-        background-color: #53C5F4;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    
-        .banner-options {
-          display: flex;
-          justify-content: space-between;
-          width: 100%;
-          margin: 0 20px;
-          padding-left: 10vw;
-          padding-right: 10vw;
-          font-size: 23px;
-          color: white;
-    
-          .dropdown {
-            position: relative;
-            display: inline-block;
-    
-            .dropdown-content {
-              position: absolute;
-              top: 100%;
-              left: -70px;
-              z-index: 1;
-              display: none;
-              flex-direction: column;
-              background-color:#E7E6E6;
-              min-width: 300px;
-              padding: 12px 1px;
-              box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-              text-align: center;
-    
-              a {
-                color: white;
-                padding: 6px 12px;
-                text-decoration: none;
-                display: block;
-                background-color: #AFABAB;
-                margin: 10px 0;
-                width: 300px;
-                border: 1px solid white;
-              }
-    
-              a:hover {
-                background-color: #00AAEE;
-              }
-            }
-          }
-    
-          .dropdown:hover .dropdown-content {
-            display: flex;
-          }
-    
-          .first-link::after {
-            content: '';
-            display: inline-block;
-            margin-left: 10px;
-            width: 0;
-            height: 0;
-            border-top: 10px solid white;
-            border-right: 10px solid transparent;
-            border-bottom: 0 solid transparent;
-            border-left: 10px solid transparent;
-            vertical-align: middle;
-          }
-        }
-      }
-      
+        
       .lower-area {
         display: flex;
         .content-container {
@@ -467,28 +379,12 @@
             border: none;
             font-size: 20px;
             font-weight: bold;
+            margin-bottom: 13%;
             transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
               &:hover{
                 background-color: #48a6ce;
                 transform: translate(-3px, -3px);
               }
-            cursor: pointer;
-          }
-          .back{
-            background-color: #53C5F4;
-            color: white;
-            height: 50px;
-            margin-bottom: 50px;
-            margin-top: 20px;
-            border-radius: 10px;
-            border: none;
-            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
-              &:hover{
-                background-color: #48a6ce;
-                transform: translate(-3px, -3px);
-              }
-            font-size: 20px;
-            font-weight: bold;
             cursor: pointer;
           }
         }

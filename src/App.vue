@@ -18,6 +18,9 @@ export default {
 </script>
 
 <style lang="less">
+html {
+  zoom: 90%;
+}
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
