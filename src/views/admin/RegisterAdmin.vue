@@ -271,7 +271,7 @@ export default {
         font-weight: bold;
     }
     .footer{
-            position: relative;
+            position: absolute;
             //bottom: 30px;
             //bottom: 10px;
             width: 100%;
@@ -280,7 +280,7 @@ export default {
             align-items: center;
             flex-direction: row;
             //margin-top: 50px;
-            margin-top: 50px;
+            top: 700px;
             
             
             .back, .register{
@@ -288,7 +288,7 @@ export default {
                 width: 130px;
                 height: 35px;
                 border: none;
-                margin: 0 200px 50px;
+                margin: 0 100px 50px;
                 border-radius: 5px;
                 color: white;
                 font-size: 20px;
@@ -302,7 +302,7 @@ export default {
                 }
 
                 &:hover{
-                    background-color: #2C4D89;
+                    background-color: #284782;
                 }
 
                 &:hover span {

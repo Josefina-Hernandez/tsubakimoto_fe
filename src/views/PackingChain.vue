@@ -42,7 +42,8 @@
 
 <style scoped lang="less">
     .index {
-        max-width: 100vw;
+        //max-width: 100vw;
+        width: 100%;
         margin: 0 auto;
 
         .main-contents{

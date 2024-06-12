@@ -42,8 +42,9 @@
 
 <style scoped lang="less">
     .index {
-        max-width: 100vw;
+        //max-width: 100vw;
         margin: 0 auto;
+        width: 100%;
 
         .main-contents{
             h3{

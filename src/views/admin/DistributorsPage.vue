@@ -72,7 +72,7 @@ export default {
             height: 80px;
             width: 250px;
             color: white;
-            background-color: #00AAEE;
+            background-color: #4472C4;
             border: none;
             border-radius: 5px;
             margin-right: 50px;
@@ -166,7 +166,7 @@ export default {
                 width: 150px;
                 height: 40px;
                 border-radius: 5px;
-                background-color: #00AAEE;
+                background-color: #4472C4;
                 border: none;
                 color: white;
                 font-size: 17px;

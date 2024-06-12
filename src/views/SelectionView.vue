@@ -25,7 +25,7 @@ export default {
   name: 'SelectionView',
   data(){
     return{
-        title: "",
+        title: "Online Quotation",
         welcome: "Welcome! TTCL",
         ifShow2: false,
         nextPage: '/index'
@@ -41,7 +41,8 @@ export default {
 
 <style scoped lang="less">
     .selection {
-        max-width: 100vw;
+        //max-width: 100vw;
+        width: 100%;
         margin: 0 auto;
         .buttons{
             margin-top: 140px;
@@ -51,14 +52,16 @@ export default {
             flex-direction: row;
                 
             .b-child{
+                padding: 10px 20px;
+                line-height: 1.5;
                 background-color: #00AAEE;
                 color: white;
-                font-size: 30px;
-                width: 330px;
+                font-size: 20px;
+                width: 200px;
                 height: 150px;
                 border: none;
                 margin: 0 100px;
-                border-radius: 20px;
+                border-radius: 5px;
                 cursor: pointer;
 
                 &:hover{

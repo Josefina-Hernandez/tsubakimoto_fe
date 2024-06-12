@@ -1,7 +1,10 @@
 <template>
       <div class="logo-container">
-        <img alt="Company logo" src="../assets/logo.png" />
+        <a href="/#/index">
+          <img alt="Company logo" src="../assets/logo.png" />
+        </a>
         <span v-if="ifShowBtn" class="btn-back"><button @click="backToMain">Online Quotation</button></span>
+        <span v-if="ifShowLogout" class="btn-back"><button @click="backToLogin">Logout</button></span>
       </div>
 
       <div class="banner-container">
@@ -35,6 +38,7 @@
     props: {
         firstLabel: String,
         ifShowBtn: Boolean,
+        ifShowLogout: Boolean,
     },
     methods: {
         hideItself() {
@@ -47,6 +51,9 @@
         },
         backToMain() {
           this.$router.push({path: '/index'});
+        },
+        backToLogin() {
+          this.$router.push({path: '/'})
         },
     }
 
@@ -61,9 +68,11 @@
         img{
             width: 300px;
             height: 70px;
+            margin-left: 50px;
         }
         .btn-back{
             margin-left: 4%;
+            margin-top: 5px;
             display: block;
             height: 70px;
             line-height: 70px;
@@ -71,10 +80,10 @@
                 align-items: center;
                 background-color: #53C5F4;
                 color: white;
-                font-size: 24px;
+                font-size: 20px;
                 font-weight: bold;
                 height: 70px;
-                width: 200px;
+                width: 250px;
                 border: none;
                 border-radius: 10px;
                 transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
@@ -89,6 +98,7 @@
     
       .banner-container {
         height: 70px;
+        width: 100%;
         background-color: #53C5F4;
         display: flex;
         justify-content: center;
@@ -107,11 +117,13 @@
           .dropdown {
             position: relative;
             display: inline-block;
+            //border: 1px solid green;
+            width: 350px;
     
             .dropdown-content {
               position: absolute;
               top: 100%;
-              left: -70px;
+              left: 30px;
               z-index: 1;
               display: none;
               flex-direction: column;

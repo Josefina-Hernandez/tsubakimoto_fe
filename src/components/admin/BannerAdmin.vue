@@ -23,7 +23,7 @@ export default {
         left: 0;
         width: 250px;
         height: 60px;
-        background-color: #00AAEE;
+        background-color: #4472C4;
         border-radius: 3px;
 
         .circle{
@@ -44,7 +44,12 @@ export default {
         }
     }
     .top{
-        width: 100vw;
+        //width: 100vw;
+        width: 100%;
         margin-top: 4vh;
+        margin-bottom: 80px;
+        .logo{
+            padding-right: 40px;
+        }
     }
 </style>

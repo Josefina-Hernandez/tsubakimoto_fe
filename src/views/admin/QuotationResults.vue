@@ -8,16 +8,16 @@
             <div class="left">
                 <label>Sort by Date</label>
                 <DatePicker v-model="startDate" type="date" class="date-picker" />
-                <span>--- </span>
+                <span>-</span>
                 <DatePicker v-model="endDate" type="date" class="date-picker" />
             </div>
             <div class="middle">
-                <button @click="switchMode">View Mode</button>
+                <button @click="switchMode"><span>View Mode</span></button>
             </div>
             <div class="right">
                 <label>Quotation No.</label>
                 <input type="text" v-model="quotationNo" placeholder="Input quotation no.">
-                <button @click="search">Search</button>
+                <button @click="search"><span>Search</span></button>
             </div>
             
         </div>
@@ -26,8 +26,8 @@
             <table>
                 <thead>
                     <tr>
-                        <th>No.</th>
-                        <th>Quotation No.</th>
+                        <th class="id-column">No.</th>
+                        <th class="no-column">Quotation No.</th>
                         <th>Product Code</th>
                         <th>Price</th>
                         <th>User Type</th>
@@ -38,8 +38,8 @@
                 </thead>
                 <tbody>
                     <tr v-for="item in paginatedData" :key="item.id">
-                        <td>{{ item.id }}</td>
-                        <td>{{ item.quotation_no }}</td>
+                        <td class="id-column">{{ item.id }}</td>
+                        <td class="no-column">{{ item.quotation_no }}</td>
                         <td>{{ item.product_code }}</td>
                         <td>{{ formatPrice(item.price) }}</td>
                         <td>{{ item.user_type }}</td>
@@ -52,9 +52,9 @@
         </div>
         
         <div class="page-btn" v-show="isShow">
-            <button @click="prevPage" :disabled="currentPage === 1" class="prepage">Previous</button>
+            <button @click="prevPage" :disabled="currentPage === 1" class="prepage"><span>Previous</span></button>
             <span>{{ currentPage }}</span>
-            <button @click="nextPage" :disabled="currentPage === totalPages" class="nextpage">Next</button>
+            <button @click="nextPage" :disabled="currentPage === totalPages" class="nextpage"><span>Next</span></button>
         </div>
 
         <!--图开始-->
@@ -71,8 +71,8 @@
         <!--图结束-->
 
         <div class="lower-btn">
-            <button @click="goBack" class="back">Back</button>
-            <button @click="saveToExcel" class="save">Save</button>          
+            <button @click="goBack" class="back"><span>Back</span></button>
+            <button @click="saveToExcel" class="save"><span>Save</span></button>          
         </div>
     </div>
 </template>
@@ -122,8 +122,14 @@ export default {
                     height: 200, // 设置高度
                     plugins: {
                         title: {
-                        display: true,
-                        text: 'Quotation query times of each Agency', // 设置标题文本
+                            display: true,
+                            text: 'Quotation query times of each Agency', // 设置标题文本
+                            font: {
+                                size: 20,
+                            },
+                            padding: {
+                                bottom: 20,
+                            },
                         },
                     },
                 },
@@ -146,8 +152,14 @@ export default {
                         height: 300, // 设置高度
                         plugins: {
                             title: {
-                            display: true,
-                            text: 'Quotation Total Amount of each Agency', // 设置标题文本
+                                display: true,
+                                text: 'Quotation Total Amount of each Agency', // 设置标题文本
+                                font: {
+                                    size: 20,
+                                },
+                                padding: {
+                                    bottom: 20,
+                                },
                             },
                         },
                         scales: {
@@ -317,7 +329,7 @@ export default {
                     margin-right: 10px;
 
                     width: 200px;
-                    height: 30px;
+                    height: 38px;
                     font-size: 19px;
                     color: #284782;
 
@@ -334,23 +346,38 @@ export default {
             .middle{
                 button{
                     margin-left: 10px;
-                    font-size: 15px;
+                    font-size: 17px;
                     width: 150px;
-                    height: 30px;
-                    background-color: #00AAEE;
+                    height: 38px;
+                    background-color: #4472C4;
                     color: white;
                     border: none;
-                    border-radius: 3px;
+                    border-radius: 5px;
 
                     &:hover{
-                        background-color: #008FC6;
+                        background-color: #284782;
                         cursor: pointer;
-                    }                   
+                    }
+                    
+                    span{
+                        position: relative; /* 添加相对定位 */
+                        top: 0;
+                        left: 0;
+                        transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+                        margin: 0;
+                    }
+
+                    &:hover span{
+                        top: 2px;
+                        left: 2px;
+                    }
                 }
             }
             .right{
                 margin-left: auto;
                 margin-right: 100px;
+                display: flex;
+                align-items: center;
                 
                 label {
                     margin-right: 10px;
@@ -361,23 +388,36 @@ export default {
                 input[type="text"] {
                     margin-right: 10px;
                     width: 250px;
-                    height: 30px;
+                    height: 38px;
                     font-size: 19px;
                 }
 
                 button {
                     margin-left: 10px;
-                    font-size: 19px;
+                    font-size: 17px;
                     width: 150px;
-                    height: 30px;
-                    background-color: #00AAEE;
+                    height: 38px;
+                    background-color: #4472C4;
                     color: white;
                     border: none;
-                    border-radius: 3px;
+                    border-radius: 5px;
 
                     &:hover{
-                        background-color: #008FC6;
+                        background-color: #284782;
                         cursor: pointer;
+                    }
+
+                    span{
+                        position: relative; /* 添加相对定位 */
+                        top: 0;
+                        left: 0;
+                        transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+                        margin: 0;
+                    }
+
+                    &:hover span{
+                        top: 2px;
+                        left: 2px;
                     }
                 }
             }
@@ -390,7 +430,7 @@ export default {
             margin-top: 20px;
             margin-left: 100px;
             margin-right: 100px;
-            height: 450px;
+            height: 410px;
             overflow: visible;
 
             table{
@@ -408,14 +448,20 @@ export default {
                 z-index: 1; 
                 //border-top: 2px solid #00AAEE; //固定顶部边框，并更改颜色
                         
-                th{
-                    background-color: #f2f2f2;
-                    //border: 2px solid #00AAEE;  // 更改边框颜色
-                    padding: 8px;
-                    text-align: center;
-                    line-height: 30px;
-                    font-family: Arial, sans-serif;  // 更改字体
-                }
+                    th{
+                        background-color: #f2f2f2;
+                        //border: 2px solid #00AAEE;  // 更改边框颜色
+                        padding: 8px;
+                        text-align: center;
+                        line-height: 30px;
+                        font-family: Arial, sans-serif;  // 更改字体
+                    }
+                    .id-column{
+                        width: 70px;
+                    }
+                    .no-column{
+                        width: 300px;
+                    }
                 }
 
                 tbody{
@@ -430,6 +476,13 @@ export default {
                         text-align: center;
                         line-height: 30px;
                         font-family: Arial, sans-serif;  // 更改字体
+                    }
+
+                    .id-column{
+                        width: 70px;
+                    }
+                    .no-column{
+                        width: 300px;
                     }
 
                     .btn-download{
@@ -458,6 +511,33 @@ export default {
         }
 
         .page-btn{
+            button{
+                background-color: #00AAEE;
+                color: white;
+                border: none;
+                cursor: pointer;
+                width: 80px;
+                height: 30px;
+                border-radius: 3px;
+
+                &:hover{
+                    background-color: #284782;
+                }
+
+                span{
+                    position: relative; /* 添加相对定位 */
+                    top: 0;
+                    left: 0;
+                    transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+                    margin: 0;
+                }
+
+                &:hover span{
+                    top: 1px;
+                    left: 1px;
+                }
+
+            }          
             span{
                 margin-left: 20px;
                 margin-right: 20px;
@@ -491,7 +571,7 @@ export default {
                 width: 150px;
                 height: 40px;
                 border-radius: 5px;
-                background-color: #00AAEE;
+                background-color: #4472C4;
                 border: none;
                 color: white;
                 font-size: 17px;

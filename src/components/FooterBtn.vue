@@ -36,15 +36,15 @@ export default {
             align-items: center;
             flex-direction: row;
             //margin-top: 50px;
-            top: 680px;
+            top: 750px;
             
             
             .back, .quotation{
-                background-color: #4472C4;
+                background-color:  #00AAEE;
                 width: 130px;
                 height: 35px;
                 border: none;
-                margin: 0 200px 50px;
+                margin: 0 40px 50px;
                 border-radius: 5px;
                 color: white;
                 font-size: 20px;
@@ -58,7 +58,7 @@ export default {
                 }
 
                 &:hover{
-                    background-color: #2C4D89;
+                    background-color: #0082B3;
                 }
 
                 &:hover span {

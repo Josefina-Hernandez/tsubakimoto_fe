@@ -12,14 +12,14 @@
 export default {
   name: 'HomeView',
   mounted() {
-    document.title = 'Hello world!!!'
+    document.title = 'Hello world!!!';
   },
 }
 </script>
 
 <style lang="less">
 html {
-  zoom: 90%;
+  zoom: 90% !important;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

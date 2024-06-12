@@ -1,5 +1,4 @@
 <template>
-
         <div class="logo-container">
             <img alt="Company logo" src="../assets/logo.png" />
             <div class="welcome">{{welcome}}</div>
@@ -25,20 +24,26 @@ export default {
   .logo-container {
     text-align: left;
     padding: 30px;
+    img{
+        width: 300px;
+        height: 70px;
+        margin-left: 50px;
+    }
     .welcome {
-    font-size: 28px;
-    font-weight: bold;
-    margin-right: 5vw;
-    margin-left: auto;
-    margin-top: 20px;
-    float: right;
-    color: #7C7C7C;
-  }
+      font-size: 28px;
+      font-weight: bold;
+      margin-right: 5vw;
+      margin-left: auto;
+      margin-top: 20px;
+      float: right;
+      color: #7C7C7C;
+    }
   }
 
   
   .banner-container {
-    height: 50px;
+    margin-top: 5px;
+    height: 70px;
     background-color: #53C5F4;
     display: flex;
     justify-content: center;

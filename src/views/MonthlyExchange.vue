@@ -169,7 +169,8 @@
   
   <style scoped lang="less">
     .index {
-      max-width: 100vw;
+      width: 100%;
+      //max-width: 100vw;
       margin: 0 auto;
         
       .lower-area {
