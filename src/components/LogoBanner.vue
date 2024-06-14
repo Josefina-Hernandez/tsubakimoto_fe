@@ -1,6 +1,8 @@
 <template>
         <div class="logo-container">
-            <img alt="Company logo" src="../assets/logo.png" />
+            <a href="/#/index">
+              <img alt="Company logo" src="../assets/logo.png" />
+            </a> 
             <div class="welcome">{{welcome}}</div>
         </div>
         <div class="banner-container">

@@ -285,13 +285,13 @@ export default {
             
             .back, .register{
                 background-color: #4472C4;
-                width: 130px;
-                height: 35px;
+                width: 150px;
+                height: 40px;
                 border: none;
                 margin: 0 100px 50px;
                 border-radius: 5px;
                 color: white;
-                font-size: 20px;
+                font-size: 17px;
                 cursor: pointer;
 
                 span {

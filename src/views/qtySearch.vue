@@ -577,7 +577,7 @@ export default {
   },
   methods: {
     checkPrice(){
-      this.showModal2 = true;
+      //this.showModal2 = true;
       axios.post(`${this.apiUrl}/qtysearch`, 
         {
           searchText: this.searchText,

@@ -154,12 +154,12 @@
               <hr class="hr" />
 
               <div class="modal-footer2">
-                <button class="modal2-default-button1" @click="showModal2 = false" v-show="showBtnBackQuotation">Close</button>
+                <button class="modal2-default-button1" @click="showModal2 = false">Close</button>
                 <div @click.prevent="toLinksInfo" v-show="showBtnBackQuotation">
                   <button class="modal2-default-button2" v-show="isEven">Get Quotation</button>
                 </div>
            
-                <button class="modal2-default-button3" @click="showModal2 = false">Done</button>
+                <!--<button class="modal2-default-button3" @click="showModal2 = false">Done</button>-->
                               
               </div>
             </div>
@@ -167,7 +167,7 @@
         </div>
 
       
-        <FooterBtn class="footer" :ifShow2="ifShow2" :toWhere="previousPage" :clickFunction="handleClick" :isButtonDisabled="isButtonDisabled" />
+        <FooterBtn class="footer" :style="footerStyle" :ifShow2="ifShow2" :toWhere="previousPage" :clickFunction="handleClick" :isButtonDisabled="isButtonDisabled" />
     </div>
 </template>
 
@@ -709,7 +709,7 @@
             .modal2-default-button2 {
               position: absolute;
               float: right;
-              right: 200px;
+              right: 25px;
               top: 0;
               width: 200px;
               height: 30px;
@@ -730,22 +730,19 @@
             }
 
             
-            .modal2-default-button3 {
-              position: absolute;
-              float: right;
-              right: 30px;
-              width: 150px;
-              height: 30px;
-              background: #00AAEE;
-              border-radius: 3px;
-              font-size: 17px;
-              color: white;
-              border: none;
-              cursor: pointer;
-            }
-            
-            
-
+            //.modal2-default-button3 {
+            //  position: absolute;
+            //  float: right;
+            //  right: 30px;
+            //  width: 150px;
+            //  height: 30px;
+            //  background: #00AAEE;
+            //  border-radius: 3px;
+            //  font-size: 17px;
+            //  color: white;
+            //  border: none;
+            //  cursor: pointer;
+            //}
           }
         }
 
@@ -754,8 +751,7 @@
 
 
     .footer{
-      position: fixed;
-      margin-bottom: 5px;
+      position: absolute;
     }
   }
 
@@ -776,6 +772,8 @@ export default {
   name: 'SearchView',
   data(){
     return{
+        windowHeight: window.innerHeight,
+
         title: "Chain & PTUC",
         welcome: "Welcome! TTCL",
         ifShow2: true,
@@ -833,6 +831,12 @@ export default {
   },
 
   computed: {
+    footerStyle() {
+      return {
+        top: this.windowHeight > 0.9 * window.screen.height ? '810px' : '750px',
+      };
+    },
+
     /*formItems(){
       return [
           { label: 'NAME:', name: 'name', type: 'text', ifshow1: true, ifshow2: false, value: '', content: '', function: null},
@@ -937,7 +941,20 @@ export default {
     },
   },
 
+  mounted() {
+    window.addEventListener('resize', this.handleResize);
+  },
+
+  beforeUnmount() {
+    window.removeEventListener('resize', this.handleResize);
+  },
+
   methods: {
+    handleResize() {
+      this.windowHeight = window.innerHeight;
+      console.log(this.windowHeight);
+    },
+
     isEnableProceedBtn(){
       if(this.companyName=='' || this.personName=='' || this.orderQty==0){
         this.modalButtonDisabled = true;
