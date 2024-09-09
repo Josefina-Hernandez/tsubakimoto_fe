@@ -8,12 +8,21 @@ export default createStore({
     newCodeShow: '',
     Unit: '',
     Price: 0,
+    loginMode: localStorage.getItem('loginMode') || null,
   },
 
   getters: {
+    getLoginMode(state){
+      return state.loginMode;
+    },
   },
 
   mutations: {
+    setLoginMode(state, mode){
+      state.loginMode = mode;
+      localStorage.setItem('loginMode', mode);
+    },
+
     PASSQTY(state, qty){
       state.orderSum = qty;
     },
@@ -40,6 +49,10 @@ export default createStore({
   },
 
   actions: {
+    updateLoginMode({ commit }, mode){
+      commit('setLoginMode', mode)
+    },
+
     passOrderQty(context, value){
       context.commit('PASSQTY', value);
     },

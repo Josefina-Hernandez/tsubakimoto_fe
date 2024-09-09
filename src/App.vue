@@ -12,7 +12,7 @@
 export default {
   name: 'HomeView',
   mounted() {
-    document.title = 'Hello world!!!';
+    document.title = 'Tsubakimoto Quotation System';
   },
 }
 </script>

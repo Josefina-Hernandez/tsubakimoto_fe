@@ -1,6 +1,6 @@
 <template>
     <div class="selection">
-        <LogoBanner :title="title" :welcome="welcome" />
+        <LogoBanner :title="title" />
 
         <div class="buttons">
             <router-link to="/search">
@@ -26,7 +26,6 @@ export default {
   data(){
     return{
         title: "Online Quotation",
-        welcome: "Welcome! TTCL",
         ifShow2: false,
         nextPage: '/index'
     }

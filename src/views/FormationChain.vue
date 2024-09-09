@@ -8,8 +8,24 @@
         <h4>Chain Type</h4>
         <div class="list">
             <div class="item" v-for="item in this.items" :key="item.value">
-                <div>{{ item.label }}</div>
-                <div></div>
+                <div>
+                    <div class="item-label" :data-selected="item.ifSelected" @click="toggleDetail(item)">{{ item.label }}</div>
+
+                    <div 
+                        v-if="item.ifSelected"
+                        class="item-detail"
+                        :key="'detail-' + item.value"
+                        >
+                        <div class="detail-image">
+                            <img :src="require(`@/assets/pics/${item.imageName}`)"  alt="Image for {{ item.label }}">
+                        </div>                            <div class="detail-text">
+                              <p>Title about {{ item.label }}</p>
+                            <p>{{ item.description }}</p>
+                        </div>
+                    </div>
+
+                </div>
+                
             </div>
         </div>
       </div>
@@ -25,18 +41,23 @@
             return {
                 firstLabel: 'Standard Formation of Chain',
                 items: [
-                    {value: '1', label: 'Drive Chains'},
-                    {value: '2', label: 'Small Size Conveyor'},
-                    {value: '3', label: 'Large Size Conveyor Chains'},
-                    {value: '4', label: 'Sprockets/Pulleys'},
-                    {value: '5', label: 'Cableveyors'},
-                    {value: '6', label: 'Top Chains'},
+                    {value: '1', label: 'Drive Chains', imageName: 'chain.jpg', description: 'Details about Drive Chains...', ifSelected: false},
+                    {value: '2', label: 'Small Size Conveyor', imageName: 'chain.jpg', description: 'Details about Small Size Conveyor...', ifSelected: false},
+                    {value: '3', label: 'Large Size Conveyor Chains', imageName: 'chain.jpg', description: 'Details about Large Size Conveyor Chains', ifSelected: false},
+                    {value: '4', label: 'Sprockets/Pulleys', imageName: 'chain.jpg', description: 'Details about Sprockets/Pulleys', ifSelected: false},
+                    {value: '5', label: 'Cableveyors', imageName: 'chain.jpg', description: 'Details about Cableveyors', ifSelected: false},
+                    {value: '6', label: 'Top Chains', imageName: 'chain.jpg', description: 'Details about Top Chains', ifSelected: false},
                 ],
             };
         },
         components: {
             BannerContainer,
-        }
+        },
+        methods: {
+            toggleDetail(item) {
+                item.ifSelected = !item.ifSelected;
+            }
+        },
     }
 </script>
 
@@ -65,47 +86,100 @@
                 margin-top: 30px;
                 display: flex;
                 flex-direction: column;
+                width: 84%;
 
                 .item{
                     display: flex;
                     justify-content: space-between;
                     background-color: #D7F1FC;
-                    height: 70px;
+                    width: 100%;
                     align-items: center;
                     margin-bottom: 10px;
-                    padding: 0 50px;
+                    //padding: 0 50px;
                     font-size: 21px;
                     font-weight: bold;
                     transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+                    border-radius: 5px;
+
                     &:hover{
                         background-color: #53C5F4;
                         color: white;
                         transform: translate(-2px, -2px);
                     }
-                    &:hover div:nth-child(2) {
-                        border-top-color: white;
-                        transform: translate(-2px, -2px);
-                    }
 
-                    div:nth-child(1) {
-
-                    }
                     
-                    div:nth-child(2) {
-                        content: '';
-                        display: inline-block;
-                        margin-left: 100px;
-                        width: 0;
-                        height: 0;
-                        border-top: 10px solid #00ACF0;
-                        border-right: 10px solid transparent;
-                        border-bottom: 0 solid transparent;
-                        border-left: 10px solid transparent;
-                        vertical-align: middle;
-                        transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+                    div{
+                        height: auto;
+                        width: 100%;
+                        //border-radius: 5px;
+                        .item-label {
+                            display: flex;
+                            align-items: center;
+                            position: relative;
+                            height: 70px;
+                            margin-left: 50px;
+
+                            &:hover{
+                                cursor: pointer;
+                            }
+                            
+                            &::after{
+                                margin-right: 60px;
+                                content: '';
+                                display: inline-block;
+                                width: 0;
+                                height: 0;
+                                border-top: 10px solid #00ACF0;
+                                border-right: 10px solid transparent;
+                                border-bottom: 0 solid transparent;
+                                border-left: 10px solid transparent;
+                                position: absolute;
+                                right: 0;
+                                top: 50%;
+                                transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+                            }
+
+                            &[data-selected="true"]::after {
+                                transform: translateY(-50%) rotate(-90deg); /* 旋转90度 */
+                            }
+                                
+                        }
+
+                        .item-detail {
+                            //width: 100%;
+                            display: flex;
+                            background-color: white;
+                            padding: 30px 0;
+                            margin-top: 10px;
+                            font-size: 18px;
+                            color: #333;
+                            justify-content: space-between;
+
+                            .detail-image {
+                                //flex: 2;
+                                margin-right: 70px;
+                                margin-left: 0;
+                                width: 500px;
+                                img{
+                                    width: 500px;
+                                    height: auto;
+                                    
+                                }
+                            }
+
+                            .detail-text {
+                                //flex: 3;
+                                p {
+                                    margin: 0 0 10px 0;
+                                    text-align: left;
+                                    font-weight: lighter;
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
     }
+
 </style>

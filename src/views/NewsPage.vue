@@ -6,7 +6,7 @@
       <div class="main-contents">
         <h3>News</h3>
         <div class="list">
-            <div class="item" v-for="item in items" :key="item.value">
+            <div class="item" v-for="item in items" :key="item.value" @click="goToDetail(item)">
                 <div class="decoration"></div>
                 <div class="title">{{ item.title }}</div>
                 <div class="contents">{{ item.content }}</div>
@@ -20,22 +20,28 @@
 
 <script>
     import BannerContainer from '@/components/BannerContainer.vue'
+
     export default {
-        name: 'PackingChain',
+        name: 'NewsPage',
         data() {
             return {
                 firstLabel: 'Information',
                 items: [
-                    {value: '1', title: 'New update of Quotation System', content: 'We have updated the system.', date: '2024-04-05',},
-                    {value: '2', title: 'New update of Quotation System', content: 'We have updated the system.', date: '2024-04-05',},
-                    {value: '3', title: 'New update of Quotation System', content: 'We have updated the system.', date: '2024-04-05',},
-                    {value: '4', title: 'New update of Quotation System', content: 'We have updated the system.', date: '2024-04-05',},
-                    {value: '5', title: 'New update of Quotation System', content: 'We have updated the system.', date: '2024-04-05',},
+                    {value: '1', title: 'New update of Quotation System 1', content: 'We have updated the system. 1', date: '2024-04-05',},
+                    {value: '2', title: 'New update of Quotation System 2', content: 'We have updated the system. 2', date: '2024-04-05',},
+                    {value: '3', title: 'New update of Quotation System 3', content: 'We have updated the system. 3', date: '2024-04-05',},
+                    {value: '4', title: 'New update of Quotation System 4', content: 'We have updated the system. 4', date: '2024-04-05',},
+                    {value: '5', title: 'New update of Quotation System 5', content: 'We have updated the system. 5', date: '2024-04-05',},
                 ],
             };
         },
         components: {
             BannerContainer,
+        },
+        methods: {
+            goToDetail(item) {
+                this.$router.push({name: 'newsdetail', params: {id: item.value}});
+            }
         }
     }
 </script>
@@ -73,6 +79,7 @@
                         background-color: #53C5F4;
                         color: white;
                         transform: translate(-2px, -2px);
+                        cursor: pointer;
                     }
                     .decoration{
                         flex: 0.2;

@@ -7,7 +7,7 @@
     </div>
     <div class="buttons">
       <a href="#/admin/user" class="button"><span>Users</span></a>
-      <a href="#/admin/quotation-results" class="button"><span>Quotation Results</span></a>
+      <!--<a href="#/admin/quotation-results" class="button"><span>Quotation Results</span></a>-->
       <a href="#/admin/price-list" class="button"><span>Price List</span></a>
       <a href="#/admin/distributors-page" class="button"><span>Distributors</span></a>
     </div>

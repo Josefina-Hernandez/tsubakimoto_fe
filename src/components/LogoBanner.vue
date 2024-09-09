@@ -3,7 +3,7 @@
             <a href="/#/index">
               <img alt="Company logo" src="../assets/logo.png" />
             </a> 
-            <div class="welcome">{{welcome}}</div>
+            <div class="welcome">{{welcomeText}}</div>
         </div>
         <div class="banner-container">
             <div class="text">{{title}}</div>
@@ -12,11 +12,23 @@
 
 
 <script>
+import { computed } from 'vue';
+import { useStore } from 'vuex';
 export default {
+  setup() {
+      const store = useStore();
+      const loginMode = computed(() => store.getters.getLoginMode);
+
+      const welcomeText = computed(() => `Welcome! ${loginMode.value}`);
+
+      return {
+        loginMode,
+        welcomeText,
+      }
+    },
   name: 'LogoBanner',
   props: {
     title: String,
-    welcome: String
   }
 }
 </script>

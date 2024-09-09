@@ -5,7 +5,20 @@
         <form @submit.prevent="login">
             <input type="text" v-model="username" placeholder="Username">
             <input type="password" v-model="password" placeholder="Password">
+
+            <div class="custom-dropdown" ref="dropdown" v-click-outside="handleClickOutside">
+              <div class="dropdown-selected" @click="toggleDropdown">
+                {{ selectedLabel }}
+              </div>
+              <div class="dropdown-options" v-if="isOpen">
+                <div class="dropdown-option" v-for="option in options" :key="option.value" @click="selectOption(option)">
+                  {{ option.label }}
+                </div>
+              </div>
+            </div>
+
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
+            <p v-if="typeMessage" class="error-message">{{ typeMessage }}</p>
             <button type="submit"><span>Log In</span></button>
         </form>  
     </div>
@@ -34,6 +47,7 @@
             flex-direction: column;
             align-items: center;
             input {
+                font-size: 16px;
                 margin-bottom: 20px;
                 width: 250px;
                 padding: 10px;
@@ -44,7 +58,60 @@
                 margin-bottom: 30px;
                 }
             }
+            .custom-dropdown{
+              position: relative;
+              margin-left: 0;
+              width: 250px;
+              flex: 2;
+              .dropdown-selected{
+                font-size: 16px;
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: rgb(232, 240, 254);
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
 
+                        /* Add the triangle using ::after */
+                &::after {
+                    content: '';
+                    position: absolute;
+                    right: -15px; /* Adjust the distance from the right */
+                    top: 60%;
+                    transform: translateY(-50%);
+                    border-width: 7px;
+                    border-style: solid;
+                    border-color: #00ADEF transparent transparent transparent;
+                }
+              }
+
+              .dropdown-options{
+                font-size: 16px;
+                display: block;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #fff;
+                z-index: 1000;
+
+                .dropdown-option{
+                  padding: 10px;
+                  cursor: pointer;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  &:hover{
+                    background-color: #f0f0f0;
+                  }
+                }
+              }
+            }
             .error-message{
                 color: red;
             }
@@ -81,20 +148,60 @@
 </style>
 
 <script>
+import { mapState, mapActions } from 'vuex';
+
 export default {
         name: 'LoginForm',
         data(){
             return{
                 username: '',
                 password: '',
-                errorMessage: null
+                errorMessage: null,
+                typeMessage: null,
+                isOpen: false,
+                selectedLabel: '-Please select the access type-',
+                selectedValue: 'default',
+                options: [
+                    {value: 'default', label: '-Please select the access type-'},
+                    {value: 'tsubakimoto', label: 'Tsubakimoto'},
+                    {value: 'kte', label: 'KTE'},
+                    {value: 'agency', label: 'Agency'},
+                ]
             }
         },
+
+        computed: {
+            ...mapState(['loginMode']),
+        },
+
         methods: {
+            ...mapActions(['updateLoginMode']),
+
+            handleClickOutside() {
+            // 这里写点击 div 外部时触发的逻辑
+                //console.log('Clicked outside:', event);
+                this.isOpen = false;
+            },
+
+            toggleDropdown() {
+                this.isOpen = !this.isOpen;
+            },
+
+            selectOption(option) {
+                this.selectedLabel = option.label;
+                this.selectedValue = option.value;
+                this.isOpen = false;
+            },
+
             login(){
                 //登录逻辑
                 if(this.username === "admin" & this.password === "admin"){
-                    this.$router.push('/index');
+                    if(this.selectedValue === "default") {
+                        this.typeMessage = 'Please select the access type first!';
+                    }else{
+                        this.updateLoginMode(this.selectedLabel);
+                        this.$router.push('/index');
+                    }       
                 }
                 else{
                     this.errorMessage = 'Invalid username or password!';

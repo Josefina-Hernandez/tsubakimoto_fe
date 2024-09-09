@@ -2,7 +2,54 @@
     <div class="user-container">
         <BannerAdmin />
 
-        <h1>Price List Page</h1>
+        <h3>Price List File Upload</h3>
+        <div class="radios">
+            <label class="custom-radio">
+                <input type="radio" value="all" v-model="selectedMode" />
+                <span class="radio-circle"></span>
+                <div class="text">Upload All Data</div>
+            </label>
+            <label class="custom-radio">
+                <input type="radio" value="part" v-model="selectedMode" />
+                <span class="radio-circle"></span>
+                <div class="text">Upload Part Data</div>
+            </label>
+        </div>
+
+        <div class="nav-price">
+            <button @click="triggerFileInput"><span>Select File</span></button>
+            <input type="text" v-model="filePath" readonly @click="triggerFileInput">
+            <button @click="uploadExcelFile"><span>Upload</span></button>
+            <!-- 隐藏的文件输入 -->
+            <input type="file" ref="fileInput" @change="handleFileChange" style="display: none;" accept=".xlsx">
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th class="first">No.</th>
+                        <th v-for="(header, index) in tableHeaders" :key="index">
+                            {{ header }}
+                        </th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
+                        <td v-for="(cell, cellIndex) in row" :key="cellIndex">
+                            {{ formatDateTime(cell) }}
+                        </td>
+                        <td class="btn-td">
+                            <button @click="downloadFile(row)">
+                                <span>Download</span>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        </div>
 
         <div class="lower-btn">
             <button @click="goBack"><span>Back</span></button>
@@ -20,7 +67,29 @@ export default {
             rows: 8,
             columns: 4,
             apiUrl: config.apiUrl,
-            user_list: []
+            user_list: [],
+            selectedMode: 'all',
+
+            tableHeaders: ["Date", "File Name", "Update by", "All/Part", "Status", "Download"],
+
+            tableData: [
+                    ["1",  new Date("2024-08-18T14:30:00"), "Pricelist_20240818_new", "Admin", "All", "Complete",],
+                    ["2",  new Date("2024-08-17T11:30:00"), "Pricelist_model_0003", "Admin", "Part", "Complete",],
+                    ["3",  new Date("2024-07-16T22:30:00"), "Pricelist_model_0005", "Admin", "Part", "Complete",],
+                    ["4",  new Date("2024-06-10T22:30:00"), "Pricelist_20240610_new", "Admin", "All", "Complete",],
+                    ["5",  new Date("2024-05-16T14:30:00"), "Pricelist_model_0022", "Admin", "Part", "Complete",],
+                    ["6",  new Date("2024-04-19T14:30:00"), "Pricelist_20240419_new", "Admin", "All", "Complete",],
+                    ["7",  new Date("2024-03-10T14:30:00"), "Pricelist_20240310_new", "Admin", "All", "Complete",],
+                    ["8",  new Date("2024-08-18T14:30:00"), "Pricelist_20240818_new", "Admin", "All", "Complete",],
+                    ["9",  new Date("2024-08-17T11:30:00"), "Pricelist_model_0003", "Admin", "Part", "Complete",],
+                    ["10",  new Date("2024-07-16T22:30:00"), "Pricelist_model_0005", "Admin", "Part", "Complete",],
+                    ["11",  new Date("2024-06-10T22:30:00"), "Pricelist_20240610_new", "Admin", "All", "Complete",],
+                    ["12",  new Date("2024-05-16T14:30:00"), "Pricelist_model_0022", "Admin", "Part", "Complete",],
+                    ["13",  new Date("2024-04-19T14:30:00"), "Pricelist_20240419_new", "Admin", "All", "Complete",],
+                    ["14",  new Date("2024-03-10T14:30:00"), "Pricelist_20240310_new", "Admin", "All", "Complete",],
+                ],
+            
+            filePath: '',
         };
     },
     
@@ -33,6 +102,48 @@ export default {
     },
 
     methods: {
+        uploadExcelFile(){
+            if (!this.filePath) {
+                alert('Please select the excel file first!');
+                return;
+            }
+            var type = ''
+            if (this.selectedMode === "all"){
+                type = 'all-type';
+            } else {
+                type = 'part-type';
+            }
+            alert("Uploaded " + type + ' file ' + this.filePath + "!"  );
+        },
+
+        triggerFileInput() {
+            this.$refs.fileInput.click();
+        },
+
+        handleFileChange(event) {
+            const file = event.target.files[0];
+            if (file) {
+                this.filePath = file.name; // 设置文件名到输入框
+            }
+        },
+
+        downloadFile(index){
+            alert("Download file " + index[2] + " !");
+        },
+
+        formatDateTime(date) {
+            if (date instanceof Date && !isNaN(date)) {
+                    // 格式化为 YYYY-MM-DD HH:mm
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day} ${hours}:${minutes}`;
+            }
+            return date; // 如果不是日期类型，直接返回原值
+        },
+
         fetchData() {
             axios.get(`${this.apiUrl}/users`)
             .then(response => {
@@ -61,108 +172,192 @@ export default {
 </script>
 
 <style scoped lang="less">
-    h1{
-        margin-top: 200px;
+    h3{
+        margin-left: 6%;
+        text-align: left;
+        font-size: 21px;
     }
-    .upper-btn{
+    .radios {
+        margin-left: 6%;
+        display: flex; /* 使用 flex 布局 */
+        flex-direction: column; /* 垂直排列 */
+        align-items: flex-start; /* 对齐到最左边 */
+        gap: 10px; /* 为每个 radio 按钮添加间距 */
+        margin-top: 25px;
+
+        .custom-radio {
+                display: flex; /* 在 div 内部使用 flex 布局 */
+                align-items: center; /* 垂直居中对齐 radio 按钮和文本 */
+                position: relative;
+                padding-left: 40px;
+                cursor: pointer;
+
+                input[type="radio"] {
+                    left: 0;
+                    top: 0;
+                    position: absolute;
+                    opacity: 0; /* 隐藏原有的 radio 按钮 */
+                }
+
+                .radio-circle {
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    width: 20px; /* 圆圈的直径 */
+                    height: 20px; /* 圆圈的直径 */
+                    border-radius: 50%; /* 使其变成圆形 */
+                    border: 1px solid #4472C4; /* 圆圈的边框 */
+                    background-color: #eff3f8; /* 圆圈的背景颜色 */
+                }
+
+                input[type="radio"]:checked + .radio-circle {
+                    background-color: #4472C4; /* 选中时的背景颜色 */
+                    border-color: #4472C4; /* 选中时的边框颜色 */
+                }
+
+                input[type="radio"]:checked + .radio-circle::after {
+                    content: '';
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    transform: translate(-50%, -50%);
+                    width: 10px; /* 内部小圆点的直径 */
+                    height: 10px; /* 内部小圆点的直径 */
+                    border-radius: 50%; /* 内部小圆点的圆形 */
+                    background-color: #eff3f8; /* 内部小圆点的颜色 */
+                }
+                .text{
+                    font-size: 18px; /* 调整文本的字体大小 */
+                    line-height: 1.5; /* 调整文本行高以确保垂直居中 */
+                    margin-left: 10px;
+                }
+        }
+    }
+
+    .nav-price{
         display: flex;
-        justify-content: center;
-        margin-top: 50px;
+        margin-left: 6%;
+        margin-top: 30px;
         button{
-            height: 80px;
-            width: 250px;
-            color: white;
-            background-color: #00AAEE;
-            border: none;
+                width: 150px;
+                height: 40px;
+                border-radius: 5px;
+                background-color: #4472C4;
+                border: none;
+                color: white;
+                font-size: 17px;
+                cursor: pointer;
+
+                &:hover{
+                    background-color: #284782;
+                }
+
+                span{
+                    position: relative; /* 添加相对定位 */
+                    top: 0;
+                    left: 0;
+                    transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+                }
+
+                &:hover span{
+                    top: 2px;
+                    left: 2px;
+                }
+            }
+        input{
+            width: 450px;
+            margin-left: 30px;
+            margin-right: 30px;
+            border: 1px solid #e0dede;
             border-radius: 5px;
-            margin-right: 50px;
-            margin-left: 50px;
-            font-size: 18px;
+            font-size: 17px;
+            color: #656363;
+            padding: 0 10px;
             cursor: pointer;
-
-            &:hover{
-                background-color: #284782;
-            }
-
-            span{
-                position: relative; /* 添加相对定位 */
-                top: 0;
-                left: 0;
-                transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
-            }
-
-            &:hover span{
-                top: 2px;
-                left: 2px;
-            }
         }
     }
 
-    .user-table{
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-    margin-left: 100px;
-    margin-right: 100px;
-    height: 350px;
-    overflow: visible;
+    .table-container {
+            margin-top: 20px;
+            margin-left: 5%;
+            margin-right: 5%;
+            width: 90%;
+            height: 420px; /* 固定表格高度 */
+            overflow-y: auto; /* 启用垂直滚动条 */
+            border: 1px solid #ddd;
 
-    table{
-        position: relative;
-        border-collapse: collapse;
-        width: 100%;
-        height: 30px;
-        background-color: white;  // 设置背景颜色
-        //box-shadow: 0 1px 3px rgba(0,0,0,0.2);  // 添加阴影效果
-        overflow: visible;
+            table{
+                    width: 100%;
+                    border-collapse: collapse;
 
-        thead{
-           position: sticky;
-           top: 0;
-           z-index: 1; 
-           //border-top: 2px solid #00AAEE; //固定顶部边框，并更改颜色
-                
-           th{
-              background-color: #f2f2f2;
-              //border: 2px solid #00AAEE;  // 更改边框颜色
-              padding: 8px;
-              text-align: center;
-              line-height: 30px;
-              font-family: Arial, sans-serif;  // 更改字体
-           }
-        }
+                    thead {
+                        height: 50px;
+                        background-color: #F2F2F2;
+                        //background-color: #03e995;
+                        opacity: 1;
+                        position: sticky;
+                        top: 0;
+                        z-index: 1; /* 使表头在滚动时保持在顶部 */
+                        th {
+                            border: 1px solid white;
+                        }
+                        
+                        .first {
+                            width: 50px; /* 调整宽度，根据需要设置具体的值 */
+                            text-align: center; /* 可选：将内容居中 */
+                            padding: 0 15px;
+                        }
+                    }
 
-        tbody{
-            display: block;
-            height: 250px;
-            overflow: auto;
+                    tbody {
+                        tr {
+                            height: 50px;
+                            border: 2px solid #F2F2F2 ;
+                            
+                            .btn-td{
+                                width: 90px;
+                                padding-right: 15px;
+                                button {
+                                    margin-left: 20px;
+                                    background-color:  #00AAEE;
+                                    width: 100px;
+                                    height: 30px;
+                                    border: none;
+                                    border-radius: 3px;
+                                    color: white;
+                                    font-size: 14px;
+                                    cursor: pointer;
 
-            td{
-                border: 1px solid #f2f2f2;  // 更改边框颜色
-                padding: 8px;
-                text-align: center;
-                line-height: 30px;
-                font-family: Arial, sans-serif;  // 更改字体
+                                    span {
+                                        position: relative; 
+                                        top: 0;
+                                        left: 0;
+                                        transition: top 0.2s ease, left 0.2s ease;
+                                    }
+
+                                    &:hover{
+                                        background-color: #0082B3;
+                                    }
+
+                                    &:hover span {
+                                        top: 2px; 
+                                        left: 2px; 
+                                    }
+                                }
+                            }
+
+
+                        }
+                }
             }
-
         }
-
-        thead, tbody tr {
-        display: table; // 添加display: table;
-        width: 100%;
-        table-layout: fixed; // 添加table-layout: fixed;
-
-        }
-       
-    }
-}
-
     .lower-btn{
             position: relative;
             margin-top: 30px;
             display: flex;
             button{
-                margin-left: 100px;
+                margin-left: 6%;
                 width: 150px;
                 height: 40px;
                 border-radius: 5px;

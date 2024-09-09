@@ -5,6 +5,7 @@
         </a>
         <span v-if="ifShowBtn" class="btn-back"><button @click="backToMain">Online Quotation</button></span>
         <span v-if="ifShowLogout" class="btn-back"><button @click="backToLogin">Logout</button></span>
+        <span class="welcome">{{welcomeText}}</span>
       </div>
 
       <div class="banner-container">
@@ -21,14 +22,28 @@
             <i class="fa fa-caret-down"></i>
           </div>
           <a href="#/news-page">News</a>
-          <a href="#/index">How to Order</a>
-          <a href="#/index">Contact Us</a>
+          <a href="#/how-to-order">How to Order</a>
+          <a href="#/contact-us">Contact Us</a>
         </div>
       </div>
 </template>
 
 <script>
+  import { computed } from 'vue';
+  import { useStore } from 'vuex';
+
   export default {
+    setup() {
+      const store = useStore();
+      const loginMode = computed(() => store.getters.getLoginMode);
+
+      const welcomeText = computed(() => `Welcome! ${loginMode.value}`);
+
+      return {
+        loginMode,
+        welcomeText,
+      }
+    },
     name: 'BannerContainer',
     data() {
         return{
@@ -94,6 +109,15 @@
                 cursor: pointer;
             }
         }
+        .welcome{
+          margin-left: auto;
+          margin-right: 5vw;
+          font-size: 28px;
+          font-weight: bold;
+          float: right;
+          margin-top: 20px;
+          color: #7C7C7C;
+        }
       }
     
       .banner-container {
@@ -127,7 +151,7 @@
               z-index: 1;
               display: none;
               flex-direction: column;
-              background-color:#E7E6E6;
+              background-color: #3EBCF2;
               min-width: 300px;
               padding: 12px 1px;
               box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -138,14 +162,14 @@
                 padding: 6px 12px;
                 text-decoration: none;
                 display: block;
-                background-color: #AFABAB;
+                background-color: #3EBCF2;
                 margin: 10px 0;
                 width: 300px;
-                border: 1px solid white;
+                border: none;
               }
     
               a:hover {
-                background-color: #00AAEE;
+                background-color: #0D8FC8;
               }
             }
           }

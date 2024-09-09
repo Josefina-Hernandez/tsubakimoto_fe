@@ -72,6 +72,34 @@ const routes = [
   },
 
   {
+    path: '/news-detail/:id',
+    name: 'newsdetail',
+
+    component: () => import('../views/NewsDetail.vue')
+  },
+
+  {
+    path: '/how-to-order',
+    name: 'howtoorder',
+
+    component: () => import('../views/HowToOrder.vue')
+  },
+
+  {
+    path: '/contact-us',
+    name: 'contactus',
+
+    component: () => import('../views/ContactUs.vue')
+  },
+
+  {
+    path: '/quotation-result',
+    name: 'quotationresult',
+
+    component: () => import('../views/QuotationResult.vue')
+  },
+
+  {
     path: '/admin/login',
     name: 'loginadmin',
 

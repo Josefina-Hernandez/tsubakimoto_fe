@@ -1,6 +1,6 @@
 <template>
     <div class="selection">
-        <LogoBanner :title="title" :welcome="welcome" />
+        <LogoBanner :title="title" />
 
         <div class="mainNav">
             <div class="search-item">
@@ -521,7 +521,6 @@ export default {
   data(){
     return{
         title: "Chain Cutting & Assembled at TTCL warehouse",
-        welcome: "Welcome! TTCL",
         ifShow2: true,
         previousPage: '/selection',
 

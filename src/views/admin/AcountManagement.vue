@@ -17,7 +17,7 @@
                     <tr v-for="user in user_list" :key="user.id">
                         <td>{{user.name}}</td>
                         <td>{{user.email}}</td>
-                        <td>{{user.password}}</td>
+                        <td>{{maskPassword(user.password)}}</td>
                         <td>{{user.access_type}}</td>
                         <td class="btns">
                             <button class="edit" @click="editUser(user)">Edit</button>
@@ -57,6 +57,10 @@ export default {
     },
 
     methods: {
+        maskPassword(password) {
+            return '*'.repeat(password.length); // 将密码转换为相同长度的星号字符串
+        },
+
         fetchData() {
             axios.get(`${this.apiUrl}/users`)
             .then(response => {

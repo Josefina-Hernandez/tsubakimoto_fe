@@ -1,9 +1,9 @@
 <template>
     <div class="selection">
-        <LogoBanner :title="title" :welcome="welcome" />
+        <LogoBanner :title="title" />
 
         <div class="mainNav">
-            <div class="dropdown" @mouseleave="hideDropdown1">
+            <div class="dropdown" @mouseleave="hideDropdown1" v-if="ifShowDistributors">
                 <div class="title">Distributors</div>
                 <div class="custom-select">
                     <div class="selected" @click="toggleDropdown1">{{ selectedItem1 ? selectedItem1 : '--' }}</div>
@@ -27,6 +27,26 @@
             </div>
             <div class="search">
                 <div class="upper">
+                  <div class="checks" v-if="ifShowChecks">
+                    <div class="check1">
+                      <div>Stock</div>
+                      <input
+                        type="checkbox"
+                        id="stocked"
+                        v-model="stocked"
+                      />
+                    </div>
+                    
+                    <div class="check2">
+                      <div>Non-Stock</div>
+                      <input
+                        type="checkbox"
+                        id="non-stocked"
+                        v-model="nonStocked"
+                      />
+                    </div>
+
+                  </div>
                   <span>Search</span>
                   <input v-model="searchText" type="text" placeholder="ITEM Code">
                   <button @click="searchPrice"><span>Search</span></button>
@@ -257,15 +277,51 @@
               }
           }
 
-          .custom-select.show .dropdown-list {
+        .custom-select.show .dropdown-list {
           display: block;
-          }
+        }
 
       
       }
       .search {
         margin-left: 20px;
         .upper{
+          .checks {
+              display: flex;
+              justify-content:center; /* 横向居中 */
+              align-items: center;     /* 纵向居中 */
+
+              .check1 {
+                display: flex;
+                div {
+                  font-size: 20px;
+                  font-weight: 550;
+                }
+                #stocked {
+                  width: 20px;
+                  height: 20px;
+                  margin-left: 3px;
+                  margin-right: 20px;
+                }
+              }
+
+              .check2{
+                display: flex;
+                div {
+                  font-size: 20px;
+                  font-weight: 550;
+                }
+                #non-stocked {
+                  width: 20px;
+                  height: 20px;
+                  margin-left: 3px;
+                  margin-right: 40px;
+                }
+              }
+
+            }
+          
+
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -775,7 +831,6 @@ export default {
         windowHeight: window.innerHeight,
 
         title: "Chain & PTUC",
-        welcome: "Welcome! TTCL",
         ifShow2: true,
         previousPage: '/selection',
         isButtonDisabled: true,
@@ -827,10 +882,21 @@ export default {
         isEven: true,
 
         isReadOnly: false,
+
+        ifShowDistributors: true,
+
+        stocked: true,
+        nonStocked: true,
+
+        ifShowChecks: true,
     }
   },
 
   computed: {
+    loginMode() {
+      return this.$store.getters.getLoginMode;
+    },
+
     footerStyle() {
       return {
         top: this.windowHeight > 0.9 * window.screen.height ? '810px' : '750px',
@@ -943,6 +1009,19 @@ export default {
 
   mounted() {
     window.addEventListener('resize', this.handleResize);
+    console.log(this.loginMode);
+    if (this.loginMode === "Tsubakimoto") {
+      this.ifShowDistributors = true;
+    } else {
+      this.ifShowDistributors = false;
+      this.selectedItem1 = "KTE";
+    }
+
+    if (this.loginMode === "Tsubakimoto" || this.loginMode === "KTE"){
+      this.ifShowChecks = true;
+    } else {
+      this.ifShowChecks = false;
+    }
   },
 
   beforeUnmount() {

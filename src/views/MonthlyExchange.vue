@@ -47,7 +47,7 @@
             </table>
           </div>
         </div>
-        <div class="btn-area">
+        <div class="btn-area" v-if="isShowingUpdateBtn">
           <button class="update">Update Current Rate</button>
         </div>     
       </div>
@@ -55,8 +55,19 @@
   </template>
   
   <script>
+    import { computed } from 'vue';
+    import { useStore } from 'vuex';
+
     import BannerContainer from '@/components/BannerContainer.vue'
     export default {
+      setup() {
+        const store = useStore();
+        const loginMode = computed(() => store.getters.getLoginMode);
+        return {
+          loginMode,
+        }
+      },
+
       name: 'MonthlyExchange',
       data() {
         return {
@@ -66,6 +77,8 @@
           selectedCurrency: 'USD',
           selectedLabel: 'USD',
           selectedIcon: require('../assets/flags/usd.png'),
+
+          isShowingUpdateBtn: true,
 
           inputAmount: '',
           options: [
@@ -159,6 +172,11 @@
 
       mounted() {
         document.addEventListener('click', (event) => this.handleClickOutside(event));
+        if(this.loginMode === "Tsubakimoto") {
+          this.isShowingUpdateBtn = true;
+        } else {
+          this.isShowingUpdateBtn = false;
+        }
       },
 
       beforeUnmount() {
