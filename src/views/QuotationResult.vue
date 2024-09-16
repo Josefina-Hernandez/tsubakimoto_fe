@@ -12,9 +12,9 @@
                 <input type="date" id="date-picker1" v-model="selectedDate1">
                 <div class="bar">-</div>
                 <input type="date" id="date-picker2" v-model="selectedDate2">
-                <button class="view-mode" :disabled="!selectedDate2">
+                <!--<button class="view-mode" :disabled="!selectedDate2">
                     <span>View Mode</span>
-                </button>
+                </button>-->
             </div>
             <div class="nav-right">
                 <div class="text-right">Quotation No.</div>
@@ -36,13 +36,26 @@
 
                 <tbody>
                     <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
-                        <td v-for="(cell, cellIndex) in row" :key="cellIndex">
+                        <td v-for="(cell, cellIndex) in row.slice(0, -1)" :key="cellIndex">
                             {{ formatDateTime(cell) }}
                         </td>
                         <td class="btn-td">
                             <button @click="downloadFile(row)">
                                 <span>Download</span>
                             </button>
+                        </td>
+                        <td :key="row.length - 1">
+                            {{ formatDateTime(row[row.length - 1]) }}
+                        </td>
+                        <td class="select-col">
+                            <div class="custom-select">
+                                <div class="selected" @click="toggleDropdown(rowIndex)">{{ row[7] }}</div>
+                                <div class="dropdown-list" v-show="dropdownOpen[rowIndex]">
+                                    <div class="dropdown-item" v-for="(rate, index) in rates" :key="index" @click="selectRate(rowIndex, rate)">
+                                        {{ rate }}
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                 </tbody>
@@ -70,39 +83,43 @@
             return {
                 backUrl: '/index',
 
+                dropdownOpen: [],
+                rates: ['未定', '受注', '失注'],
+                filteredTableData: [],
+
                 firstLabel: 'Information',
                 selectedDate1: null,
                 selectedDate2: null,
 
-                tableHeaders: ["No.", "Quotation No.", "Product Code", "Price", "User Type", "Status", "Date", "Download"],
+                tableHeaders: ["No.", "Quotation No.", "Product Code", "Price", "User Type", "Status", "Date", "Download", "受注・失注", "設定"],
                 tableData: [
-                    ["1", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), ],
-                    ["2", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), ],
-                    ["3", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), ],
-                    ["4", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), ],
-                    ["5", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), ],
-                    ["6", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), ],
-                    ["7", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), ],
-                    ["8", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), ],
-                    ["9", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), ],
-                    ["10", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), ],
-                    ["11", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), ],
-                    ["12", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), ],
-                    ["13", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), ],
-                    ["14", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), ],
-                    ["15", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), ],
-                    ["16", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), ],
-                    ["17", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), ],
-                    ["18", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), ],
-                    ["19", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), ],
-                    ["20", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), ],
-                    ["21", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), ],
-                    ["22", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), ],
-                    ["23", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), ],
-                    ["24", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), ],
-                    ["25", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), ],
-                    ["26", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), ],
-                    ["27", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), ],
+                    ["1", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), '未定'],
+                    ["2", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), '未定'],
+                    ["3", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), '未定'],
+                    ["4", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), '未定'],
+                    ["5", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), '未定'],
+                    ["6", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), '未定'],
+                    ["7", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), '未定'],
+                    ["8", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), '未定'],
+                    ["9", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), '未定'],
+                    ["10", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), '未定'],
+                    ["11", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"),'未定' ],
+                    ["12", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), '未定'],
+                    ["13", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), '未定'],
+                    ["14", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), '未定'],
+                    ["15", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), '未定'],
+                    ["16", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), '未定'],
+                    ["17", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), '未定'],
+                    ["18", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), '未定'],
+                    ["19", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), '未定'],
+                    ["20", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), '未定'],
+                    ["21", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), '未定'],
+                    ["22", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), '未定'],
+                    ["23", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), '未定'],
+                    ["24", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), '未定'],
+                    ["25", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), '未定'],
+                    ["26", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), '未定'],
+                    ["27", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), '未定'],
                 ]
             };
         },
@@ -113,6 +130,10 @@
         },
 
         mounted () {
+            this.dropdownOpen = Array(this.tableData.length).fill(false);
+            this.filteredTableData = this.tableData;
+            document.addEventListener('click', this.handleClickOutside);
+
             const today = new Date();
             // 计算三天前的日期
             const sevenDaysAgo = new Date();
@@ -156,7 +177,27 @@
             
         },
 
+        beforeUnmount(){
+            document.removeEventListener('click', this.handleClickOutside);
+        },
+
         methods: {
+            handleClickOutside(event){
+                const customSelects = document.querySelectorAll('.custom-select');
+                customSelects.forEach((customSelect, index) => {
+                    // 如果点击的位置不在 customSelect 元素内，则关闭对应的下拉菜单
+                    if (!customSelect.contains(event.target)) {
+                        this.dropdownOpen[index] = false;
+                    }
+                });
+            },
+            selectRate(rowIndex, rate) {
+                this.tableData[rowIndex][7] = rate;       
+                this.dropdownOpen[rowIndex] = false;
+            },
+            toggleDropdown(rowIndex) {
+                this.dropdownOpen = this.dropdownOpen.map((open, index) => index === rowIndex ? !open : false);
+            },
             // 日期时间格式化函数
             formatDateTime(date) {
                 if (date instanceof Date && !isNaN(date)) {
@@ -364,7 +405,7 @@
                     opacity: 1;
                     position: sticky;
                     top: 0;
-                    //z-index: 1; /* 使表头在滚动时保持在顶部 */
+                    z-index: 1; /* 使表头在滚动时保持在顶部 */
                 }
 
                 tbody {
@@ -372,39 +413,111 @@
                         height: 50px;
                         border: 2px solid #F2F2F2 ;
                         
+
                         .btn-td{
-                            width: 90px;
-                            padding-right: 15px;
-                            button {
-                                margin-left: 20px;
-                                background-color:  #00AAEE;
-                                width: 100px;
-                                height: 30px;
-                                border: none;
-                                border-radius: 3px;
-                                color: white;
-                                font-size: 14px;
-                                cursor: pointer;
+                                width: 90px;
+                                padding-right: 15px;
+                                button {
+                                    margin-left: 20px;
+                                    background-color:  #00AAEE;
+                                    width: 100px;
+                                    height: 30px;
+                                    border: none;
+                                    border-radius: 3px;
+                                    color: white;
+                                    font-size: 14px;
+                                    cursor: pointer;
 
-                                span {
-                                    position: relative; 
-                                    top: 0;
-                                    left: 0;
-                                    transition: top 0.2s ease, left 0.2s ease;
-                                }
+                                    span {
+                                        //position: relative;   //解决button在表头背景下显示问题
+                                        top: 0;
+                                        left: 0;
+                                        transition: top 0.2s ease, left 0.2s ease;
+                                    }
 
-                                &:hover{
-                                    background-color: #0082B3;
-                                }
+                                    &:hover{
+                                        background-color: #0082B3;
+                                    }
 
-                                &:hover span {
-                                    top: 2px; 
-                                    left: 2px; 
+                                    &:hover span {
+                                        top: 2px; 
+                                        left: 2px; 
+                                    }
                                 }
+                        }
+                            
+                        .select-col{
+                            .custom-select {
+                                    position: relative;
+                                    display: inline-block;
+                                    width: 100px;
+                                    height: 30px;
+                                    border-radius: 3px;
+                                    background-color: #E7E6E6;
+                                    cursor: pointer;
+                                    margin-top: 1px;
+                                    border: none;
+                                    .selected {
+                                        display: flex;
+                                        justify-content: space-between;
+                                        align-items: center;
+                                        height: 100%;
+                                        padding: 0 20px 0 20px;
+                                        font-size: 16px;
+                                        color: white;
+                                        background-color:#00AAEE;
+                                        border-radius: 3px;
+                                        &:hover{
+                                            background-color: #0082B3;
+                                        }
+                                    }
+
+                                    .selected::after {
+                                    content: '';
+                                        display: inline-block;
+                                        margin-top: 1px;
+                                        width: 0;
+                                        height: 0;
+                                        border-left: 7px solid transparent;
+                                        border-right: 7px solid transparent;
+                                        border-top: 7px solid white;
+                                        border-radius: 3px;
+                                    }
+                                    .dropdown-list {
+                                        position: absolute;
+                                        top: 100%;
+                                        left: 0;
+                                        z-index: 1;
+                                        width: 100%;
+                                        max-height: 200px;
+                                        overflow-y: auto;
+                                        background-color: #00AAEE;
+                                        border-radius: 3px;
+                                        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                                        z-index: 9999;
+
+                                        .dropdown-item {
+                                            height: 40px;
+                                            padding: 0 20px;
+                                            display: flex;
+                                            align-items: center;
+                                            font-size: 16px;
+                                            color: white;
+                                            cursor: pointer;
+                                            justify-content: center;
+                                            border: none;
+                                        }
+
+                                        .dropdown-item:hover {
+                                            background-color: #0082B3;
+                                        }
+                                    }
+                            }
+
+                            .custom-select.show .dropdown-list {
+                                display: block;
                             }
                         }
-
-
                      }
             }
         }

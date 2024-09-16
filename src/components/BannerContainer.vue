@@ -143,6 +143,7 @@
             display: inline-block;
             //border: 1px solid green;
             width: 350px;
+            z-index: 5;
     
             .dropdown-content {
               position: absolute;

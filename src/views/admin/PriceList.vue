@@ -287,26 +287,32 @@ export default {
             overflow-y: auto; /* 启用垂直滚动条 */
             border: 1px solid #ddd;
 
+            //will-change: scroll-position; /* 提示浏览器优化滚动性能 */
+            //backface-visibility: hidden; /* 避免元素闪烁或位移 */
+
             table{
                     width: 100%;
                     border-collapse: collapse;
 
                     thead {
-                        height: 50px;
                         background-color: #F2F2F2;
                         //background-color: #03e995;
                         opacity: 1;
                         position: sticky;
-                        top: 0;
+                        top: 0px;
                         z-index: 1; /* 使表头在滚动时保持在顶部 */
-                        th {
-                            border: 1px solid white;
-                        }
-                        
-                        .first {
-                            width: 50px; /* 调整宽度，根据需要设置具体的值 */
-                            text-align: center; /* 可选：将内容居中 */
-                            padding: 0 15px;
+                        height: 50px;
+
+                        tr {                        
+                            th {
+                                //border: 1px solid white;
+                            }
+                            
+                            .first {
+                                width: 50px; /* 调整宽度，根据需要设置具体的值 */
+                                text-align: center; /* 可选：将内容居中 */
+                                padding: 0 15px;
+                            }
                         }
                     }
 
