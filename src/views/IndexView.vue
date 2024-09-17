@@ -2,7 +2,7 @@
   <div class="index">
     <BannerContainer :firstLabel="this.firstLabel" :ifShowBtn="ifShowBtn" :ifShowLogout="ifShowLogout" :welcomeText="welcomeText" />
     <div class="content-container">
-      <div class="news" v-for="(row, index) in items.slice(0,1)" :key="index">
+      <div class="news" v-for="(row, index) in items.slice(0,1)" :key="index" @click="clickNews">
         <div class="news-title">★Update:  【{{ row.title }}】</div>
         <div class="news-content">   {{ row.content }}</div>  
         <div class="news-date">--  date: {{ row.date }}</div>  
@@ -57,6 +57,9 @@
     },
 
     methods: {
+      clickNews(){
+        this.$router.push('/news-page');
+      },
       toOnline(){
         this.$router.push('/selection');
       },
@@ -82,21 +85,33 @@
     .content-container {
       padding: 40px;
       .news {
+        padding: 10px 0;
         color: #7C7C7C;
         display: flex;
         justify-content:center;
         align-items: center;
         margin-bottom: 20px;
-        height: 50px;
+        margin-left: 17%;
+        margin-right: 17%;
+        border-radius: 7px;
+        //height: 50px;
+        border: 1px solid #00AAEE;
+        cursor: pointer;
+        &:hover {
+          background: #eef4f8;
+        }
         .news-title{
+          text-align: start;
           font-size: 20px;
           font-weight: bold;
         }
         .news-content{
+          text-align: start;
           margin-left: 40px;
           font-size: 20px;
         }
         .news-date{
+          text-align: start;
           margin-left: 40px;
           font-size: 19px;
         }
@@ -105,7 +120,7 @@
         //border: 1px solid green;
         display: flex;
         flex-direction: row;
-        height: 210px;
+        height: 205px;
         align-items: center;
         justify-content: center;
         .online{

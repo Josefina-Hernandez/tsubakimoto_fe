@@ -44,7 +44,8 @@
                                 <span>Download</span>
                             </button>
                         </td>
-                        <td :key="row.length - 1">
+                        <td :key="row.length - 1" 
+                        :style='{color: getColor(row[row.length - 1]), fontWeight: "bold"}'>
                             {{ formatDateTime(row[row.length - 1]) }}
                         </td>
                         <td class="select-col">
@@ -77,6 +78,7 @@
 
     import BannerContainer from '@/components/BannerContainer.vue'
     import ResultFooterBtn from "@/components/ResultFooterBtn.vue";
+
     export default {
         name: 'QuotationResult',
         data() {
@@ -84,42 +86,42 @@
                 backUrl: '/index',
 
                 dropdownOpen: [],
-                rates: ['未定', '受注', '失注'],
+                rates: ['Undetermined', 'Order Received', 'Order Lost'],
                 filteredTableData: [],
 
                 firstLabel: 'Information',
                 selectedDate1: null,
                 selectedDate2: null,
 
-                tableHeaders: ["No.", "Quotation No.", "Product Code", "Price", "User Type", "Status", "Date", "Download", "受注・失注", "設定"],
+                tableHeaders: ["No.", "Quotation No.", "Product Code", "Price", "User Type", "Status", "Date", "Download", "Order Status", "Order Setting"],
                 tableData: [
-                    ["1", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), '未定'],
-                    ["2", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), '未定'],
-                    ["3", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), '未定'],
-                    ["4", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), '未定'],
-                    ["5", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), '未定'],
-                    ["6", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), '未定'],
-                    ["7", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), '未定'],
-                    ["8", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), '未定'],
-                    ["9", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), '未定'],
-                    ["10", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), '未定'],
-                    ["11", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"),'未定' ],
-                    ["12", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), '未定'],
-                    ["13", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), '未定'],
-                    ["14", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), '未定'],
-                    ["15", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), '未定'],
-                    ["16", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), '未定'],
-                    ["17", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), '未定'],
-                    ["18", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), '未定'],
-                    ["19", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), '未定'],
-                    ["20", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), '未定'],
-                    ["21", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), '未定'],
-                    ["22", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), '未定'],
-                    ["23", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), '未定'],
-                    ["24", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), '未定'],
-                    ["25", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), '未定'],
-                    ["26", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), '未定'],
-                    ["27", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), '未定'],
+                    ["1", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), 'Undetermined'],
+                    ["2", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), 'Undetermined'],
+                    ["3", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), 'Undetermined'],
+                    ["4", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), 'Undetermined'],
+                    ["5", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), 'Undetermined'],
+                    ["6", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), 'Undetermined'],
+                    ["7", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), 'Undetermined'],
+                    ["8", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), 'Undetermined'],
+                    ["9", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), 'Undetermined'],
+                    ["10", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), 'Undetermined'],
+                    ["11", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"),'Undetermined' ],
+                    ["12", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), 'Undetermined'],
+                    ["13", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), 'Undetermined'],
+                    ["14", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), 'Undetermined'],
+                    ["15", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), 'Undetermined'],
+                    ["16", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), 'Undetermined'],
+                    ["17", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), 'Undetermined'],
+                    ["18", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), 'Undetermined'],
+                    ["19", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), 'Undetermined'],
+                    ["20", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), 'Undetermined'],
+                    ["21", "Tsubasa20240903", "RF2050G", 52000, "TKT", "Complete", new Date("2024-09-03T14:30:00"), 'Undetermined'],
+                    ["22", "Tsubasa20240904", "RF2050G-BLA2", 42000, "HRD", "Complete", new Date("2024-09-04T14:30:00"), 'Undetermined'],
+                    ["23", "Tsubasa20240905", "RF2050S", 92000, "PLANET", "In-complete", new Date("2024-09-05T14:30:00"), 'Undetermined'],
+                    ["24", "Tsubasa20240906", "RF2050S-BLA2", 80000, "NICHIDEN", "In-complete", new Date("2024-09-06T14:30:00"), 'Undetermined'],
+                    ["25", "Tsubasa20240907", "RF2050B", 54000, "KTE", "Complete", new Date("2024-09-07T14:30:00"), 'Undetermined'],
+                    ["26", "Tsubasa20240908", "RF2050B-BLA2", 75000, "HRD", "Complete", new Date("2024-09-08T14:30:00"), 'Undetermined'],
+                    ["27", "Tsubasa20240909", "RF2050R", 61000, "KTE", "Complete", new Date("2024-09-09T14:30:00"), 'Undetermined'],
                 ]
             };
         },
@@ -182,6 +184,14 @@
         },
 
         methods: {
+            getColor(value) {
+                if (value === "Order Received") {
+                    return '#05A545';
+                } else if (value === "Order Lost") {
+                    return 'red';
+                }
+                return '#2c3e50'; // 默认颜色
+            },
             handleClickOutside(event){
                 const customSelects = document.querySelectorAll('.custom-select');
                 customSelects.forEach((customSelect, index) => {
@@ -450,7 +460,7 @@
                             .custom-select {
                                     position: relative;
                                     display: inline-block;
-                                    width: 100px;
+                                    width: 170px;
                                     height: 30px;
                                     border-radius: 3px;
                                     background-color: #E7E6E6;
