@@ -1,7 +1,7 @@
 <template>
     <div class="index">
       
-      <BannerContainer :firstLabel="firstLabel" :ifShowBtn="true" />
+      <LogoBanner :title="title" />
       
       <div class="main-contents">
         <div class="nav">
@@ -17,6 +17,8 @@
                 </button>-->
             </div>
             <div class="nav-right">
+                <div class="text-right">Cust. Ref.</div>
+                <input type="text" id="cust-input">
                 <div class="text-right">Quotation No.</div>
                 <input type="text" id="number-input">
                 <button class="search">
@@ -58,6 +60,11 @@
                                 </div>
                             </div>
                         </td>
+                        <td class="revision-col">
+                            <button @click="toEditQuotationPage(row)">
+                                <span>Edit</span>
+                            </button>
+                        </td>
                     </tr>
                 </tbody>
 
@@ -76,13 +83,16 @@
     import flatpickr from "flatpickr";
     import "flatpickr/dist/flatpickr.min.css";
 
-    import BannerContainer from '@/components/BannerContainer.vue'
+    import BannerContainer from '@/components/LogoBanner.vue';
     import ResultFooterBtn from "@/components/ResultFooterBtn.vue";
+import LogoBanner from "@/components/LogoBanner.vue";
 
     export default {
         name: 'QuotationResult',
         data() {
             return {
+                title: 'Quotation',
+
                 backUrl: '/index',
 
                 dropdownOpen: [],
@@ -93,7 +103,7 @@
                 selectedDate1: null,
                 selectedDate2: null,
 
-                tableHeaders: ["No.", "Quotation No.", "Product Code", "Price", "User Type", "Status", "Date", "Download", "Order Status", "Order Setting"],
+                tableHeaders: ["No.", "Quotation No.", "Product Code", "Price", "User Type", "Status", "Date", "Download", "Order Status", "Order Setting", "Revision"],
                 tableData: [
                     ["1", "Tsubasa20240901", "RF2050R", 62000, "KTE", "Complete", new Date("2024-09-01T14:30:00"), 'Undetermined'],
                     ["2", "Tsubasa20240902", "RF2050R-BLA2", 72000, "NICHIDEN", "In-complete", new Date("2024-09-02T14:30:00"), 'Undetermined'],
@@ -127,7 +137,7 @@
         },
 
         components: {
-            BannerContainer,
+            LogoBanner,
             ResultFooterBtn,
         },
 
@@ -184,6 +194,10 @@
         },
 
         methods: {
+            toEditQuotationPage(row) {
+                this.$router.push({ path: '/editquotationpage' });
+            },
+
             getColor(value) {
                 if (value === "Order Received") {
                     return '#05A545';
@@ -352,8 +366,9 @@
                 align-items: center;
                 .text-right {
                     font-size: 19px;
+                    margin-left: 15px;
                 }
-                #number-input {
+                #cust-input, #number-input {
                     font-size: 19px;
                     padding: 0 10px;
                     margin-left: 15px;
@@ -400,7 +415,7 @@
             margin-left: 5%;
             margin-right: 5%;
             width: 90%;
-            height: 500px; /* 固定表格高度 */
+            height: 440px; /* 固定表格高度 */
             overflow-y: auto; /* 启用垂直滚动条 */
             border: 1px solid #ddd;
 
@@ -526,6 +541,39 @@
 
                             .custom-select.show .dropdown-list {
                                 display: block;
+                            }
+                        }
+
+                        .revision-col{
+                            width: 90px;
+                            padding-right: 15px;
+                            button {
+                                margin-left: 10px;
+                                margin-right: 5px;
+                                background-color:  #00AAEE;
+                                width: 70px;
+                                height: 30px;
+                                border: none;
+                                border-radius: 3px;
+                                color: white;
+                                font-size: 14px;
+                                cursor: pointer;
+
+                                span {
+                                    //position: relative;   //解决button在表头背景下显示问题
+                                    top: 0;
+                                    left: 0;
+                                    transition: top 0.2s ease, left 0.2s ease;
+                                }
+
+                                &:hover{
+                                    background-color: #0082B3;
+                                }
+
+                                &:hover span {
+                                    top: 2px; 
+                                    left: 2px; 
+                                }
                             }
                         }
                      }

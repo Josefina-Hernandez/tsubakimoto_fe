@@ -30,17 +30,54 @@ const routes = [
 
     component: () => import('../views/Search.vue')
   },
+
+  {
+    path: '/onlinepricelist',
+    name: 'OnlinePriceList',
+
+    component: () => import('../views/OnlinePriceList.vue')
+  },
+
+  {
+    path: '/chaincutting',
+    name: 'ChainCutting',
+
+    component: () => import('../views/chainCutting.vue')
+  },
+
+  {
+    path: '/presubmitquotation',
+    name: 'PreSubmitQuotation',
+
+    component: () => import('../views/preSubmitQuotation.vue')
+  },
+
   {
     path: '/qtysearch',
     name: 'qtysearch',
 
     component: () => import('../views/qtySearch.vue')
   },
+
   {
     path: '/quotationpage',
     name: 'quotationpage',
 
     component: () => import('../views/QuotationPage.vue')
+  },
+
+  {
+    path: '/editquotationpage',
+    name: 'EditeQuotationPage',
+
+    component: () => import('../views/EditQuotationPage.vue')
+  },
+
+  {
+    path: '/editproducts',
+    name: 'EditeProducts',
+
+    component: () => import('../views/EditProducts.vue')
   },
 
   {

@@ -1009,7 +1009,7 @@ export default {
 
   mounted() {
     window.addEventListener('resize', this.handleResize);
-    console.log(this.loginMode);
+
     if (this.loginMode === "Tsubakimoto") {
       this.ifShowDistributors = true;
     } else {

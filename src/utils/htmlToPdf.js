@@ -9,7 +9,7 @@ const htmlToPdf = {
     getPdf(title) {
         html2Canvas(document.querySelector('#quote'), {
             allowTaint: true,
-        }).then(canvas=>{
+        }).then(canvas => {
             //内容的宽度
             let contentWidth = canvas.width;
             //内容高度

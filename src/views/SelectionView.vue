@@ -3,11 +3,11 @@
         <LogoBanner :title="title" />
 
         <div class="buttons">
-            <router-link to="/search">
-                <button class="b-child"><span>Chain & PUTC</span></button>
+            <router-link to="/onlinepricelist">
+                <button class="b-child"><span>Online Price List</span></button>
             </router-link>
 
-            <router-link to="/qtysearch">
+            <router-link to="/chaincutting">
                 <button class="b-child"><span>Chain Cutting & Assembled at TTCL warehouse</span></button>
             </router-link>
         </div>
@@ -44,7 +44,7 @@ export default {
         width: 100%;
         margin: 0 auto;
         .buttons{
-            margin-top: 140px;
+            margin-top: 170px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -55,9 +55,9 @@ export default {
                 line-height: 1.5;
                 background-color: #00AAEE;
                 color: white;
-                font-size: 20px;
-                width: 200px;
-                height: 150px;
+                font-size: 18px;
+                width: 320px;
+                height: 90px;
                 border: none;
                 margin: 0 100px;
                 border-radius: 5px;

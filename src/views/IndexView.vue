@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <BannerContainer :firstLabel="this.firstLabel" :ifShowBtn="ifShowBtn" :ifShowLogout="ifShowLogout" :welcomeText="welcomeText" />
+    <BannerContainer :firstLabel="this.firstLabel" :ifShowBtn="ifShowBtn" :ifShowLogout="ifShowLogout" :welcomeText="welcomeText.value" />
     <div class="content-container">
       <div class="news" v-for="(row, index) in items.slice(0,1)" :key="index" @click="clickNews">
         <div class="news-title">★Update:  【{{ row.title }}】</div>
@@ -9,7 +9,7 @@
       </div>
       <div class="buttons">
         <button class="online" @click="toOnline">
-          <span>Quotation System</span>
+          <span>Online Price List System</span>
         </button>
         <button class="result" @click="toResult">
           <span>Quotation Result</span>
@@ -30,6 +30,7 @@
       const loginMode = computed(() => store.getters.getLoginMode);
 
       const welcomeText = computed(() => `Welcome! ${loginMode.value}`);
+      console.log(loginMode);
 
       return {
         loginMode,
@@ -43,11 +44,11 @@
         ifShowBtn: false,
         ifShowLogout: true,
         items: [
-                    {value: '1', title: 'New update of Quotation System 1', content: 'We have updated the system. 1', date: '2024-04-05',},
-                    {value: '2', title: 'New update of Quotation System 2', content: 'We have updated the system. 2', date: '2024-04-05',},
-                    {value: '3', title: 'New update of Quotation System 3', content: 'We have updated the system. 3', date: '2024-04-05',},
-                    {value: '4', title: 'New update of Quotation System 4', content: 'We have updated the system. 4', date: '2024-04-05',},
-                    {value: '5', title: 'New update of Quotation System 5', content: 'We have updated the system. 5', date: '2024-04-05',},
+                  {value: '1', title: 'New update of Quotation System 1', content: 'We have updated the system. 1', date: '2024-04-05',},
+                  {value: '2', title: 'New update of Quotation System 2', content: 'We have updated the system. 2', date: '2024-04-05',},
+                  {value: '3', title: 'New update of Quotation System 3', content: 'We have updated the system. 3', date: '2024-04-05',},
+                  {value: '4', title: 'New update of Quotation System 4', content: 'We have updated the system. 4', date: '2024-04-05',},
+                  {value: '5', title: 'New update of Quotation System 5', content: 'We have updated the system. 5', date: '2024-04-05',},
                 ],
       };
     },
@@ -70,7 +71,7 @@
     },
 
     mounted() {
-      console.log(this.loginMode);
+      //console.log(this.loginMode);
     },
 
   };
@@ -124,14 +125,14 @@
         align-items: center;
         justify-content: center;
         .online{
-          width: 200px;
-          height: 150px;
+          width: 320px;
+          height: 90px;
           padding: 10px 20px;
           border-radius: 5px;
           border: none;
           background-color: #00AAEE;
           color: white;
-          font-size: 20px;
+          font-size: 18px;
           //margin-top: 7vw;
           cursor: pointer;
 
@@ -154,14 +155,14 @@
           }
         }
         .result{
-          width: 200px;
-          height: 150px;
+          width: 320px;
+          height: 90px;
           padding: 10px 20px;
           border-radius: 5px;
           border: none;
           background-color: #00AAEE;
           color: white;
-          font-size: 20px;
+          font-size: 18px;
           //margin-top: 7vw;
           cursor: pointer;
 

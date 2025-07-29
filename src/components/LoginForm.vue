@@ -15,6 +15,7 @@
                   {{ option.label }}
                 </div>
               </div>
+              <label for="">(Select for frontend test only!)</label>
             </div>
 
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
@@ -80,7 +81,7 @@
                     content: '';
                     position: absolute;
                     right: -15px; /* Adjust the distance from the right */
-                    top: 60%;
+                    top: 40%;
                     transform: translateY(-50%);
                     border-width: 7px;
                     border-style: solid;
@@ -164,14 +165,63 @@ export default {
                 options: [
                     {value: 'default', label: '-Please select the access type-'},
                     {value: 'tsubakimoto', label: 'Tsubakimoto'},
-                    {value: 'kte', label: 'KTE'},
-                    {value: 'agency', label: 'Agency'},
+                    {value: 'kte_bangkok', label: 'KTE Bangkok'},
+                    {value: 'kte_pattaya', label: 'KTE Pattaya'},
+                    {value: 'kte_corporation', label: 'KTE Corporation'},
+                    {value: 'nichiden', label: 'NICHIDEN'},
+                    {value: 'hrd', label: 'HRD'},
+                    {value: 'planet', label: 'PLANET'},
                 ]
             }
         },
 
         computed: {
             ...mapState(['loginMode']),
+            payload () {
+                let companyName = '';
+                let companyAddress = '';
+                let paymentTerms = '';
+
+                if (this.selectedValue === 'tsubakimoto') {
+                    companyName = 'Tsubakimoto (Thailand) Co., Ltd.';
+                    companyAddress = "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670";
+                    paymentTerms = '30 days Aft Mth End Close';
+                } else if (this.selectedValue === 'kte_bangkok') {
+                    companyName = 'TSUBAKO KTE CO., LTD. (Bangkok)';
+                    companyAddress = "952 RAMALAND BLDG., 17TH FLOOR, RAMA\nIV ROAD SURIYAWONG, BANGRAK\nBANGKOK 10500\nTHAILAND";
+                    paymentTerms = '30 days Aft Mth End Close';
+                } else if (this.selectedValue === 'kte_pattaya') {
+                    companyName = 'TSUBACO KTE CO., LTD. (Pattaya)';
+                    companyAddress = "4/222 HARBOR MALL OFFICE, ROOM 5B-01\nMOO 10 SUKHUMVIT RD.TUNGSUKLA,\nSRIRACHA,\nCHONBURI 20230\nTHAILAND";
+                    paymentTerms = '30 days Aft Mth End Close';
+                } else if (this.selectedValue === 'kte_corporation') {
+                    companyName = 'KTE CORPORATION CO., LTD.';
+                    companyAddress = "6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET,\nBANGKOK 10250\nTHAILAND";
+                    paymentTerms = '60 days Aft Mth End Close';
+                } else if (this.selectedValue === 'nichiden') {
+                    companyName = 'NICHIDEN TRADING (THAILAND) CO., LTD.';
+                    companyAddress = "159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103\nSUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA,\nWATTANA,\nBANGKOK 10110\nTHAILAND";
+                    paymentTerms = '30 days Aft Mth End Close';
+                } else if (this.selectedValue === 'hrd') {
+                    companyName = 'HRD (THAILAND) CO., LTD.';
+                    companyAddress = "BANGNA TOWERS-A, 2ND. FL., 2/3 MOO 14\nBANGNA-TRAD RD., K.M.6.5, BANGKAEW,\nBANGPLEE\nSAMUTPRAKARN 10540\nTHAILAND";
+                    paymentTerms = '30 days Aft Mth End Close';
+                } else if (this.selectedValue === 'planet') {
+                    companyName = 'PLANET T AND S CO., LTD.';
+                    companyAddress = "28 KRUNGTHEP KRITHA 20 YAEK 3,\nTHAPCHANG, SAPANSUNG,\nBANGKOK 10250\nTHAILAND";
+                    paymentTerms = '30 days Aft Mth End Close';
+                } else {
+                    companyName = '';
+                    companyAddress = '';
+                    paymentTerms = '';
+                }
+                return {
+                    mode: this.selectedLabel,
+                    companyName,
+                    companyAddress,
+                    paymentTerms,
+                };
+            }
         },
 
         methods: {
@@ -199,7 +249,7 @@ export default {
                     if(this.selectedValue === "default") {
                         this.typeMessage = 'Please select the access type first!';
                     }else{
-                        this.updateLoginMode(this.selectedLabel);
+                        this.updateLoginMode(this.payload);
                         this.$router.push('/index');
                     }       
                 }

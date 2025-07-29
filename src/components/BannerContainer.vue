@@ -37,7 +37,8 @@
       const store = useStore();
       const loginMode = computed(() => store.getters.getLoginMode);
 
-      const welcomeText = computed(() => `Welcome! ${loginMode.value}`);
+      const welcomeText = computed(() => 
+      loginMode.value === 'Tsubakimoto' ? 'Welcome! TTCL' : `Welcome! ${loginMode.value}`);
 
       return {
         loginMode,
