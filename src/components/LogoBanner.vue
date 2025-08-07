@@ -38,10 +38,12 @@ export default {
 
   .logo-container {
     text-align: left;
-    padding: 30px;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    
     img{
-        width: 300px;
-        height: 70px;
+        width: 250px;
         margin-left: 50px;
     }
     .welcome {
@@ -49,7 +51,7 @@ export default {
       font-weight: bold;
       margin-right: 5vw;
       margin-left: auto;
-      margin-top: 20px;
+      margin-top: 0px;
       float: right;
       color: #7C7C7C;
     }
@@ -57,8 +59,8 @@ export default {
 
   
   .banner-container {
-    margin-top: 5px;
-    height: 70px;
+    //margin-top: 5px;
+    height: 50px;
     background-color: #53C5F4;
     display: flex;
     justify-content: center;

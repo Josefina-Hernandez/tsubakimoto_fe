@@ -81,6 +81,13 @@ const routes = [
   },
 
   {
+    path: '/editproducts-result',
+    name: 'EditeProductsForResult',
+
+    component: () => import('../views/EditProductsForResult.vue')
+  },
+
+  {
     path: '/exchange',
     name: 'monthlyexchange',
 

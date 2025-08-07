@@ -1,24 +1,30 @@
 <template>
     <div class="footer">
-        <router-link :to="toWhere">
-            <button class="back"><span>Back</span></button>
-        </router-link>
-        <div class="right">
-            <button class="download" @click="handleClick"><span>Download All</span></button> 
-        </div>            
+        <button class="back" @click="backFunc(toWhere)"><span>Back</span></button>
+        <button class="add" @click="backFunc(toWhere2)"><span>Add Parts</span></button>
+        <div class="spacer"></div>
+        <button class="quotation" v-bind:disabled="isButtonDisabled" v-show="ifShow2" @click="handleClick"><span>Get Quotation</span></button>      
     </div>
 </template>
 
 <script>
 export default {
-  name: 'ResultFooterBtn',
+  name: 'FooterBtn3',
   props: {
+    ifShow1: Boolean,
+    ifShow2: Boolean,
     toWhere: String,
+    toWhere2: String,
     clickFunction: Function,
+    isButtonDisabled: Boolean,
   },
   methods: {
     handleClick(){
         this.clickFunction();
+    },
+
+    backFunc(backUrl) {
+        this.$router.push(backUrl);
     },
   },
 }
@@ -26,22 +32,33 @@ export default {
 
 <style scoped lang="less">
     .footer{
-            //bottom: 30px;
-            //bottom: 10px;
             position: absolute;
             width: 100%;
             display: flex;
-            justify-content: space-between;
+            justify-content: space-evenly;
             align-items: center;
             flex-direction: row;
+            //margin-top: 50px;
             bottom: 0px;
             
-            .back, .download {
+            .add {
+                margin-left: 10px;
+                flex: 1;
+                max-width: 180px;
+            }
+
+            .back {
+               flex: 1;
+               max-width: 180px;
+            }
+
+            
+            .back, .add, .quotation{
                 background-color:  #00AAEE;
                 width: 180px;
                 height: 35px;
                 border: none;
-                margin: 0 40px 50px;
+                margin: 0 40px 30px;
                 border-radius: 5px;
                 color: white;
                 font-size: 18px;
@@ -66,40 +83,24 @@ export default {
                     left: 2px; 
                 }
             }
-            .right{
-                display: flex;
-                .download{
-                    width: 200px;
-
-                    &:disabled{
+            .spacer {
+                flex: 4;
+            }
+            .quotation{
+                max-width: 200px;
+                flex: 4;
+                &:disabled{
+                    pointer-events: none;
+                    background-color: #BFBFBF;
+                    user-select: none;
+                    
+                    &:hover{
                         pointer-events: none;
                         background-color: #BFBFBF;
-                        user-select: none;
-                        
-                        &:hover{
-                            pointer-events: none;
-                            background-color: #BFBFBF;
-                            opacity: 0.5
-                        }
-                    }
-                }
-                .next{
-                    width: 200px;
-
-                    &:disabled{
-                        pointer-events: none;
-                        background-color: #BFBFBF;
-                        user-select: none;
-                        
-                        &:hover{
-                            pointer-events: none;
-                            background-color: #BFBFBF;
-                            opacity: 0.5
-                        }
+                        opacity: 0.5
                     }
                 }
             }
-
 
         
         }

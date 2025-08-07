@@ -3,13 +3,8 @@
         <LogoBanner :title="title" />
 
         <div class="buttons">
-            <router-link to="/onlinepricelist">
-                <button class="b-child"><span>Online Price List</span></button>
-            </router-link>
-
-            <router-link to="/chaincutting">
-                <button class="b-child"><span>Chain Cutting & Assembled at TTCL warehouse</span></button>
-            </router-link>
+            <button class="b-child" @click="toOnlinePriceList"><span>Online Price List</span></button>
+            <button class="b-child" @click="toChainCutting"><span>Chain Cutting & Assembled at TTCL warehouse</span></button>
         </div>
         <FooterBtn :ifShow2="ifShow2" :toWhere="nextPage" />
     </div>
@@ -33,6 +28,16 @@ export default {
   components: {
     LogoBanner,
     FooterBtn,
+  },
+
+  methods: {
+    toOnlinePriceList() {
+        this.$router.push('/onlinepricelist');
+    },
+
+    toChainCutting() {
+        this.$router.push('/chaincutting');
+    },
   }
 }
 </script>
@@ -44,7 +49,7 @@ export default {
         width: 100%;
         margin: 0 auto;
         .buttons{
-            margin-top: 170px;
+            margin-top: 167px;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -62,9 +67,12 @@ export default {
                 margin: 0 100px;
                 border-radius: 5px;
                 cursor: pointer;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+                transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
                 &:hover{
                             background-color: #0082B3; /* 鼠标悬停时改变背景色 */
+                            transform: translate(3px, 3px);
                         }
 
                 span {

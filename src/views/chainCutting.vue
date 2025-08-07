@@ -236,7 +236,7 @@
       </div>
 
     
-      <FooterBtn2 class="footer" :style="footerStyle" :ifShow2="ifShow2" :toWhere="previousPage" :clickFunction="handleClick" :isButtonDisabled="isButtonDisabled" />
+      <FooterBtn2 class="footer" :ifShow1="isShow1" :ifShow2="ifShow2" :toWhere="previousPage" :switchTo="switchTo" :switchLabelText="switchLabelText" :clickFunction="handleClick" :isButtonDisabled="isButtonDisabled" />
   </div>
 </template>
 
@@ -248,42 +248,45 @@
   .mainNav {
     display: flex;
     align-items: center;
-    margin-top: 30px;
-    padding-left: 100px;
-    padding-right: 100px;
+    margin-top: 15px;
+    padding-left: 6vw;
+    padding-right: 6vw;
     justify-content: space-between;
     .dropdown {
       margin-left: 0;
       margin-right: 0;
-      width: 350px;
-    
+      width: 22vw;
 
       .title{
         background-color: #53C5F4;
-        height: 40px;
+        height: 30px;
         text-align: center;
-        line-height: 40px;
+        line-height: 30px;
         color: white;
-        font-size: 20px;
+        font-size: 18px;
         border-radius: 5px;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 添加轮廓阴影 */
       }
       
       .custom-select {
             position: relative;
             display: inline-block;
-            width: 350px;
-            height: 40px;
+            width: 22vw;
+            height: 35px;
             border-radius: 5px;
-            background-color: #E7E6E6;
+            //background-color: #E7E6E6;
+            background-color: #E9EBF5;
             cursor: pointer;
             margin-top: 1px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 添加轮廓阴影 */
+
             .selected {
                 display: flex;
                 justify-content: space-between;
                 align-items: center;
                 height: 100%;
                 padding: 0 20px 0 20px;
-                font-size: 17px;
+                font-size: 15px;
                 color: #333;
                 
             }
@@ -294,9 +297,9 @@
                 margin-top: 1px;
                 width: 0;
                 height: 0;
-                border-left: 10px solid transparent;
-                border-right: 10px solid transparent;
-                border-top: 10px solid #333;
+                border-left: 7px solid transparent;
+                border-right: 7px solid transparent;
+                border-top: 7px solid #333;
             }
             .dropdown-list {
                 position: absolute;
@@ -304,17 +307,18 @@
                 left: 0;
                 z-index: 1;
                 width: 100%;
-                max-height: 200px;
+                max-height: 300px;
                 overflow-y: auto;
-                background-color: #E7E6E6;
+                //background-color: #E7E6E6;
+                background-color: #E9EBF5;
                 border-radius: 5px;
-                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
                 .dropdown-item {
                     height: 40px;
                     padding: 0 20px;
                     display: flex;
                     align-items: center;
-                    font-size: 17px;
+                    font-size: 15px;
                     color: #333;
                     cursor: pointer;
                     justify-content: center;
@@ -371,46 +375,61 @@
           }
           
           .divider {
-              width: 220px;
+              width: 13vw;
           }
 
         display: flex;
         justify-content: space-between;
         align-items: center;
         span{
-          font-size: 20px;
+          font-size: 19px;
           font-weight:550;
         }
         input{
-          width: 300px;
+          width: 20vw;
           height: 50px;
           border: 1px solid #333;
+          border-radius: 4px;
           padding: 0 10px;
-          font-size: 19px;
+          font-size: 17px;
           color: #333;
           margin-left: 30px;
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 添加轮廓阴影 */
+          transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+            &:hover {
+                background-color: #f0f4f8; /* 鼠标悬停时改变背景色 */
+            }
+
+            &:focus {
+                outline: none; /* 去除默认的聚焦边框 */
+                box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.5); /* 聚焦时的轮廓阴影 */
+            }
         }
         button{
-          width: 100px;
+          width: 8vw;
           height: 50px;
           margin-left: 30px;
           vertical-align: bottom;
           background-color: #53C5F4;
           color: white;
-          font-size: 17px;
+
           border-radius: 5px;
           border: none;
           cursor: pointer;
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+          transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
           span{
             position: relative;
             top: 0;
             left: 0;
             transition: top 0.2s ease, left 0.2s ease;
+            font-size: 18px;
           }
 
           &:hover{
             background-color: #0E9BD8;
+            transform: translate(3px, 3px);
 
             span{
               top: 2px;
@@ -430,23 +449,26 @@
   }
 
   .table-container {
-    max-height: 380px;
-    border-collapse: collapse;
+    height: calc(68vh - 20px);
+
     overflow-y: scroll;
-    margin-top: 40px;
-    display: flex;
-    justify-content: center; 
+    margin-top: 15px;
+    // display: flex;
+    // justify-content: center; 
     margin-right: 40px;
     margin-left: 40px;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
 
     table {
       width: 100%;
-      padding-right: 0;
-      font-size: 15px;
+      //padding-right: 0;
+      font-size: 14px;
+      border-collapse: collapse;
 
       .sticky-header {
         position: sticky;
         top: 0;
+        opacity: 1;
       
         th {
           background-color: #00AAEE;
@@ -455,9 +477,15 @@
           overflow: hidden;
           word-wrap: break-word;
           text-overflow: ellipsis;
-          max-width: 100px;
+          max-width: 120px;
           min-width: 20px;
           cursor: pointer;
+          padding: 0 2px;
+          border-right: 1px solid white;
+          &:last-child {
+            border-right: none;
+          }
+
           &:hover {
             text-decoration: underline;
           }
@@ -467,12 +495,18 @@
       
       tbody {
         tr {
+          border: 2px solid white;
           td {
+            border-right: 1px solid white;
+            &:last-child {
+              border-right: none;
+            }
+
             padding: 10px;
             overflow: hidden;
             word-wrap: break-word;
             text-overflow: ellipsis;
-            max-width: 100px;
+            max-width: 160px;
             min-width: 20px;
             vertical-align: middle;
             cursor: pointer;
@@ -565,6 +599,18 @@
               min-width: 50px;
               padding: 5px;
               height: 40px;
+              border: 1px solid grey;
+              border-radius: 4px;
+              transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+              box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
+              &:hover {
+                  background-color: #f0f4f8; /* 鼠标悬停时改变背景色 */
+              }
+
+              &:focus {
+                  outline: none; /* 去除默认的聚焦边框 */
+                  box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.4); /* 聚焦时的轮廓阴影 */
+              }
             }
 
             .radios1-container{
@@ -607,6 +653,7 @@
 
           button:hover{
             background: #0082B3;
+            transform: translate(3px, 3px);
           }
           .modal-default-button1 {
             float: left;
@@ -619,6 +666,8 @@
             color: white;
             border: none;
             cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
           }
 
           .modal-default-button2 {
@@ -632,12 +681,13 @@
             color: white;
             border: none;
             cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
             &:disabled{
-                    pointer-events: none;
-                    background-color: #BFBFBF;
-                    user-select: none
-            
+              pointer-events: none;
+              background-color: #BFBFBF;
+              user-select: none
             }
 
           }
@@ -725,6 +775,7 @@
                       cursor: pointer;
                       margin-top: 1px;
                       margin-left: -10px;
+                      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
                       .selected {
                           display: flex;
                           justify-content: space-between;
@@ -732,8 +783,7 @@
                           height: 100%;
                           padding: 0 10px 0 10px;
                           font-size: 14px;
-                          color: #333;
-                          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
+                          color: #333;                         
                       }
 
                       .selected::after {
@@ -798,6 +848,16 @@
                       border: 1px solid #2b2a2a;
                       padding: 0 5px;
                       margin-left: 40px;
+                      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
+                      transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+                      &:hover {
+                          background-color: #f0f4f8; /* 鼠标悬停时改变背景色 */
+                      }
+
+                      &:focus {
+                          outline: none; /* 去除默认的聚焦边框 */
+                          box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.4); /* 聚焦时的轮廓阴影 */
+                      }
                   }
                   .linknum-unit{
                       font-size: 14px;
@@ -835,6 +895,7 @@
                       cursor: pointer;
                       margin-top: 1px;
                       margin-left: 10px;
+                      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
                       .selected {
                           display: flex;
                           justify-content: space-between;
@@ -842,8 +903,7 @@
                           height: 100%;
                           padding: 0 10px 0 10px;
                           font-size: 14px;
-                          color: #333;
-                          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
+                          color: #333;                         
                       }
 
                       .selected::after {
@@ -906,6 +966,7 @@
                       cursor: pointer;
                       margin-top: 1px;
                       margin-left: 10px;
+                      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
                       .selected {
                           display: flex;
                           justify-content: space-between;
@@ -913,8 +974,7 @@
                           height: 100%;
                           padding: 0 10px 0 10px;
                           font-size: 14px;
-                          color: #333;
-                          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
+                          color: #333;                      
                       }
 
                       .selected::after {
@@ -978,6 +1038,7 @@
                       cursor: pointer;
                       margin-top: 1px;
                       margin-left: 10px;
+                      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
                       .selected {
                           display: flex;
                           justify-content: space-between;
@@ -985,8 +1046,7 @@
                           height: 100%;
                           padding: 0 10px 0 10px;
                           font-size: 14px;
-                          color: #333;
-                          box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
+                          color: #333;                          
                       }
 
                       .selected::after {
@@ -1165,6 +1225,16 @@
                   border: 1px solid #2b2a2a;
                   padding: 0 5px;
                   margin-left: 10px;
+                  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
+                  transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+                  &:hover {
+                      background-color: #f0f4f8; /* 鼠标悬停时改变背景色 */
+                  }
+
+                  &:focus {
+                      outline: none; /* 去除默认的聚焦边框 */
+                      box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.4); /* 聚焦时的轮廓阴影 */
+                  }
               }
 
               .qty-unit{
@@ -1193,6 +1263,7 @@
 
           button:hover{
             background: #0082B3;
+            transform: translate(3px, 3px);
           }
           .modal2-default-button1 {
             float: left;
@@ -1205,6 +1276,8 @@
             color: white;
             border: none;
             cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
           }
 
           .modal2-default-button2 {
@@ -1220,14 +1293,14 @@
             color: white;
             border: none;
             cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
             &:disabled{
-                    pointer-events: none;
-                    background-color: #BFBFBF;
-                    user-select: none
-            
+              pointer-events: none;
+              background-color: #BFBFBF;
+              user-select: none          
             }
-            
           }
 
           
@@ -1246,14 +1319,13 @@
           //}
         }
       }
-
     }
   }
 
 
-  .footer{
-    position: absolute;
-  }
+  // .footer{
+  //   position: absolute;
+  // }
 }
 
 </style>
@@ -1277,8 +1349,11 @@ data(){
       windowHeight: window.innerHeight,
 
       title: "Cutting & Assembly at TTCL Warehouse",
+      isShow1: true,
       ifShow2: true,
       previousPage: '/selection',
+      switchTo: '/onlinepricelist',
+      switchLabelText: 'Online Price List',
       isButtonDisabled: true,
       modalButtonDisabled: true,
     
@@ -1719,12 +1794,6 @@ data(){
 computed: {
   loginMode() {
     return this.$store.getters.getLoginMode;
-  },
-
-  footerStyle() {
-    return {
-      top: this.windowHeight > 0.9 * window.screen.height ? '810px' : '750px',
-    };
   },
 
   /*formItems(){

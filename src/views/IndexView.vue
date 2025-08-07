@@ -98,6 +98,7 @@
         //height: 50px;
         border: 1px solid #00AAEE;
         cursor: pointer;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
         &:hover {
           background: #eef4f8;
         }
@@ -124,6 +125,7 @@
         height: 205px;
         align-items: center;
         justify-content: center;
+
         .online{
           width: 320px;
           height: 90px;
@@ -135,11 +137,13 @@
           font-size: 18px;
           //margin-top: 7vw;
           cursor: pointer;
-
           margin-right: 100px;
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+          transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
           &:hover{
               background-color: #0082B3; /* 鼠标悬停时改变背景色 */
+              transform: translate(3px, 3px);
           }
 
           span {
@@ -165,11 +169,13 @@
           font-size: 18px;
           //margin-top: 7vw;
           cursor: pointer;
-
           margin-left: 100px;
+          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+          transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
           &:hover{
               background-color: #0082B3; /* 鼠标悬停时改变背景色 */
+              transform: translate(3px, 3px);
           }
 
           span {

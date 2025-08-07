@@ -85,7 +85,7 @@
 
     import BannerContainer from '@/components/LogoBanner.vue';
     import ResultFooterBtn from "@/components/ResultFooterBtn.vue";
-import LogoBanner from "@/components/LogoBanner.vue";
+    import LogoBanner from "@/components/LogoBanner.vue";
 
     export default {
         name: 'QuotationResult',
@@ -250,7 +250,7 @@ import LogoBanner from "@/components/LogoBanner.vue";
 <style lang="less">
   /* 自定义 Flatpickr 样式 */
     .flatpickr-calendar {
-        background-color: #edf8f9 !important; /* 背景色 */
+        background-color: white !important; /* 背景色 */
         color: #615e5e !important; /* 文字色 */
         font-size: 17px !important;
         border: 1px solid #53C5F4;
@@ -289,75 +289,82 @@ import LogoBanner from "@/components/LogoBanner.vue";
                 justify-content: space-around;
                 align-items: center;
                 .text-left {
-                    font-size: 19px;
+                    font-size: 18px;
+                    white-space: nowrap;
                 }
                 #date-picker1 {
-                    font-size: 19px;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                    font-size: 18px;
                     padding: 0 10px;
                     margin-left: 15px;
                     height: 40px;
+                    width: 15vw;
                     border: 1px solid #d2d1d1;
                     border-radius: 5px;
                     color: #615e5e;
+                    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
                     &:hover {
                         background-color: #e5f3f5;
                     }
                 }
                 .bar {
-                    font-size: 19px;
+                    font-size: 20px;
                     margin-left: 5px;
                 }
                 #date-picker2 {
-                    font-size: 19px;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+                    font-size: 18px;
                     padding: 0 10px;
                     margin-left: 5px;
                     height: 40px;
+                    width: 15vw;
                     border: 1px solid #d2d1d1;
                     border-radius: 5px;
                     color: #615e5e;
+                    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
                     &:hover {
                         background-color: #e5f3f5;
                     }
                 }
-                .view-mode {
-                    margin-left: 20px;
-                    background-color:  #00AAEE;
-                    width: 130px;
-                    height: 35px;
-                    border: none;
-                    border-radius: 5px;
-                    color: white;
-                    font-size: 17px;
-                    cursor: pointer;
+                // .view-mode {
+                //     margin-left: 20px;
+                //     background-color:  #00AAEE;
+                //     width: 130px;
+                //     height: 35px;
+                //     border: none;
+                //     border-radius: 5px;
+                //     color: white;
+                //     font-size: 17px;
+                //     cursor: pointer;
 
-                    span {
-                        position: relative; 
-                        top: 0;
-                        left: 0;
-                        transition: top 0.2s ease, left 0.2s ease;
-                    }
+                //     span {
+                //         position: relative; 
+                //         top: 0;
+                //         left: 0;
+                //         transition: top 0.2s ease, left 0.2s ease;
+                //     }
 
-                    &:hover{
-                        background-color: #0082B3;
-                    }
+                //     &:hover{
+                //         background-color: #0082B3;
+                //     }
 
-                    &:hover span {
-                        top: 2px; 
-                        left: 2px; 
-                    }
+                //     &:hover span {
+                //         top: 2px; 
+                //         left: 2px; 
+                //     }
 
-                    &:disabled{
-                        pointer-events: none;
-                        background-color: #BFBFBF;
-                        user-select: none;
+                //     &:disabled{
+                //         pointer-events: none;
+                //         background-color: #BFBFBF;
+                //         user-select: none;
                         
-                        &:hover{
-                            pointer-events: none;
-                            background-color: #BFBFBF;
-                            opacity: 0.5
-                        }
-                    }
-                }
+                //         &:hover{
+                //             pointer-events: none;
+                //             background-color: #BFBFBF;
+                //             opacity: 0.5
+                //         }
+                //     }
+                // }
             }
 
             .nav-right {
@@ -365,20 +372,26 @@ import LogoBanner from "@/components/LogoBanner.vue";
                 justify-content: space-around;
                 align-items: center;
                 .text-right {
-                    font-size: 19px;
+                    font-size: 18px;
                     margin-left: 15px;
                 }
                 #cust-input, #number-input {
-                    font-size: 19px;
+                    font-size: 18px;
                     padding: 0 10px;
                     margin-left: 15px;
                     height: 40px;
                     border: 1px solid #d2d1d1;
                     border-radius: 5px;
                     color: #615e5e;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
+                    transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
                     &:hover{
                         cursor: pointer;
                         background-color: #e5f3f5;
+                    }
+                    &:focus {
+                        outline: none; /* 去除默认的聚焦边框 */
+                        box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.4); /* 聚焦时的轮廓阴影 */
                     }
                 }
                 .search {
@@ -391,6 +404,8 @@ import LogoBanner from "@/components/LogoBanner.vue";
                     color: white;
                     font-size: 17px;
                     cursor: pointer;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+                    transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
                     span {
                         position: relative; 
@@ -401,6 +416,7 @@ import LogoBanner from "@/components/LogoBanner.vue";
 
                     &:hover{
                         background-color: #0082B3;
+                        transform: translate(3px, 3px);
                     }
 
                     &:hover span {
@@ -415,13 +431,16 @@ import LogoBanner from "@/components/LogoBanner.vue";
             margin-left: 5%;
             margin-right: 5%;
             width: 90%;
-            height: 440px; /* 固定表格高度 */
+            //height: 440px; /* 固定表格高度 */
+            height: calc(68vh - 20px);
             overflow-y: auto; /* 启用垂直滚动条 */
             border: 1px solid #ddd;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 
             table{
                 width: 100%;
                 border-collapse: collapse;
+                font-size: 14px;;
 
                 thead {
                     height: 50px;
@@ -452,9 +471,10 @@ import LogoBanner from "@/components/LogoBanner.vue";
                                     color: white;
                                     font-size: 14px;
                                     cursor: pointer;
+                                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
 
                                     span {
-                                        //position: relative;   //解决button在表头背景下显示问题
+                                        position: relative;   //解决button在表头背景下显示问题
                                         top: 0;
                                         left: 0;
                                         transition: top 0.2s ease, left 0.2s ease;
@@ -482,13 +502,14 @@ import LogoBanner from "@/components/LogoBanner.vue";
                                     cursor: pointer;
                                     margin-top: 1px;
                                     border: none;
+                                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
                                     .selected {
                                         display: flex;
                                         justify-content: space-between;
                                         align-items: center;
                                         height: 100%;
                                         padding: 0 20px 0 20px;
-                                        font-size: 16px;
+                                        font-size: 15px;
                                         color: white;
                                         background-color:#00AAEE;
                                         border-radius: 3px;
@@ -558,9 +579,10 @@ import LogoBanner from "@/components/LogoBanner.vue";
                                 color: white;
                                 font-size: 14px;
                                 cursor: pointer;
+                                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4);
 
                                 span {
-                                    //position: relative;   //解决button在表头背景下显示问题
+                                    position: relative;   //解决button在表头背景下显示问题
                                     top: 0;
                                     left: 0;
                                     transition: top 0.2s ease, left 0.2s ease;

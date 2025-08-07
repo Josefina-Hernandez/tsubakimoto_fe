@@ -5,116 +5,265 @@
 
       <div class="lower-area">
         <div class="content-container">
-          <div class="title">Calculation</div>
-          <div class="calculator">
-            <input type="text" 
-              v-model="formattedValue" 
-              @input="formateInput" 
-              @blur="formatValue" 
-              onkeyup="this.value=this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1')"
-              placeholder="Enter amount"
-            >
+          
+          <div class="pulldown-wrapper">
+            <div class="title">Monthly Exchange</div>
             <div class="custom-dropdown" ref="dropdown">
               <div class="dropdown-selected" @click="toggleDropdown">
-                {{ selectedLabel }}
-                <span class="selected-flag" :style="{ backgroundImage: `url(${selectedIcon})`}"></span>
+                {{ formatDateTime(selectedOption) }}
               </div>
               <div class="dropdown-options" v-if="isOpen">
-                <div class="dropdown-option" v-for="option in options" :key="option.value" @click="selectOption(option)">
-                  {{ option.label }}
-                  <span class="option-flag" :style="{ backgroundImage: `url(${option.icon})`}"></span>
+                <div class="dropdown-option" v-for="(option, index) in options" :key="index" @click="selectOption(option, index)">
+                  {{ formatDateTime(option) }}
                 </div>
               </div>
             </div>
-            <button class="btn-cal">Calculate</button>
+            <div class="updated-text">Updated: {{ formatDateTime(selectedOption) }}</div>       
           </div>
           <div class="table-area">
             <table>
               <thead>
                 <th></th>
-                <th></th>
-                <th>Current Rate</th>
-                <th>Result Amount</th>
+                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../assets/flags/jpy.png')})` }"></span><span>JPY</span></th>
+                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../assets/flags/usd.png')})` }"></span><span>USD</span></th>
+                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../assets/flags/eur.png')})` }"></span><span>EUR</span></th>
               </thead>
               <tbody>
-                <tr v-for="line in tableLines" :key="line.value">
-                  <td class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${line.icon})` }"></span></td>
+                <tr v-for="line, index in filteredTableLines" :key="index">
                   <td class="currency-txt">{{ line.label }}</td>
-                  <td class="rate-txt">{{ line.rate }}</td>
-                  <td class="amount-txt">{{ line.amount }}</td>
+                  <td class="rate-txt">{{ line.jpy }}</td>
+                  <td class="rate-txt">{{ line.usd }}</td>
+                  <td class="amount-txt">{{ line.eur }}</td>
                 </tr>
               </tbody>
             </table>
           </div>
+          <div class="remark">
+            <h3>Remark:</h3>
+            <div> {{ this.currentRow[13] }} </div>
+          </div>
         </div>
         <div class="btn-area" v-if="isShowingUpdateBtn">
-          <button class="update">Update Current Rate</button>
+          <input type="file" ref="fileInput" accept=".xlsx" @change="handleFileChange" hidden />
+          <button class="update" @click="triggerSelect">Update Current Rate</button>
         </div>     
       </div>
     </div>
+    <teleport to='body'>
+      <div v-if="isUploading" class="modal-loading">
+        <div class="spinner"></div>
+        <div class="upload-msg">Uploading and processing excel file, please wait...</div>
+      </div>
+    </teleport>
   </template>
   
   <script>
-    import { computed } from 'vue';
-    import { useStore } from 'vuex';
-
+    import { computed, nextTick } from 'vue';
+    import { mapGetters, useStore } from 'vuex';
+    import config from '@/config.js';
     import BannerContainer from '@/components/BannerContainer.vue'
+    import axios from 'axios';
+    
     export default {
-      setup() {
-        const store = useStore();
-        const loginMode = computed(() => store.getters.getLoginMode);
-        return {
-          loginMode,
-        }
-      },
-
       name: 'MonthlyExchange',
       data() {
         return {
+          isUploading: false,
+
+          apiUrl: config.apiUrl,
           firstLabel: 'Monthly Exchange',
 
           isOpen: false,
-          selectedCurrency: 'USD',
-          selectedLabel: 'USD',
-          selectedIcon: require('../assets/flags/usd.png'),
+          selectedOption: '',
 
           isShowingUpdateBtn: true,
 
           inputAmount: '',
-          options: [
-            {value: 'USD', label: 'USD', icon: require('../assets/flags/usd.png')},
-            {value: 'EUR', label: 'EUR', icon: require('../assets/flags/eur.png')},
-            {value: 'JPY', label: 'JPY', icon: require('../assets/flags/jpy.png')},
-            {value: 'CNY', label: 'CNY', icon: require('../assets/flags/cny.png')},
-            {value: 'THB', label: 'THB', icon: require('../assets/flags/thb.png')},
-          ],
+          options: [],
+          // tableLines: [
+          //   {value: 'USD', icon: require('../assets/flags/usd.png'), label: 'USD', rate: 1, amount: 0},
+          //   {value: 'EUR', icon: require('../assets/flags/eur.png'), label: 'EUR', rate: 0.92, amount: 0},
+          //   {value: 'JPY', icon: require('../assets/flags/jpy.png'), label: 'JPY', rate: 151.12, amount: 0},
+          //   {value: 'CNY', icon: require('../assets/flags/cny.png'), label: 'CNY', rate: 7.23, amount: 0},
+          //   {value: 'THB', icon: require('../assets/flags/thb.png'), label: 'THB', rate: 36.74, amount: 0},
+          // ],
           tableLines: [
-            {value: 'USD', icon: require('../assets/flags/usd.png'), label: 'USD', rate: 1, amount: 0},
-            {value: 'EUR', icon: require('../assets/flags/eur.png'), label: 'EUR', rate: 0.92, amount: 0},
-            {value: 'JPY', icon: require('../assets/flags/jpy.png'), label: 'JPY', rate: 151.12, amount: 0},
-            {value: 'CNY', icon: require('../assets/flags/cny.png'), label: 'CNY', rate: 7.23, amount: 0},
-            {value: 'THB', icon: require('../assets/flags/thb.png'), label: 'THB', rate: 36.74, amount: 0},
+            {label: 'Bank Rate', jpy:  0.92, usd:  0.92, eur: 1},
+            {label: 'Cost Rate', jpy: '', usd: '', eur: 0.92},
+            {label: 'Pricelist Rate', jpy: '', usd: '', eur: 151.12},
+            {label: 'Quotation Rate', jpy: '', usd: '', eur: 7.23},
           ],
+
+          rateFileList: [],
+          currentRow: [],
+
+          isAdmin: false,
+
+          fill: null,
+          selectedFileName: '',
         };
       },
       components: {
         BannerContainer,
       },
       computed: {
-        formattedValue: {
-          get() {
-            console.log('get');
-            console.log(this.inputAmount);
-            return this.inputAmount;//this.formatNumber(this.inputAmount);
-          },
-          set(newAmount) {
-            console.log('set');
-            this.inputAmount = newAmount.replace(/,/g, '');
-          }
+        ...mapGetters(['getLoginMode']),
+
+        loginMode() {
+          return this.getLoginMode;
+        },
+        // formattedValue: {
+        //   get() {
+        //     console.log('get');
+        //     console.log(this.inputAmount);
+        //     return this.inputAmount;//this.formatNumber(this.inputAmount);
+        //   },
+        //   set(newAmount) {
+        //     console.log('set');
+        //     this.inputAmount = newAmount.replace(/,/g, '');
+        //   }
+        // }
+        filteredTableLines() {
+          return this.tableLines.filter((_, index) => {
+            return index === 0 || (index !==0 && this.isAdmin === true);
+          });
+        },
+      },
+
+      async mounted() {
+        document.addEventListener('click', (event) => this.handleClickOutside(event));
+        if(this.loginMode === "Tsubakimoto") {
+          this.isShowingUpdateBtn = true;
+        } else {
+          this.isShowingUpdateBtn = false;
         }
+
+        await this.fetchRateFiles();
+
+        this.isAdmin = this.loginMode === 'Tsubakimoto';
+      },
+
+      beforeUnmount() {
+        document.removeEventListener('click', (event) => this.handleClickOutside(event));
       },
 
       methods: {
+        formatDateTime(input) {
+          const date = new Date(input);
+          const hours = date.getHours().toString().padStart(2, '0');
+          const minutes = date.getMinutes().toString().padStart(2, '0');
+          const day = date.getDate();
+          const month = date.toLocaleString('en-US', { month: 'short' });
+          const year = date.getFullYear();
+          return `${month} ${day}, ${year}, ${hours}:${minutes}`;
+        },
+
+        formatYearMonth(input) {
+          const date = new Date(input);
+          // const hours = date.getHours().toString().padStart(2, '0');
+          // const minutes = date.getMinutes().toString().padStart(2, '0');
+          // const day = date.getDate();
+          const month = date.toLocaleString('en-US', { month: 'short' });
+          const year = date.getFullYear();
+          return `${month}, ${year}`;
+        },
+
+        triggerSelect() {
+          this.fill = null;
+          this.selectedFileName = '';
+          this.$refs.fileInput.click();
+        },
+
+        handleFileChange() {
+          const file = this.$refs['fileInput'].files[0];
+          if (file) {
+            this.file = file;
+            this.selectedFileName = file.name;
+            this.uploadExcel(file);
+          } else {
+            this.file = null;
+            this.selectedFileName = '';
+          }
+        },
+
+        async uploadExcel(file) {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          this.isUploading = true;  //开始上传
+
+          try {
+            const response = await fetch(`${this.apiUrl}/exchange_rate/upload`, {
+              method: 'POST',
+              body: formData
+            });
+            const result = await response.json();
+            if (result.status && result.status === 'true' ) {
+              await this.fetchRateFiles();
+              this.isUploading = false;
+
+              setTimeout(() => {
+                alert('Exchange rate file has been uploaded successfully!');
+              }, 100);
+              
+            } else {
+              this.isUploading = false;
+
+              setTimeout(() => {
+                alert('File upload failed.');
+              }, 100);  
+            }
+          } catch (err) {
+            this.isUploading = false;
+
+            setTimeout(() => {
+              alert('Upload error: ' + err.message);
+            }, 100);
+          } finally {
+            this.file = null;
+            this.selectedFileName = null;
+          }
+        },
+
+        updateTableLine() {
+          this.tableLines[0]['jpy'] = this.currentRow[9];
+          this.tableLines[0]['usd'] = this.currentRow[1];
+          this.tableLines[0]['eur'] = this.currentRow[5];
+          
+          this.tableLines[1]['jpy'] = this.currentRow[10];
+          this.tableLines[1]['usd'] = this.currentRow[2];
+          this.tableLines[1]['eur'] = this.currentRow[6];
+
+          this.tableLines[2]['jpy'] = this.currentRow[11];
+          this.tableLines[2]['usd'] = this.currentRow[3];
+          this.tableLines[2]['eur'] = this.currentRow[8];
+
+          this.tableLines[3]['jpy'] = this.currentRow[12];
+          this.tableLines[3]['usd'] = this.currentRow[4];
+          this.tableLines[3]['eur'] = this.currentRow[7];
+        },
+
+        async fetchRateFiles() {
+          this.options = [];
+          try {
+            const response = await axios.post(`${this.apiUrl}/exchange_rate/listall`);
+            this.rateFileList = response.data;
+            for (var i=0; i<this.rateFileList.length; i++) {
+              this.options.push(this.rateFileList[i][16]);
+            }
+            this.options.reverse();
+            this.selectedOption = this.options[0];
+            this.rateFileList.reverse();
+            this.currentRow = this.rateFileList[0];
+
+            this.updateTableLine();
+          }
+          catch (error) {
+            console.error('Error fetch rate list', error);
+            alert('Failed to load data');
+          }
+        },
+
         backToIndex() {
           this.$router.push({path: '/index'});
         },
@@ -122,10 +271,12 @@
           this.isOpen = !this.isOpen;
         },
 
-        selectOption(option) {
-          this.selectedCurrency = option.value;
-          this.selectedLabel = option.label;
-          this.selectedIcon = option.icon;
+        selectOption(option, index) {
+          this.selectedOption = option;
+          this.currentRow = this.rateFileList[index];
+
+          this.updateTableLine();
+
           this.isOpen = false;
         },
 
@@ -169,19 +320,6 @@
         }
 
       },
-
-      mounted() {
-        document.addEventListener('click', (event) => this.handleClickOutside(event));
-        if(this.loginMode === "Tsubakimoto") {
-          this.isShowingUpdateBtn = true;
-        } else {
-          this.isShowingUpdateBtn = false;
-        }
-      },
-
-      beforeUnmount() {
-        document.removeEventListener('click', (event) => this.handleClickOutside(event));
-      },
     };
   </script>
   
@@ -194,42 +332,36 @@
       .lower-area {
         display: flex;
         .content-container {
-          padding: 40px;
+          padding: 20px 40px 0;
           //border: 1px solid red;
-          margin-left: 100px;
+          margin-left: 20px;
+          margin-right: 20px;
           flex: 8;
-          .title{
-            height: 50px;
-            font-size: 22px;
-            font-weight: bold;
-            //border: 1px solid red;
-            text-align: left;
-          }
+          
 
-          .calculator{
+          .pulldown-wrapper{
             //border: 1px solid red;
             display: flex;
             justify-content: center;
-            input{
-              flex: 3;
+            align-items: center;
+
+            .title{
+              height: 30px;
               font-size: 20px;
-              text-align: right;
-              color: #525252;
-              padding-right: 20px;
-              border-radius: 5px;
-              border: 1px solid #ccc;
-              cursor: pointer;
-              &:hover{
-                background-color: #f0f0f0;
-              }
+              font-weight: bold;
+              //border: 1px solid red;
+              text-align: left;
+              line-height: 30px;
             }
+            
             .custom-dropdown{
               position: relative;
-              margin-left: 5px;
+              margin-left: 2vw;
               flex: 2;
+              
               .dropdown-selected{
                 font-size: 20px;
-                width: 100%;
+                width: 20vw;
                 padding: 10px;
                 border: 1px solid #ccc;
                 border-radius: 5px;
@@ -238,14 +370,22 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                .selected-flag{
-                  width: 50px;
-                  height: 30px;
-                  background-size: cover;
-                  background-position: center;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
+                transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+
+                &::after {
+                  content: '';
+                  border-left: 6px solid transparent;
+                  border-right: 6px solid transparent;
+                  border-top: 6px solid #333;
+                  margin-left: 10px;
                   display: inline-block;
-                  margin-right: 10px;
-                  background-repeat: no-repeat;
+                }
+
+                &:hover {
+                    background-color: #f0f4f8; /* 鼠标悬停时改变背景色 */
+                    outline: none; /* 去除默认的聚焦边框 */
+                    box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.4); /* 聚焦时的轮廓阴影 */
                 }
               }
 
@@ -255,11 +395,16 @@
                 position: absolute;
                 top: 100%;
                 left: 0;
-                width: 100%;
+                width: 20vw;
                 border: 1px solid #ccc;
                 border-radius: 5px;
                 background-color: #fff;
-                z-index: 1000;
+                z-index: 1;
+
+                max-height: 400px;
+                overflow-y: auto;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 添加轮廓阴影 */
+                
 
                 .dropdown-option{
                   padding: 10px;
@@ -270,36 +415,16 @@
                   &:hover{
                     background-color: #f0f0f0;
                   }
-                  .option-flag{
-                    width: 50px;
-                    height: 30px;
-                    margin-right: 10px;
-                    background-size: cover;
-                    background-position: center;
-                    display: inline-block;
-                    background-repeat: no-repeat;
-                  }
                 }
               }
             }
 
-            .btn-cal{
-              flex: 1;
-              cursor: pointer;
-              background-color: #53C5F4;
-              color: white;
-              font-size: 20px;
-              font-weight: bold;
-              margin-left: 10px;
-              border: none;
-              border-radius: 5px;
-              transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
-              &:hover{
-                background-color: #48a6ce;
-                transform: translate(-3px, -3px);
-              }
+            .updated-text {
+              height: 30px;
+              font-size: 18px;
+              text-align: right;
+              line-height: 30px;
             }
-
           }
 
           .table-area{
@@ -312,14 +437,27 @@
                 //border: 1px solid yellow;
                 th{
                   flex: 1; /* 默认值，前两个 th 使用 */
-
-                  &:nth-of-type(3),
-                  &:nth-of-type(4) {
-                    flex: 3; /* 后两个 th 使用 */
-                    font-size: 20px;
-                    font-weight: bold;
+                  font-size: 19px;
+                  font-weight: bold;
+                }
+                .flag-icon{
+                  flex: 2;
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-evenly;
+                  
+                  .line-flag{
+                    width: 90px;
+                    height: 55px;
+                    margin-right: 10px;
+                    background-size: cover;
+                    background-position: center;
+                    display: inline-block;
+                    background-repeat: no-repeat;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5); /* 添加轮廓阴影 */
                   }
                 }
+                
               }
 
               tbody{
@@ -330,31 +468,21 @@
                   width: 100%;
                   margin-top: 20px;
                   display: flex;
-                  .flag-icon{
-                    flex: 1;
-                    .line-flag{
-                      width: 90px;
-                      height: 55px;
-                      margin-right: 10px;
-                      background-size: cover;
-                      background-position: center;
-                      display: inline-block;
-                      background-repeat: no-repeat;
-                    }
-                  }
+                  height: 60px;
+                  
                   .currency-txt{
                     flex: 1;
                     display: flex;
                     align-items: center;
-                    font-size: 20px;
                     font-weight: bold;
-                    justify-content: center;
+                    justify-content: end;
+                    font-size: 18px;
                   }
                   .rate-txt{
                     background-color: #53C5F4;
                     color: white;
                     margin: 0 20px;
-                    flex: 3;
+                    flex: 2;
                     display: flex;
                     align-items: center;
                     font-size: 20px;
@@ -362,11 +490,12 @@
                     justify-content: flex-end;
                     padding-right: 20px;
                     border-radius: 5px;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
                   }
                   .amount-txt{
                     background-color: #53C5F4;
                     color: white;
-                    flex: 3;
+                    flex: 2;
                     display: flex;
                     align-items: center;
                     font-size: 20px;
@@ -374,10 +503,27 @@
                     justify-content: flex-end;
                     padding-right: 20px;
                     border-radius: 5px;
+                    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
                   }
                 }
               }
             }      
+          }
+
+          .remark {
+            //width: 100%;
+            display: flex;
+            flex-direction: column;
+            margin-left: 7vw;
+            margin-top: 20px;
+
+            h3 {
+              text-align: left;
+            }
+
+            div {
+              text-align: left;
+            }
           }
 
         }
@@ -391,22 +537,98 @@
           padding-left: 50px;
           padding-right: 50px;
           .update{
-            height: 100px;
+            height: 50px;
             background-color: #53C5F4;
             color: white;
             border-radius: 10px;
             border: none;
             font-size: 20px;
             font-weight: bold;
-            margin-bottom: 13%;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); /* 添加轮廓阴影 */
             transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
               &:hover{
-                background-color: #48a6ce;
-                transform: translate(-3px, -3px);
+                background-color: #0082B3;
+                transform: translate(3px, 3px);
               }
             cursor: pointer;
           }
         }
+      }
+    }
+
+    .modal-loading {
+      position: fixed;
+      z-index: 9999;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, .5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      pointer-events: all;
+
+      .spinner {
+        width: 60px;
+        height: 60px;
+        //margin-bottom: 100px;
+        border: 10px solid #ffffff;
+        border-top: 10px solid #53C5F4;
+        border-radius: 50%;
+        box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.4);
+        animation: spin 1s linear infinite;
+        box-sizing: border-box;
+      }
+
+      .upload-msg {
+        margin-top: 40px;
+        margin-bottom: 100px;
+        font-size: 24px;
+        font-weight: bold;
+        color: white;
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.8);
+        animation: fadeBounce 2.0s cubic-bezier(0.6, 0, 0.2, 1) infinite, colorPulse 2.0s ease-in-out infinite;
+
+      }
+
+      @keyframes spin {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      @keyframes fadeBounce {
+        0% {
+          opacity: 0;
+          transform: translateY(0) scale(1);
+        }
+        30% {
+          opacity: 1;
+          transform: translateY(-5px) scale(1.1);
+        }
+        50% {
+          opacity: 1;
+          transform: translateY(-5px) scale(1.1);
+        }
+        80% {
+          opacity: 1;
+          transform: translateY(-5px) scale(1.1);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(0) scale(1);
+        }
+      }
+
+      @keyframes colorPulse {
+        0% { color: #eceff0; }
+        50% { color: #ffffff; }
+        100% { color: #eceff0; }
       }
     }
   </style>

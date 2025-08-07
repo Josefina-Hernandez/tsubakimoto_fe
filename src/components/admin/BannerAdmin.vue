@@ -47,7 +47,6 @@ export default {
         //width: 100vw;
         width: 100%;
         margin-top: 4vh;
-        margin-bottom: 80px;
         .logo{
             padding-right: 40px;
         }

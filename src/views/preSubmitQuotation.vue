@@ -1,137 +1,139 @@
 <template>
-    <div class="quotation" id="quote">
-      <div class="top">
-        <img alt="Company logo" src="../assets/logo.png" />
-        <div class="tsubaki-container">
-            <strong>Tsubakimoto (Thailand) Co., Ltd.</strong>
-            <span><br>{{ tsubakiAddress }}</span>
-        </div> 
-      </div>
-      <div class="title">QUOTATION</div>
-      <div class="no-line">
-        <div class="reg-no">COMPANY REG. NO.: 0105545036171</div>
-        <div class="tax-id">TAX ID NO.: 0105545036171</div>
-      </div>
-      
-      <hr class="hr" />
-      
-      <div class="upper-detail">
-        <div class="detail-left">
-            <div class="to-line">
-                <div class="to-label">To:</div>
-                <div class="to-customer">{{ companyName }}</div>
-            </div>
-            <div class="address-line">
-                <div class="address-label"></div>
-                <div class="address">{{ companyAddress }}</div>
-            </div>
-            <div class="attn-line">
-                <div class="attn-label">Attn:</div>
-                <div class="attn">MS.WARARAT</div>
-            </div>
+    <div id="quote">
+      <div v-for="(pageItems, pageIndex) in paginatedItems" :key="pageIndex" class="quotation quote-page">
+        <div class="top">
+          <img alt="Company logo" src="../assets/logo.png" />
+          <div class="tsubaki-container">
+              <strong>Tsubakimoto (Thailand) Co., Ltd.</strong>
+              <span><br>{{ tsubakiAddress }}</span>
+          </div> 
         </div>
-        <div class="detail-right">
-            <div class="ref-line">
-                <div class="ref-label">Your Ref.</div>
-                <div class="ref">:THAI SINTO KOGIO</div>
-            </div>
-            <div class="id-line">
-                <div class="id-label">Quote ID</div>
-                <div class="id">:Q-102274</div>
-            </div>
-            <div class="date-line">
-                <div class="date-label">Created Date</div>
-                <div class="date" v-if="!ifShowEditBtn">:{{ createdDt }}</div>
-                <div class="date" v-if="ifShowEditBtn"><span>:</span><input v-model="createdDt" type="text" placeholder="Edit date"></div>
-            </div>
-            <div class="payment-line">
-                <div class="payment-label">Payment Terms</div>
-                <div class="payment" v-if="!ifShowEditBtn">:{{ paymentTerms }}</div>
-                <div class="payment" v-if="ifShowEditBtn"><span>:</span><input v-model="paymentTerms" type="text" placeholder="Edit payment terms"></div>
-            </div>
-            <div class="trade-line">
-                <div class="trade-label">Trade Terms</div>
-                <div class="trade">:DELEVERD DUTY PAID BANGKOK</div>
-            </div>
-            <div class="mode-line">
-                <div class="mode-label">Delivery Mode</div>
-                <div class="mode">:TRUCK</div>
-            </div>
-            <div class="period-line">
-                <div class="period-label">Delivery Period</div>
-                <div class="period">:8 WEEKS BY AIR</div>
-            </div>
-            <div class="validity-line">
-                <div class="validity-label">Validity Terms</div>
-                <div class="validity">:15 DAYS</div>
-            </div>
-            <div class="currency-line">
-                <div class="currency-label">Currenty Code</div>
-                <div class="currency">:Thai baht</div>
-            </div>
-            
+        <div class="title">QUOTATION</div>
+        <div class="no-line">
+          <div class="reg-no">COMPANY REG. NO.: 0105545036171</div>
+          <div class="tax-id">TAX ID NO.: 0105545036171</div>
+        </div>
+        
+        <hr class="hr" />
+        
+        <div class="upper-detail">
+          <div class="detail-left">
+              <div class="to-line">
+                  <div class="to-label">To:</div>
+                  <div class="to-customer">{{ companyName }}</div>
+              </div>
+              <div class="address-line">
+                  <div class="address-label"></div>
+                  <div class="address">{{ companyAddress }}</div>
+              </div>
+              <div class="attn-line">
+                  <div class="attn-label">Attn:</div>
+                  <div class="attn">{{ this.yourName }}</div>
+              </div>
+          </div>
+          <div class="detail-right">
+              <div class="ref-line">
+                  <div class="ref-label">Your Ref.</div>
+                  <div class="ref">:{{ this.endUserName }}</div>
+              </div>
+              <div class="id-line">
+                  <div class="id-label">Quote ID</div>
+                  <div class="id">:Q-102274</div>
+              </div>
+              <div class="date-line">
+                  <div class="date-label">Created Date</div>
+                  <div class="date" v-if="!ifShowEditBtn">:{{ createdDt }}</div>
+                  <div class="date" v-if="ifShowEditBtn"><span>:</span><input v-model="createdDt" type="text" placeholder="Edit date"></div>
+              </div>
+              <div class="payment-line">
+                  <div class="payment-label">Payment Terms</div>
+                  <div class="payment" v-if="!ifShowEditBtn">:{{ paymentTerms }}</div>
+                  <div class="payment" v-if="ifShowEditBtn"><span>:</span><input v-model="paymentTerms" type="text" placeholder="Edit payment terms"></div>
+              </div>
+              <div class="trade-line">
+                  <div class="trade-label">Trade Terms</div>
+                  <div class="trade">:DELEVERD DUTY PAID BANGKOK</div>
+              </div>
+              <div class="mode-line">
+                  <div class="mode-label">Delivery Mode</div>
+                  <div class="mode">:TRUCK</div>
+              </div>
+              <div class="period-line">
+                  <div class="period-label">Delivery Period</div>
+                  <div class="period">:8 WEEKS BY AIR</div>
+              </div>
+              <div class="validity-line">
+                  <div class="validity-label">Validity Terms</div>
+                  <div class="validity">:15 DAYS</div>
+              </div>
+              <div class="currency-line">
+                  <div class="currency-label">Currenty Code</div>
+                  <div class="currency">:Thai baht</div>
+              </div>
+              
+          </div>
+
+          <div class="detail-right"></div>
         </div>
 
-        <div class="detail-right"></div>
-      </div>
-
-      <div class="details">
-        <table>
-          <thead>
-            <tr>
-              <th class="index">S/No</th>
-              <th class="description">Description of Comodity</th>
-              <th>Qty</th>
-              <th class="uom">UOM</th>
-              <th>Unit Price</th>
-              <th>Amount</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="(item, index) in items" :key="index">
-              <td>{{ index+1 }}</td>
-              <td>{{ item.newModelNo }}</td>
-              <td>{{ formatNumber(item.qty.toLocaleString('en-US')) }}</td>
-              <td>{{ item.unit }}</td>
-              <td>{{ formatNumber(item.unitPrice.toLocaleString('en-US')) }}</td>
-              <td>{{ formatNumber(item.amount) }}</td>
-            </tr>
-          </tbody>
-        </table>
-        <div class="btn-edit" v-show="ifShowEditBtn">
-            <button class="btn-edit" @click="toEditProducts"><span>Edit Products</span></button>
+        <div class="details">
+          <table>
+            <thead>
+              <tr>
+                <th class="index">S/No</th>
+                <th class="description">Description of Comodity</th>
+                <th>Qty</th>
+                <th class="uom">UOM</th>
+                <th>Unit Price</th>
+                <th>Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="(item, index) in pageItems" :key="index">
+                <td>{{ index + 1 + pageIndex*15 }}</td>
+                <td>{{ item.newModelNo }}</td>
+                <td>{{ formatNumber(item.qty.toLocaleString('en-US')) }}</td>
+                <td>{{ item.unit }}</td>
+                <td>{{ formatNumber(item.unitPrice.toLocaleString('en-US')) }}</td>
+                <td>{{ formatNumber(item.amount) }}</td>
+              </tr>
+            </tbody>
+          </table>
+          <div class="btn-edit" v-show="ifShowEditBtn">
+              <button class="btn-edit" @click="toEditProducts"><span>Edit Products</span></button>
+          </div>
+          
+          <div class="remarks" v-show="this.remark">Remarks:</div>
+          <div class="detail">{{ this.remark }}</div>
+          
+          <div class="sum-area" v-if="pageIndex === paginatedItems.length - 1">
+              <div class="total-line">
+                  <div class="total-label">Total Price</div>
+                  <div class="total-sum">{{ formatNumber(total) }}</div>
+              </div>
+              <div class="total-line">
+                  <div class="total-label">Tax (VAT)</div>
+                  <div class="total-sum">{{ formatNumber(total * 0.07) }}</div>
+              </div>
+              <div class="total-line">
+                  <div class="total-label">Grand Total</div>
+                  <div class="total-sum">{{ formatNumber(total * 1.07) }}</div>
+              </div>
+          </div>
+          
+          <div class="sign-area">
+              <div>Created by Online Pricelist System</div>
+              <hr class="hr-sign" />
+              <div>Arparwan Sanantung</div>
+          </div>
         </div>
-        
-        <div class="remarks">Remarks:&nbsp;&nbsp;&nbsp;&nbsp;PIC: Sirikamon</div>
-        <div class="detail">- Price included air charge<br>- The goods to be imported from Germany.</div>
-        
-        <div class="sum-area">
-            <div class="total-line">
-                <div class="total-label">Total Price</div>
-                <div class="total-sum">{{ formatNumber(total) }}</div>
-            </div>
-            <div class="total-line">
-                <div class="total-label">Tax (VAT)</div>
-                <div class="total-sum">{{ formatNumber(total * 0.07) }}</div>
-            </div>
-            <div class="total-line">
-                <div class="total-label">Grand Total</div>
-                <div class="total-sum">{{ formatNumber(total * 1.07) }}</div>
-            </div>
+        <div class="bottom-text">
+          <div>Page {{ pageIndex + 1 }} of {{ paginatedItems.length }}</div>
+          <div>E.&.O.E</div>
         </div>
-        
-        <div class="sign-area">
-            <img alt="Sign1" src="../assets/signatures/signature1.jpg" />
-            <hr class="hr-sign" />
-            <div>Arparwan Sanantung</div>
-            <img alt="Sign1" src="../assets/signatures/signature2.jpg" />
-        </div>
-      </div>
-      <div class="bottom-text">
-        <div>Page 1 of 1</div>
-        <div>&nbsE.&.O.E</div>
       </div>
     </div>
+    
     <div class="button-area1">
         <div></div>
         <button @click="handleClickEditPage"
@@ -193,31 +195,7 @@
           orderSum: state => state.orderSum
         }
       ),
-  
-      // items(){
-      //   return [
-      //     {
-      //       // description: store.state.newCodeShow,
-      //       // qty: store.state.orderSum,
-      //       // unit: store.state.Unit,
-      //       // price: store.state.Price,
-      //       // amount: store.state.Price * store.state.orderSum,
-      //       description: 'S0650.85.RS1.75.ST-2535 FAI/MAI W/STEEL BAND COVER ON BOTH SIDES',
-      //       qty: 1,
-      //       UOM: 'PC',
-      //       unitPrice: 70350,
-      //       amount: 70350,
-      //     },  
-      //   //   {
-      //   //     description: 'S0650.85.RS1.75.ST-2535 FAI/MAI W/STEEL BAND COVER ON BOTH SIDES',
-      //   //     qty: 1,
-      //   //     UOM: 'PC',
-      //   //     unitPrice: 70350,
-      //   //     amount: 70350,
-      //   //   },  
-      //   ];
-      // },
-      
+   
       customerName(){
         return store.state.companyName;
       },
@@ -225,7 +203,16 @@
       personName(){
         return "Ms./Mr. " + store.state.personName.toString();
       },
-  
+
+      paginatedItems() {
+        const items = this.items;
+        const pageSize = 15;
+        const pages = [];
+        for (let i = 0; i < items.length; i += pageSize) {
+          pages.push(items.slice(i, i + pageSize));
+        }
+        return pages;
+      },
     },
 
     mounted() {
@@ -238,7 +225,7 @@
       this.companyAddress = this.$store.state.companyAddress;
       this.paymentTerms = this.$store.state.paymentTerms;
       
-      console.log(this.items);
+      console.log(this.remark);
       this.inputFinalInfo();
     },
   
@@ -313,8 +300,15 @@
     line-height: 1.5;
     border: 1px solid black;
     //min-height: 794*1.4142px;
-    min-height: calc(794px * 1.4142); // A4 高度
+    height:  calc(794px * 1.4142); // A4 高度
     position: relative;
+
+    page-break-after: always;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+
+    &:last-child {
+      page-break-after: auto;
+    }
 
     .top {
       display: flex;
@@ -323,7 +317,7 @@
       margin-bottom: 20px;
       margin-left: 30px;
       margin-right: 30px;
-      margin-top: 30px;
+      margin-top: 10px;
       img {
         width: 200px;
         height: 35px;
@@ -394,17 +388,17 @@
                 margin-top: 10px;
                 justify-content: left;
                 .address-label {
-                    width: 60px;
+                    width: 50px;
                 }
                 .address {
-                  
+                  width: 250px;
                 }
             }
             .attn-line {
                 display: flex;
                 margin-top: 10px;
                 .attn-label {
-                    width: 65px;
+                    width: 50px;
                     font-weight: bold;
                 }
                 .attn {
@@ -587,6 +581,7 @@
             justify-content: center;
             background-color: #4472C4;
             cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 
             span {
                 position: relative; 
@@ -617,7 +612,8 @@
         text-align: left;
         font-size: 13px;
         margin-left: 65px;
-        margin-top: 10px;
+        margin-top: -19px;
+        white-space: pre-line;
       }
       .sum-area {
         text-align: left;
@@ -642,13 +638,13 @@
     .sign-area {
         position: absolute;
         //margin-left: 430px;
-        width: 300px;
+        width: 270px;
         bottom: 20px;
         right: 20px;
-        img {
-            width: 130px;
-            height: 70px;
-        }
+        // img {
+        //     width: 130px;
+        //     height: 70px;
+        // }
         .hr-sign{
             border-style: solid;
             border-width: 1px 0;
@@ -659,6 +655,11 @@
             margin-right: 45px;
             font-size: 12px;
             font-weight: bold;
+            &:first-child {
+              //text-align: center;
+              font-size: 13px;
+              font-weight: 300;
+            }
         }
     }
   
@@ -693,6 +694,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
 
       &.edit-mode {
         background-color: #4472C4;
@@ -743,6 +745,7 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
   
       span {
         position: relative; 
@@ -807,6 +810,7 @@
     page-break-inside: avoid;
     break-inside: avoid;
     border: none !important;
+    box-shadow: none !important;
   }
 
   // 强制签名、底部文本不被分页

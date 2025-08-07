@@ -53,12 +53,12 @@
             margin-left: 8%;
             margin-right: 8%;
             .title{
-                margin-top: 50px;
+                margin-top: 20px;
                 align-items: center;
                 height: 70px;
                 h3{     
                         text-align: center;
-                        font-size: 28px;
+                        font-size: 22px;
                         font-weight: bold;
                     }
             }
@@ -67,7 +67,7 @@
                 margin-top: 50px;
                 
                 .text {
-                    font-size: 24px;
+                    font-size: 20px;
                     text-align: left;
                     padding-left: 10%;
                 }

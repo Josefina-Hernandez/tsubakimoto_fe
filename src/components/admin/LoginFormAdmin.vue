@@ -18,7 +18,7 @@
 
     .outer-container{
         position: absolute;
-        top: 50%;
+        top: 43%;
         left: 50%;
         transform: translate(-50%, -50%);
         width: 40vw;
@@ -72,6 +72,7 @@
                 border: none;
                 border-radius: 4px;
                 cursor: pointer;
+                box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.4);
 
                 &:hover{
                     background-color: #0082B3;

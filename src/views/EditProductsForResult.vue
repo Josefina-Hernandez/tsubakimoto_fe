@@ -67,7 +67,7 @@
           </div>
         </div>
 
-        <FooterBtn class="footer" :ifShow2="ifShow2" :toWhere="previousPage" :clickFunction="handleClick" :isButtonDisabled="isButtonDisabled" />
+        <FooterBtn3 class="footer" :ifShow2="ifShow2" :toWhere="previousPage" :toWhere2="onlinePriceLink" :clickFunction="handleClick" :isButtonDisabled="isButtonDisabled" />
     </div>
 
 </template>
@@ -75,17 +75,18 @@
 <script>
 // @ is an alias to /src
 import LogoBanner from '@/components/LogoBanner.vue'
-import FooterBtn from '@/components/FooterBtn.vue'
+import FooterBtn3 from '@/components/FooterBtn3.vue'
 
 import store from '@/store';
 
 export default {
-  name: 'EditProducts',
+  name: 'EditProductsForResult',
   data(){
     return{
-        title: "Edit Products",
+        title: "Edit Products for Quotation Result",
         ifShow2: true,
-        previousPage: '/onlinepricelist',
+        previousPage: '/editquotationpage',
+        onlinePriceLink: '/onlinepricelist',
         isButtonDisabled: false,
 
         showModal: false,
@@ -101,7 +102,7 @@ export default {
   },
   components: {
     LogoBanner,
-    FooterBtn,
+    FooterBtn3,
   },
 
   mounted() {
