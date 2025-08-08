@@ -19,7 +19,7 @@
               <!-- <a href="https://www.akaganethailand.co.th/" target="_blank" @click="hideItself">RPP Website</a> -->
               <!-- <a href="https://www.akaganethailand.co.th/" target="_blank" @click="hideItself">Catalog</a> -->
             </div>
-            <i class="fa fa-caret-down"></i>
+            <!-- <i class="fa fa-caret-down"></i> -->
           </div>
           <a class="link-label" href="#/news-page">News</a>
           <a class="link-label" href="#/how-to-order">How to Order</a>
