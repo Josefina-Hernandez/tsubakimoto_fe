@@ -9,7 +9,7 @@
                     <div class="selected" @click="toggleDropdown1">{{ selectedItem1 ? selectedItem1 : '--' }}</div>
                     <div class="dropdown-list" v-show="dropdownOpen1">
                         <div class="dropdown-item" v-for="(item, index) in items1" :key="index" @click="selectItem1(item)">
-                            {{ item }}
+                            {{ item && item.length > 1 ? item[1] : '' }}
                         </div>
                     </div>
                 </div>
@@ -1482,6 +1482,7 @@ export default {
         modalButtonDisabled: true,
       
         selectedItem1: '',
+        selectedId1: null,
         selectedItem2: '',
         selectedCategoryItem: 'Drive Chain',
         selectedAItem: '---',
@@ -1497,7 +1498,7 @@ export default {
 
         // items1: ['--', 'KTE', 'TKT', 'HRD', 'PLANET', 'NICHIDEN'],
         // items2: ['--', 'THB DRICE CHAIN', 'PRICE LIST NAME 2', 'PRICE LIST NAME 3', 'PRICE LIST NAME 4'],
-        items1: ['--'],
+        items1: [null, '--'],
         items2: ['--'],
         categoryItems: ['Drive chain', 'Small size conveyor chain', 'Large size conveyor chain', 'Cableveyors', 'Top chains(ST/RT)', 'Top chains(RS)', 'Top chains(TS/TSA)'],
         aItems: ['MWJ', 'MWJK', 'MCJ', 'MCJK', 'MSJ', 'MSJK', 'FWJ', 'FCJ', 'FSJ'],
@@ -2022,7 +2023,7 @@ export default {
     },
   },
 
-  mounted() {
+  async mounted() {
     window.addEventListener('resize', this.handleResize);
 
     if (this.loginMode === "Tsubakimoto") {
@@ -2042,7 +2043,7 @@ export default {
     this.cartCount = this.addedDataList.length;
     
     this.isEnableProceedBtn();
-    this.fetchFilterOptinons();
+    await this.fetchFilterOptinons();
     this.fetchMasterData();
   },
 
@@ -2051,21 +2052,29 @@ export default {
   },
 
   methods: {
-    fetchFilterOptinons() {
-      axios.post(`${this.apiUrl}/master_data/get_filters`)
-        .then(response => {
-          const data = response.data;
-          if (data.suppliers && Array.isArray(data.suppliers)) {
-            this.items1 = ['--', ...data.suppliers];
-          }
+    async fetchPricelistOptions() {
+      const response = await axios.post(`${this.apiUrl}/master_data/get_pricelist_filter`, {
+        company_id: this.selectedId1,
+      });
+      const data = response.data;
+      if (data.pricelists && Array.isArray(data.pricelists)) {
+        this.items2 = ['--', ...data.pricelists];
+      }
+      this.selectedItem2 = '';
+      this.fetchMasterData();
+    },
 
-          if (data.pricelists && Array.isArray(data.pricelists)) {
-            this.items2 = ['--', ...data.pricelists];
-          }
-        })
-        .catch(error => {
-          console.error('Error fetching filter options:', error);
-        });
+    async fetchFilterOptinons() {
+      const response = await axios.post(`${this.apiUrl}/master_data/get_filters`);
+
+      const data = response.data;
+      if (data.distributors && Array.isArray(data.distributors)) {
+        this.items1 = [[null, '--'], ...data.distributors];
+      }
+      //console.log(this.items1)
+      if (data.pricelists && Array.isArray(data.pricelists)) {
+        this.items2 = ['--', ...data.pricelists];
+      }
     },
 
     async onSliderChange() {
@@ -2084,8 +2093,7 @@ export default {
         const response = await axios.post(`${this.apiUrl}/master_data/list`, {
           page: page,
           pageSize: this.pageSize,
-          distributorName: this.selectedItem1,
-          priceListName: this.selectedItem2,
+          priceListNames: this.selectedItem2 != '' ? [this.selectedItem2] : this.items2,
           keyword: this.searchText,
         });
 
@@ -2363,15 +2371,17 @@ export default {
     },
 
     selectItem1(item) {
-      if(item == '--'){
+      if(item[1] == '--'){
         this.selectedItem1 = '';
+        this.selectedId1 = null
       }else{
-        this.selectedItem1 = item;
+        this.selectedItem1 = item[1];
+        this.selectedId1 = item[0]
       }
       
       this.dropdownOpen1 = false;
 
-      this.fetchMasterData();
+      this.fetchPricelistOptions();
       this.sliderPage = 1;
     },
 
