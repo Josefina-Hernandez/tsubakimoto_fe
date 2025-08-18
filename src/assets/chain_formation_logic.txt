@@ -1,0 +1,239 @@
+Calculation cases
+
+case 1: (default case)
+	condition	(cal case: drive chain or small size) and ("R" in conn A or conn B or both )
+	calculation	no. link * base price
+	code show	RS40-1-RP+191L-RR
+
+
+case 2:
+	condition	(cal case: drive chain or small size) and choose conn A and ( choose only one of conn B or offset )
+	calculation	(no. link - 1) * base price + last chosen price
+	code show	RS40-1-RP+601L-MCJOK
+
+
+case 3:
+	condition	(cal case: drive chain or small size) and choose conn A and conn B and offset
+	calculation	(no.link - 3) * base price + conn A + offset
+	code show	RS40-1-RP+601L-FCJFCJ2O
+
+
+case 4:
+	condition	"cut and assembly" and (cal case: drive chain or small size) and choose conn A and (conn B or offset)
+	calculation	1.1 * (no. link + (count a chosen 'R') - 1) * base price + conn A + (conn B or offset)
+	code show	RS40-1-RP+191L-RR
+
+
+case 5:
+	condition	"cut and assembly" and (cal case: drive chain or small size) and conn A and conn B and offset
+	calculation	1.1 * (no. link - 3) * base price + conn A + conn B + offset
+	code show	Cutting & Assembly, drive chain (JJK2OK)
+
+
+case 6:
+	condition	cal case: TOP chain and choose offset
+	calculation	(no. link - 1) * base price + offset price
+	formation	TS550+61L-PKOK
+
+case 7:
+	condition	cal case: Cableveyor	* none: no price*
+	calculation	no. link * base price + (conn A, if chosen) + (conn B, if chosen)
+	formation	TKP35H22-30W38R50+400L
+
+
+** for the formation 
+	
+normal case:	
+	if no. link / max length  >  1: 		standard length (LKS)/PC x floor(no. link / std length) PC, (no.link modulo std_len) (LKS)/PC x 1 PC
+
+ 	else :									no. link (LKS)/PC x 1 PC
+				
+	sample: 								120 (LKS)/PC x 2 PC, 24 (LKS)/PC x 1 PC
+
+	
+T option case:
+	user can select T option if the base code contain maximum length in the database. 
+	user need to input "no. link" with in:			standard len <= no. link <= max len 
+	if user select T-option, the formation be like this
+
+		no. link (LKS)/PC x 1 PC
+
+	sample:		
+		base is 	RF2040R-LMCNP-9LK2
+
+		no. link: 190,	std_len: 120
+
+		result:		190 (LKS)/PC x 1 PC
+
+
+case of attachment:	
+	In the base code that has "...-3LK2..", "...-10LSA..", ... are attachment, and need to input no. link that can divided by number of attachment . 
+
+	In database, a column "stat" is the number of attachment, thus we can use it to division
+	
+	sample: 	
+		base is  		RF2040R-LMCNP-9LK2
+		num of att.(stat) is 	9			
+		User can input only 9, 18, 27, ... 	in this case, we may auto convert the "no. link" to the nearest and divided by 9	
+
+		formation: 	ROUND(std_len / no.link)*no.link - no.link (LKS)/PC x floor(no. link / std_len) PC, (no. link modulo std_len) (LKS)/PC x 1 PC
+
+
+** code generating:
+	normal case: 				base "+" no.link "L" "-" connA connB offset
+		RS40-1-RP+242L-RR
+		RS40-1-RP+242L-MCJR
+		RS40-1-RP+601L-FCJFCJ2O
+
+	T-option:				base "+" no.link "L" "-" connA connB offset "-T"
+		RS40-1-RP+241L-MCJKMCJK-T
+
+
+** 	some code exclude T option: in the database max is NULL 
+**	some case exclude both T-option and formation : standard is NULL	
+
+
+计算规则说明
+情境一：默认情况
+条件：
+计算类别为“驱动链条”或“小型尺寸”，且连接器 A 或 B 中有 “R”。
+
+计算方式：
+链节数 × 单价
+
+编码格式：
+RS40-1-RP+191L-RR
+
+情境二：
+条件：
+计算类别为“驱动链条”或“小型尺寸”，选择了连接器 A，并且 仅选择了连接器 B 或 offset 其中之一
+
+计算方式：
+（链节数 - 1）× 单价 + 最后所选连接器的价格
+
+编码格式：
+RS40-1-RP+601L-MCJOK
+
+情境三：
+条件：
+计算类别为“驱动链条”或“小型尺寸”，选择了连接器 A、连接器 B 和 offset
+
+计算方式：
+（链节数 - 3）× 单价 + 连接器 A + offset 价格
+
+编码格式：
+RS40-1-RP+601L-FCJFCJ2O
+
+情境四：
+条件：
+“切割组装” 且 计算类别为“驱动链条”或“小型尺寸”，并选择连接器 A 和 （连接器 B 或 offset）
+
+计算方式：
+1.1 × (链节数 + 连接器中 R 的个数 - 1) × 单价 + 连接器 A + （连接器 B 或 offset）
+
+编码格式：
+RS40-1-RP+191L-RR
+
+情境五：
+条件：
+“切割组装” 且 计算类别为“驱动链条”或“小型尺寸”，并选择了连接器 A、B 和 offset
+
+计算方式：
+1.1 × (链节数 - 3) × 单价 + 连接器 A + 连接器 B + offset
+
+编码格式：
+Cutting & Assembly, drive chain (JJK2OK)
+
+情境六：
+条件：
+计算类别为 TOP chain，且选择了 offset
+
+计算方式：
+（链节数 - 1）× 单价 + offset 价格
+
+编码格式：
+TS550+61L-PKOK
+
+情境七：
+条件：
+计算类别为 Cableveyor，如果没有选择连接器则无价格
+
+计算方式：
+链节数 × 单价 + （连接器 A，如果有）+（连接器 B，如果有）
+
+编码格式：
+TKP35H22-30W38R50+400L
+
+编码与数量显示（formation）
+标准情况：
+如果 链节数 ÷ 标准长度 > 1：
+
+java
+复制
+标准长度 (LKS)/PC x floor(链节数 / 标准长度) PC, 
+剩余链节数 (LKS)/PC x 1 PC
+否则：
+
+复制
+链节数 (LKS)/PC x 1 PC
+示例：
+
+swift
+复制
+120 (LKS)/PC x 2 PC, 24 (LKS)/PC x 1 PC
+T-option 情况：
+如果数据库中基础编码含最大长度字段，则用户可选择 T-option。
+
+用户需输入链节数满足：
+
+复制
+标准长度 ≤ 链节数 ≤ 最大长度
+编码格式：
+
+复制
+链节数 (LKS)/PC x 1 PC
+示例：
+
+复制
+基础码：RF2040R-LMCNP-9LK2
+链节数：190，标准长度：120
+结果：190 (LKS)/PC x 1 PC
+附件情况（Attachment）
+如果基础码中包含 ...-3LK2..、...-10LSA.. 等表示附件，需输入的链节数必须能被附件数整除。
+
+数据库中的 stat 字段表示附件数量，可用于判断能否整除。
+
+若不能整除，可自动将链节数向上调整为最接近并能被整除的数。
+
+示例：
+
+bash
+复制
+基础码：RF2040R-LMCNP-9LK2
+附件数 stat = 9
+用户只能输入 9, 18, 27, ...
+Formation:
+
+pgsql
+复制
+ROUND(标准长度 / 附件数) × 附件数 - 当前链节数 (LKS)/PC x floor(链节数 / 标准长度) PC, 
+剩余链节数 (LKS)/PC x 1 PC
+编码生成规则：
+标准情况：
+
+csharp
+复制
+base + 链节数L - connA connB offset
+示例：RS40-1-RP+242L-RR
+      RS40-1-RP+601L-MCJR
+      RS40-1-RP+601L-FCJFCJ2O
+T-option 情况：
+
+r
+复制
+base + 链节数L - connA connB offset -T
+示例：RS40-1-RP+241L-MCJKMCJK-T
+限制说明：
+部分编码不支持 T-option：即数据库中的 max 为 NULL
+
+部分编码不支持 T-option 和 formation：即标准长度为 NULL

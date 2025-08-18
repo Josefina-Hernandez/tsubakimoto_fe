@@ -28,27 +28,40 @@
               </div>
               <div class="attn-line">
                   <div class="attn-label">Attn:</div>
-                  <div class="attn">{{ this.yourName }}</div>
+                  <div class="attn">{{ yourName }}</div>
               </div>
           </div>
           <div class="detail-right">
               <div class="ref-line">
                   <div class="ref-label">Your Ref.</div>
-                  <div class="ref">:{{ this.endUserName }}</div>
+                  <div class="ref">:{{ endUserName }}</div>
               </div>
               <div class="id-line">
                   <div class="id-label">Quote ID</div>
-                  <div class="id">:Q-102274</div>
+                  <div
+                   class="id"
+                   :style="{ backgroundColor: bottomEditBtnText === 'Cancel Edit' ? '#F5F500' : '#FFFFFF' }"
+                   >:{{ quotationId }}</div>
               </div>
               <div class="date-line">
                   <div class="date-label">Created Date</div>
                   <div class="date" v-if="!ifShowEditBtn">:{{ createdDt }}</div>
-                  <div class="date" v-if="ifShowEditBtn"><span>:</span><input v-model="createdDt" type="text" placeholder="Edit date"></div>
+                  <div class="date" v-if="ifShowEditBtn">
+                    <span>:</span>
+                    <flat-pickr
+                      v-model="createdDt"
+                      :config="{ dateFormat: 'd-m-Y' }"
+                      placeholder="Edit date"
+                      @on-change="handleChangeCreatedDt"
+                    ></flat-pickr>
+                  </div>
               </div>
               <div class="payment-line">
                   <div class="payment-label">Payment Terms</div>
                   <div class="payment" v-if="!ifShowEditBtn">:{{ paymentTerms }}</div>
-                  <div class="payment" v-if="ifShowEditBtn"><span>:</span><input v-model="paymentTerms" type="text" placeholder="Edit payment terms"></div>
+                  <div class="payment" v-if="ifShowEditBtn"><span>:</span><input v-model="paymentTerms" type="text" placeholder="Edit payment terms"
+                    @input="handleChangePaymentTerms"
+                    ></div>
               </div>
               <div class="trade-line">
                   <div class="trade-label">Trade Terms</div>
@@ -90,12 +103,14 @@
             </thead>
             <tbody>
               <tr v-for="(item, index) in pageItems" :key="index">
-                <td>{{ index + 1 + pageIndex*15 }}</td>
-                <td>{{ item.newModelNo }}</td>
-                <td>{{ formatNumber(item.qty.toLocaleString('en-US')) }}</td>
-                <td>{{ item.unit }}</td>
-                <td>{{ formatNumber(item.unitPrice.toLocaleString('en-US')) }}</td>
-                <td>{{ formatNumber(item.amount) }}</td>
+                <td>{{ index + 1 + pageIndex*10 }}</td>
+                <td>{{ item.new_model_no }}
+                  <br v-if="item.chain_formation !== null">{{ item.chain_formation !== null ? item.chain_formation : ''}}
+                </td>
+                <td>{{ formatNumber(item.quantity.toLocaleString('en-US')) }}</td>
+                <td>{{ item.uom }}</td>
+                <td>{{ formatNumber((item.unit_price).toLocaleString('en-US')) }}</td>
+                <td>{{ formatNumber(item.total) }}</td>
               </tr>
             </tbody>
           </table>
@@ -137,12 +152,12 @@
     <div class="button-area1">
         <div></div>
         <button @click="handleClickEditPage"
-            :class="{'edit-mode': bottomEditBtnText === 'Edit', 'save-mode': bottomEditBtnText === 'Save Edition'}"
+            :class="{'edit-mode': bottomEditBtnText === 'Edit', 'cancel-mode': bottomEditBtnText === 'Cancel Edit'}"
         ><span>{{ bottomEditBtnText }}</span></button>
     </div>
     <div class="button-area2">
       <button @click="closePage"><span>Go Back</span></button>
-      <button @click="printQuote" :disabled="bottomEditBtnText === 'Save Edition'"><span>Download PDF</span></button>
+      <button @click="printQuote" :disabled="bottomEditBtnText === 'Edit'"><span>Save and Submit</span></button>
     </div>
   </template>
   
@@ -150,17 +165,28 @@
   //import jsPDF from 'jspdf'
   //import html2canvas from 'html2canvas'
   //import htmlToPdf from '@/utils/htmlToPdf'
+  import flatPickr from 'vue-flatpickr-component';
+  import 'flatpickr/dist/flatpickr.css';
   
   import { mapState/*, mapMutations*/ } from 'vuex'
   import store from '@/store';
+
+  import config from '@/config'
+  import axios from 'axios'
+
+  import qs from 'qs';
   
   export default {
     name: "EditQuotationPage",
     data() {
       return {
+        apiUrl: config.apiUrl,
+
         companyName: '',
         companyAddress: '',
         paymentTerms: '',
+
+        userId: '',
 
         tsubakiAddress: "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670",
   
@@ -170,21 +196,29 @@
 
         bottomEditBtnText: 'Edit',
 
-        createdDt: '2 Oct 2024',
+        createdDt: '',
 
-        paymentTerms: '30 days Aft Mth End Close',
+        paymentTerms: '',
 
         items: [],
+        orgItems: [],
 
         endUserName: '',
         yourName: '',
         remark: '',
+
+        quotationId: '',
+        orgQuotationId: '',
       };
+    },
+
+    components: {
+      flatPickr,
     },
   
     computed: {
       total() {
-        return this.items.reduce((sum, item) => sum + item.amount, 0);
+        return this.items.reduce((sum, item) => sum + Number(item.total), 0);
   
       },
   
@@ -204,7 +238,7 @@
 
       paginatedItems() {
         const items = this.items;
-        const pageSize = 15;
+        const pageSize = 10;
         const pages = [];
         for (let i = 0; i < items.length; i += pageSize) {
           pages.push(items.slice(i, i + pageSize));
@@ -214,20 +248,91 @@
     },
 
     mounted() {
-      this.items = this.$store.state.partList;
-      this.endUserName = this.$store.state.endUserName;
-      this.yourName = this.$store.state.yourName;
-      this.remark = this.$store.state.remark;
-
-      this.companyName = this.$store.state.companyName;
-      this.companyAddress = this.$store.state.companyAddress;
-      this.paymentTerms = this.$store.state.paymentTerms;
+      this.bottomEditBtnText = this.$store.state.bottomEditBtnText;
+      this.items = this.$store.state.itemsTargetQuotNo;
+      this.quotationId = this.items[0].quot_no;
+      this.orgQuotationId = this.quotationId;
       
-      console.log(this.remark);
-      this.inputFinalInfo();
+      if (this.bottomEditBtnText === 'Edit') {
+        this.ifShowEditBtn = false;
+        this.orgItems = JSON.parse(JSON.stringify(this.items));
+        this.$store.commit('setItemsOrgQuotNo', this.orgItems);
+      } else {
+        this.ifShowEditBtn = true;
+        this.fetchNextRevisedQuotId();
+        this.orgItems = this.$store.state.itemsOrgQuotNo;
+      } 
+      
+      //console.log(this.items, '--------');
+      //console.log(this.$store.state.partList);
+
+      
+
+      this.endUserName = this.items[0].customer_ref;
+      this.yourName = this.items[0].attention;
+      this.remark = this.items[0].remark;
+
+      this.companyName = this.items[0].distributor_name;
+      this.paymentTerms = this.items[0].payment_terms;
+
+      if (this.companyName === 'Tsubakimoto (Thailand) Co., Ltd.') {
+          this.companyAddress = "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670";
+      } else if (this.companyName === 'TSUBAKO KTE CO., LTD. (Bangkok)') {
+          this.companyAddress = "952 RAMALAND BLDG., 17TH FLOOR, RAMA\nIV ROAD SURIYAWONG, BANGRAK\nBANGKOK 10500\nTHAILAND";
+      } else if (this.companyName === 'TSUBACO KTE CO., LTD. (Pattaya)') {
+          this.companyAddress = "4/222 HARBOR MALL OFFICE, ROOM 5B-01\nMOO 10 SUKHUMVIT RD.TUNGSUKLA,\nSRIRACHA,\nCHONBURI 20230\nTHAILAND";
+      } else if (this.companyName === 'KTE CORPORATION CO., LTD.') {
+          this.companyAddress = "6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET,\nBANGKOK 10250\nTHAILAND";
+      } else if (this.companyName === 'NICHIDEN TRADING (THAILAND) CO., LTD.') {
+          this.companyAddress = "159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103\nSUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA,\nWATTANA,\nBANGKOK 10110\nTHAILAND";
+      } else if (this.companyName === 'HRD (THAILAND) CO., LTD.') {
+          this.companyAddress = "BANGNA TOWERS-A, 2ND. FL., 2/3 MOO 14\nBANGNA-TRAD RD., K.M.6.5, BANGKAEW,\nBANGPLEE\nSAMUTPRAKARN 10540\nTHAILAND";
+      } else if (this.companyName === 'PLANET T AND S CO., LTD.') {
+          this.companyAddress = "28 KRUNGTHEP KRITHA 20 YAEK 3,\nTHAPCHANG, SAPANSUNG,\nBANGKOK 10250\nTHAILAND";
+      } else {
+          this.companyAddress = '';
+      }
+      
+      this.userId = this.items[0].user_id;
+      this.createdDt = this.items[0].create_time.split(" ")[0];
+
+      
+      
     },
   
     methods: {
+      getDataToday() {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+        this.createdDt = `${day}-${month}-${year}`;
+
+        const hours = String(today.getHours()).padStart(2, '0');
+        const minutes = String(today.getMinutes()).padStart(2, '0');
+        const seconds = String(today.getSeconds()).padStart(2, '0');
+
+        this.items.forEach(item => {
+          item.create_time = `${this.createdDt} ${hours}:${minutes}:${seconds}`;
+        });
+        this.$store.commit('setItemsTargetQuotNo', this.items);
+      },
+
+      async fetchNextRevisedQuotId() {
+        try {
+          const response = await axios.post(`${this.apiUrl}/generate-next-revision`, {
+            quotation_no: this.quotationId,
+          });
+          const data = response.data;
+          //console.log(data)
+          this.orgQuotationId = this.quotationId;
+          this.quotationId = data.new_quotation_no;
+
+        } catch (error) {
+          console.error("Error fetching new quot-no:", error);
+        }
+      },
+
       inputFinalInfo() {
 
       },
@@ -258,14 +363,108 @@
         }, 1000);
       },
 
+      async handleClickSubmit() {
+        this.ifSubmitted = true;
+        const preUploadedItems = this.items.map(item => {
+          let newItem = { ...item };
+
+          //如果有newChainNo
+          if (newItem.newChainNo) {
+            newItem.newModelNo = newItem.newChainNo;
+            delete newItem.newChainNo;
+          }
+
+          //如果有chainUnitPriceNum
+          if (newItem.chainUnitPriceNum) {
+            newItem.unitPriceNum = newItem.chainUnitPriceNum;
+            delete newItem.chainUnitPriceNum;
+          }
+
+          //删除unitPrice和checked
+          delete newItem.unitPrice;
+          delete newItem.checked;
+
+          //如果没有chainFormation, 加一个值为null
+          if (!('chainFormation' in newItem)) {
+            newItem.chainFormation = null;
+          }
+
+          return newItem;
+        });
+        
+        try {
+          const response = await axios.post(
+            `${this.apiUrl}/quotation/submit-new-quotation`,
+            {
+              quotationNo: this.quotationId,
+              userId: this.userId,
+              distributorName: this.companyName,
+              companyAddress: this.companyAddress,
+              tsubakiAddress: this.tsubakiAddress,
+              endUserName: this.endUserName,
+              yourName: this.yourName,
+              remark: this.remark,
+              paymentTerms: this.paymentTerms,
+              quotationAmount: this.total,
+              items: preUploadedItems,
+            }
+          );
+
+          if (response.status === 200) {
+              this.ifSubmitted = true;
+              this.$store.commit('setPartList', []);
+              alert (response.data.message);
+          }
+        } catch (error) {
+          
+          if (error) {
+            alert (error.response.data.message);
+
+          } else {
+            alert('Network error!');
+          }
+          this.ifSubmitted = false;
+        }
+      },
+
+      handleChangeCreatedDt() {
+        this.items = this.items.map(item => {
+          const [_, timePart] = item.create_time.split(" ");
+          return {
+            ...item,
+            create_time: `${this.createdDt} ${timePart}`
+          };
+        });
+        this.$store.commit('setItemsTargetQuotNo', this.items);
+      },
+
+      handleChangePaymentTerms() {
+        this.items.forEach(item => {
+          item.payment_terms = this.paymentTerms;
+        });
+        this.$store.commit('setItemsTargetQuotNo', this.items);
+      },
+
+
       handleClickEditPage() {
         if (this.bottomEditBtnText === 'Edit') {
-            this.bottomEditBtnText = 'Save Edition';
+            this.bottomEditBtnText = 'Cancel Edit';
             this.ifShowEditBtn = true;
+
+            this.fetchNextRevisedQuotId();
+            this.getDataToday();
         } else {
             this.bottomEditBtnText = 'Edit';
             this.ifShowEditBtn = false;
+
+            this.quotationId = this.orgQuotationId;
+            this.items = JSON.parse(JSON.stringify(this.orgItems));
+            this.paymentTerms = this.items[0].payment_terms;
+            this.createdDt = this.items[0].create_time.split(" ")[0];
+            this.$store.commit('setItemsTargetQuotNo', this.items);
         }
+
+        this.$store.commit('setBottomEditBtnText', this.bottomEditBtnText);
       },
   
       formatNumber(value) {
@@ -425,7 +624,7 @@
                     font-weight: bold;
                 }
                 .id {
-
+                  background: #F5F500;
                 }
             }
             .date-line {
@@ -541,6 +740,10 @@
           &.uom {
             width: 50px;
           }
+          &:nth-child(2) {
+            text-align: left;
+            padding-left: 20px;
+          }
           &:nth-child(5),
           &:nth-child(6) {
             text-align: right;
@@ -553,7 +756,7 @@
           padding: 3px 8px;
 
           &:nth-child(2) {
-            text-align: center;
+            text-align: left;
           }
           &:nth-child(5),
           &:nth-child(6) {
@@ -697,8 +900,8 @@
       &.edit-mode {
         background-color: #4472C4;
       }
-      &.save-mode {
-        background-color: #369871;
+      &.cancel-mode {
+        background-color: #BE0505;
       }
   
       span {
@@ -712,14 +915,19 @@
         &.edit-mode {
             background-color: #2C4D89;
         }
-        &.save-mode {
-            background-color: #1b5f44;
+        &.cancel-mode {
+            background-color: #920404;
         }
       }
   
-      &:hover span {
+      &:not(:disabled):hover span {
           top: 2px; 
           left: 2px; 
+      }
+
+      &:disabled {
+        background-color: #666;
+        cursor: not-allowed;
       }
     }
 
@@ -744,6 +952,10 @@
       border-radius: 5px;
       cursor: pointer;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+
+      &:nth-child(2) {
+        background-color: #369871
+      }
   
       span {
         position: relative; 
@@ -754,6 +966,15 @@
   
       &:hover{
         background-color: #2C4D89;
+
+        &:nth-child(2) {
+          background-color: #297557;
+          
+          &:disabled {
+            background-color: #666;
+            cursor: not-allowed;
+          }
+        }
       }
   
       &:not(:disabled):hover span {
@@ -823,6 +1044,4 @@
     //margin: 20mm;
   }
 }
-
-  
-  </style>
+</style>

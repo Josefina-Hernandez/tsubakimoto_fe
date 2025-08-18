@@ -6,7 +6,7 @@
             <input type="text" v-model="username" placeholder="Username">
             <input type="password" v-model="password" placeholder="Password">
 
-            <div class="custom-dropdown" ref="dropdown" v-click-outside="handleClickOutside">
+            <!-- <div class="custom-dropdown" ref="dropdown" v-click-outside="handleClickOutside">
               <div class="dropdown-selected" @click="toggleDropdown">
                 {{ selectedLabel }}
               </div>
@@ -16,7 +16,7 @@
                 </div>
               </div>
               <label for="">(Select for frontend test only!)</label>
-            </div>
+            </div> -->
 
             <p v-if="errorMessage" class="error-message">{{ errorMessage }}</p>
             <p v-if="typeMessage" class="error-message">{{ typeMessage }}</p>
@@ -152,6 +152,9 @@
 <script>
 import { mapState, mapActions } from 'vuex';
 
+import axios from 'axios';
+import config from '@/config';
+
 export default {
         name: 'LoginForm',
         data(){
@@ -165,14 +168,18 @@ export default {
                 selectedValue: 'default',
                 options: [
                     {value: 'default', label: '-Please select the access type-'},
-                    {value: 'tsubakimoto', label: 'Tsubakimoto'},
-                    {value: 'kte_bangkok', label: 'KTE Bangkok'},
-                    {value: 'kte_pattaya', label: 'KTE Pattaya'},
-                    {value: 'kte_corporation', label: 'KTE Corporation'},
+                    {value: 'ttcl_admin', label: 'Tsubakimoto'},
+                    {value: 'ttcl_user', label: 'Tsubakimoto'},
+                    {value: 'kte_bkk', label: 'KTE Bangkok'},
+                    {value: 'kte_sri', label: 'KTE Pattaya'},
+                    {value: 'kte_corp', label: 'KTE Corporation'},
                     {value: 'nichiden', label: 'NICHIDEN'},
                     {value: 'hrd', label: 'HRD'},
                     {value: 'planet', label: 'PLANET'},
-                ]
+                ],
+
+                apiUrl: config.apiUrl,
+                companyCode: "",
             }
         },
 
@@ -183,31 +190,64 @@ export default {
                 let companyAddress = '';
                 let paymentTerms = '';
 
-                if (this.selectedValue === 'tsubakimoto') {
+                // if (this.selectedValue === 'tsubakimoto') {
+                //     companyName = 'Tsubakimoto (Thailand) Co., Ltd.';
+                //     companyAddress = "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670";
+                //     paymentTerms = '30 days Aft Mth End Close';
+                // } else if (this.selectedValue === 'kte_bangkok') {
+                //     companyName = 'TSUBAKO KTE CO., LTD. (Bangkok)';
+                //     companyAddress = "952 RAMALAND BLDG., 17TH FLOOR, RAMA\nIV ROAD SURIYAWONG, BANGRAK\nBANGKOK 10500\nTHAILAND";
+                //     paymentTerms = '30 days Aft Mth End Close';
+                // } else if (this.selectedValue === 'kte_pattaya') {
+                //     companyName = 'TSUBACO KTE CO., LTD. (Pattaya)';
+                //     companyAddress = "4/222 HARBOR MALL OFFICE, ROOM 5B-01\nMOO 10 SUKHUMVIT RD.TUNGSUKLA,\nSRIRACHA,\nCHONBURI 20230\nTHAILAND";
+                //     paymentTerms = '30 days Aft Mth End Close';
+                // } else if (this.selectedValue === 'kte_corporation') {
+                //     companyName = 'KTE CORPORATION CO., LTD.';
+                //     companyAddress = "6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET,\nBANGKOK 10250\nTHAILAND";
+                //     paymentTerms = '60 days Aft Mth End Close';
+                // } else if (this.selectedValue === 'nichiden') {
+                //     companyName = 'NICHIDEN TRADING (THAILAND) CO., LTD.';
+                //     companyAddress = "159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103\nSUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA,\nWATTANA,\nBANGKOK 10110\nTHAILAND";
+                //     paymentTerms = '30 days Aft Mth End Close';
+                // } else if (this.selectedValue === 'hrd') {
+                //     companyName = 'HRD (THAILAND) CO., LTD.';
+                //     companyAddress = "BANGNA TOWERS-A, 2ND. FL., 2/3 MOO 14\nBANGNA-TRAD RD., K.M.6.5, BANGKAEW,\nBANGPLEE\nSAMUTPRAKARN 10540\nTHAILAND";
+                //     paymentTerms = '30 days Aft Mth End Close';
+                // } else if (this.selectedValue === 'planet') {
+                //     companyName = 'PLANET T AND S CO., LTD.';
+                //     companyAddress = "28 KRUNGTHEP KRITHA 20 YAEK 3,\nTHAPCHANG, SAPANSUNG,\nBANGKOK 10250\nTHAILAND";
+                //     paymentTerms = '30 days Aft Mth End Close';
+                // } else {
+                //     companyName = '';
+                //     companyAddress = '';
+                //     paymentTerms = '';
+                // }
+                if (this.companyCode === 'ttcl_admin' || this.companyCode === 'ttcl_user') {
                     companyName = 'Tsubakimoto (Thailand) Co., Ltd.';
                     companyAddress = "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670";
                     paymentTerms = '30 days Aft Mth End Close';
-                } else if (this.selectedValue === 'kte_bangkok') {
+                } else if (this.companyCode === 'kte_bkk') {
                     companyName = 'TSUBAKO KTE CO., LTD. (Bangkok)';
                     companyAddress = "952 RAMALAND BLDG., 17TH FLOOR, RAMA\nIV ROAD SURIYAWONG, BANGRAK\nBANGKOK 10500\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
-                } else if (this.selectedValue === 'kte_pattaya') {
+                } else if (this.companyCode === 'kte_sri') {
                     companyName = 'TSUBACO KTE CO., LTD. (Pattaya)';
                     companyAddress = "4/222 HARBOR MALL OFFICE, ROOM 5B-01\nMOO 10 SUKHUMVIT RD.TUNGSUKLA,\nSRIRACHA,\nCHONBURI 20230\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
-                } else if (this.selectedValue === 'kte_corporation') {
+                } else if (this.companyCode === 'kte_corp') {
                     companyName = 'KTE CORPORATION CO., LTD.';
                     companyAddress = "6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET,\nBANGKOK 10250\nTHAILAND";
                     paymentTerms = '60 days Aft Mth End Close';
-                } else if (this.selectedValue === 'nichiden') {
+                } else if (this.companyCode === 'nichiden') {
                     companyName = 'NICHIDEN TRADING (THAILAND) CO., LTD.';
                     companyAddress = "159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103\nSUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA,\nWATTANA,\nBANGKOK 10110\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
-                } else if (this.selectedValue === 'hrd') {
+                } else if (this.companyCode === 'hrd') {
                     companyName = 'HRD (THAILAND) CO., LTD.';
                     companyAddress = "BANGNA TOWERS-A, 2ND. FL., 2/3 MOO 14\nBANGNA-TRAD RD., K.M.6.5, BANGKAEW,\nBANGPLEE\nSAMUTPRAKARN 10540\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
-                } else if (this.selectedValue === 'planet') {
+                } else if (this.companyCode === 'planet') {
                     companyName = 'PLANET T AND S CO., LTD.';
                     companyAddress = "28 KRUNGTHEP KRITHA 20 YAEK 3,\nTHAPCHANG, SAPANSUNG,\nBANGKOK 10250\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
@@ -217,7 +257,7 @@ export default {
                     paymentTerms = '';
                 }
                 return {
-                    mode: this.selectedLabel,
+                    mode: this.options.find(item => item.value == this.companyCode)?.label,
                     companyName,
                     companyAddress,
                     paymentTerms,
@@ -244,18 +284,43 @@ export default {
                 this.isOpen = false;
             },
 
-            login(){
+            async login(){
                 //登录逻辑
-                if(this.username === "admin" & this.password === "admin"){
-                    if(this.selectedValue === "default") {
-                        this.typeMessage = 'Please select the access type first!';
-                    }else{
-                        this.updateLoginMode(this.payload);
-                        this.$router.push('/index');
-                    }       
+                // if(this.username === "admin" & this.password === "admin"){
+                //     if(this.selectedValue === "default") {
+                //         this.typeMessage = 'Please select the access type first!';
+                //     }else{
+                //         this.updateLoginMode(this.payload);
+                //         this.$router.push('/index');
+                //     }       
+                // }
+                // else{
+                //     this.errorMessage = 'Invalid username or password!';
+                // }
+                if (this.username === '') {
+                    this.errorMessage = 'Please input your username';
+                    return;
+                } else if (this.password === '') {
+                    this.errorMessage = 'Please input the password';
+                    return;
                 }
-                else{
-                    this.errorMessage = 'Invalid username or password!';
+                try {
+                    const response = await axios.post(`${this.apiUrl}/user-login`, {
+                        username: this.username,
+                        password: this.password,
+                    });
+                    this.$store.dispatch('updateToken', response.data.token);
+                    this.$store.dispatch('updateUserName', response.data.user_name);  //更新用户
+                    this.$store.dispatch('updateUserId', response.data.user_id);
+                    this.companyCode = response.data.company_name;
+                    this.$store.dispatch('updateLoginMode', this.payload);
+                    this.$router.push('/index');
+                } catch (error) {
+                    if (error.response && error.response.data) {
+                        this.errorMessage = error.response.data.message;
+                    } else {
+                        this.errorMessage = "Network error";
+                    }
                 }
             }
         }

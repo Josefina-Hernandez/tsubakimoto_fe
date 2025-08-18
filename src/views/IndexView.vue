@@ -12,7 +12,7 @@
           <span>Online Price List System</span>
         </button>
         <button class="result" @click="toResult">
-          <span>Quotation Result</span>
+          <span>Quotation Record</span>
         </button>
       </div>
     </div>

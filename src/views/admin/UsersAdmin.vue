@@ -91,8 +91,8 @@ export default {
                         userType = 'TSUBACO KTE (SRIRACHA)';
                     } else if (each[4] === 'kte_corp') {
                         userType = 'KTE CORPORATION';
-                    } else if (each[4] === 'hdr') {
-                        userType = 'HDR';
+                    } else if (each[4] === 'hrd') {
+                        userType = 'HRD';
                     } else if (each[4] === 'planet') {
                         userType = 'PLANET T AND S';
                     } else {

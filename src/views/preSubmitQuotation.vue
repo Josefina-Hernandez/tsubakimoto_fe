@@ -28,22 +28,30 @@
               </div>
               <div class="attn-line">
                   <div class="attn-label">Attn:</div>
-                  <div class="attn">{{ this.yourName }}</div>
+                  <div class="attn">{{ yourName }}</div>
               </div>
           </div>
           <div class="detail-right">
               <div class="ref-line">
                   <div class="ref-label">Your Ref.</div>
-                  <div class="ref">:{{ this.endUserName }}</div>
+                  <div class="ref">:{{ endUserName }}</div>
               </div>
               <div class="id-line">
                   <div class="id-label">Quote ID</div>
-                  <div class="id">:Q-102274</div>
+                  <div class="id">:{{ quotationId }}</div>
               </div>
               <div class="date-line">
                   <div class="date-label">Created Date</div>
                   <div class="date" v-if="!ifShowEditBtn">:{{ createdDt }}</div>
-                  <div class="date" v-if="ifShowEditBtn"><span>:</span><input v-model="createdDt" type="text" placeholder="Edit date"></div>
+                  <div class="date" v-if="ifShowEditBtn">
+                    <span>:</span>
+                    <flat-pickr
+                      v-model="createdDt"
+                      :config="{ dateFormat: 'd-m-Y' }"
+                      placeholder="Edit date"
+                    ></flat-pickr>
+                  </div>
+                  <!-- <div class="date" v-if="ifShowEditBtn"><span>:</span><input v-model="createdDt" type="text" placeholder="Edit date"></div> -->
               </div>
               <div class="payment-line">
                   <div class="payment-label">Payment Terms</div>
@@ -90,11 +98,13 @@
             </thead>
             <tbody>
               <tr v-for="(item, index) in pageItems" :key="index">
-                <td>{{ index + 1 + pageIndex*15 }}</td>
-                <td>{{ item.newModelNo }}</td>
+                <td>{{ index + 1 + pageIndex*10 }}</td>
+                <td>{{ item.newChainNo && item.newChainNo !== '' ? item.newChainNo : item.newModelNo }}
+                  <br v-if="item.newChainNo && item.newChainNo !== ''">{{ item.chainFormation && item.chainFormation !== '' ? item.chainFormation : ''}}
+                </td>
                 <td>{{ formatNumber(item.qty.toLocaleString('en-US')) }}</td>
                 <td>{{ item.unit }}</td>
-                <td>{{ formatNumber(item.unitPrice.toLocaleString('en-US')) }}</td>
+                <td>{{ formatNumber((item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? item.chainUnitPriceNum.toFixed(2) : item.unitPrice).toLocaleString('en-US')) }}</td>
                 <td>{{ formatNumber(item.amount) }}</td>
               </tr>
             </tbody>
@@ -136,13 +146,13 @@
     
     <div class="button-area1">
         <div></div>
-        <button @click="handleClickEditPage"
-            :class="{'edit-mode': bottomEditBtnText === 'Edit', 'save-mode': bottomEditBtnText === 'Save Edition'}"
-        ><span>{{ bottomEditBtnText }}</span></button>
+        <button @click="handleClickSubmit"
+            :class="{'edit-mode': bottomEditBtnText === 'Edit', 'save-mode': bottomEditBtnText === 'Save Edition',}" :disabled="ifSubmitted"
+        ><span>Submit Quotation</span></button>
     </div>
     <div class="button-area2">
-      <button @click="closePage"><span>Go Back</span></button>
-      <button @click="printQuote" :disabled="bottomEditBtnText === 'Save Edition'"><span>Download PDF</span></button>
+      <button @click="closePage"><span v-if="ifSubmitted">Back to Top</span><span v-else>Back</span></button>
+      <button @click="printQuote" :disabled="!ifSubmitted"><span>Download PDF</span></button>
     </div>
   </template>
   
@@ -150,17 +160,30 @@
   //import jsPDF from 'jspdf'
   //import html2canvas from 'html2canvas'
   //import htmlToPdf from '@/utils/htmlToPdf'
-  
+  import flatPickr from 'vue-flatpickr-component';
+  import 'flatpickr/dist/flatpickr.css';
+
   import { mapState/*, mapMutations*/ } from 'vuex'
   import store from '@/store';
+
+  import config from '@/config'
+  import axios from 'axios'
+
+  import qs from 'qs';
   
   export default {
     name: "PreSubmitQuotation",
     data() {
       return {
+        apiUrl: config.apiUrl,
+
+        ifSubmitted: false,
+
         companyName: '',
         companyAddress: '',
         paymentTerms: '',
+
+        userId: '',
 
         tsubakiAddress: "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670",
   
@@ -170,17 +193,22 @@
 
         bottomEditBtnText: 'Edit',
 
-        createdDt: '2 Oct 2024',
+        createdDt: '',
 
-        paymentTerms: '30 days Aft Mth End Close',
+        paymentTerms: '',
 
         items: [],
 
         endUserName: '',
         yourName: '',
         remark: '',
-  
+
+        quotationId: '',
       };
+    },
+
+    components: {
+      flatPickr,
     },
   
     computed: {
@@ -206,7 +234,7 @@
 
       paginatedItems() {
         const items = this.items;
-        const pageSize = 15;
+        const pageSize = 10;
         const pages = [];
         for (let i = 0; i < items.length; i += pageSize) {
           pages.push(items.slice(i, i + pageSize));
@@ -216,7 +244,9 @@
     },
 
     mounted() {
+      this.getDataToday();
       this.items = this.$store.state.partList;
+      console.log(this.items, '-------');
       this.endUserName = this.$store.state.endUserName;
       this.yourName = this.$store.state.yourName;
       this.remark = this.$store.state.remark;
@@ -224,12 +254,35 @@
       this.companyName = this.$store.state.companyName;
       this.companyAddress = this.$store.state.companyAddress;
       this.paymentTerms = this.$store.state.paymentTerms;
+
+      this.userId = this.$store.state.userId;
       
       console.log(this.remark);
       this.inputFinalInfo();
+
+      this.fetchQuotationId();
     },
   
     methods: {
+      getDataToday() {
+        const today = new Date();
+        const day = String(today.getDate()).padStart(2, '0');
+        const month = String(today.getMonth() + 1).padStart(2, '0');
+        const year = today.getFullYear();
+        this.createdDt = `${day}-${month}-${year}`;
+      },
+
+      async fetchQuotationId() {
+        try {
+          const response = await axios.post(`${this.apiUrl}/auto-generate-quotation-no`);
+          const data = response.data;
+          this.quotationId = data.quot_no;
+
+        } catch (error) {
+          console.error("Error fetching new quot-no:", error);
+        }
+      },
+
       inputFinalInfo() {
 
       },
@@ -260,6 +313,70 @@
         }, 1000);
       },
 
+      async handleClickSubmit() {
+        this.ifSubmitted = true;
+        const preUploadedItems = this.items.map(item => {
+          let newItem = { ...item };
+
+          //如果有newChainNo
+          if (newItem.newChainNo) {
+            newItem.newModelNo = newItem.newChainNo;
+            delete newItem.newChainNo;
+          }
+
+          //如果有chainUnitPriceNum
+          if (newItem.chainUnitPriceNum) {
+            newItem.unitPriceNum = newItem.chainUnitPriceNum;
+            delete newItem.chainUnitPriceNum;
+          }
+
+          //删除unitPrice和checked
+          delete newItem.unitPrice;
+          delete newItem.checked;
+
+          //如果没有chainFormation, 加一个值为null
+          if (!('chainFormation' in newItem)) {
+            newItem.chainFormation = null;
+          }
+
+          return newItem;
+        });
+        
+        try {
+          const response = await axios.post(
+            `${this.apiUrl}/quotation/submit-new-quotation`,
+            {
+              quotationNo: this.quotationId,
+              userId: this.userId,
+              distributorName: this.companyName,
+              companyAddress: this.companyAddress,
+              tsubakiAddress: this.tsubakiAddress,
+              endUserName: this.endUserName,
+              yourName: this.yourName,
+              remark: this.remark,
+              paymentTerms: this.paymentTerms,
+              quotationAmount: this.total,
+              items: preUploadedItems,
+            }
+          );
+
+          if (response.status === 200) {
+              this.ifSubmitted = true;
+              this.$store.commit('setPartList', []);
+              alert (response.data.message);
+          }
+        } catch (error) {
+          
+          if (error) {
+            alert (error.response.data.message);
+
+          } else {
+            alert('Network error!');
+          }
+          this.ifSubmitted = false;
+        }
+      },
+
       handleClickEditPage() {
         if (this.bottomEditBtnText === 'Edit') {
             this.bottomEditBtnText = 'Save Edition';
@@ -285,7 +402,11 @@
       },
   
       closePage(){
-        this.$router.push({path: '/editproducts'});
+        if (this.ifSubmitted) {
+          this.$router.push({path: this.$store.state.previousPage});
+        } else {
+          this.$router.push({path: '/editproducts'});
+        }
       },
     }
   };
@@ -543,6 +664,10 @@
           &.uom {
             width: 50px;
           }
+          &:nth-child(2) {
+            text-align: left;
+            padding-left: 20px;
+          }
           &:nth-child(5),
           &:nth-child(6) {
             text-align: right;
@@ -555,7 +680,7 @@
           padding: 3px 8px;
 
           &:nth-child(2) {
-            text-align: center;
+            text-align: left;
           }
           &:nth-child(5),
           &:nth-child(6) {
@@ -695,14 +820,7 @@
       border-radius: 5px;
       cursor: pointer;
       box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-
-      &.edit-mode {
-        background-color: #4472C4;
-      }
-      &.save-mode {
-        background-color: #369871;
-      }
-  
+ 
       span {
         position: relative; 
         top: 0;
@@ -711,17 +829,17 @@
       }
   
       &:hover{
-        &.edit-mode {
-            background-color: #2C4D89;
-        }
-        &.save-mode {
-            background-color: #1b5f44;
-        }
+        background-color: #2C4D89;
       }
   
-      &:hover span {
+      &:not(:disabled):hover span {
           top: 2px; 
           left: 2px; 
+      }
+
+      &:disabled {
+        background-color: #666;
+        cursor: not-allowed;
       }
     }
 
@@ -825,7 +943,5 @@
     //margin: 20mm;
   }
 }
-
-  
-  </style>
+</style>
   

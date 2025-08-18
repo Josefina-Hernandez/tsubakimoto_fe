@@ -18,12 +18,12 @@
             <tbody>
               <tr v-for="(item, index) in items" :key="index" :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
                 <td>{{ index + 1 }}</td>
-                <td>{{ item.oldModelNo }}</td>
-                <td>{{ item.newModelNo }}</td>
-                <td><input type="text" v-model="item.qty"></td>
-                <td>{{ item.unit }}</td>
-                <td>{{ item.unitPrice }}</td>
-                <td>{{ formatNumberWithCommas(item.qty * item.unitPrice) }}</td>
+                <td>{{ item.pre_model_no }}</td>
+                <td>{{ item.new_model_no }}</td>
+                <td><input type="text" v-model="item.quantity"></td>
+                <td>{{ item.uom }}</td>
+                <td>{{ item.unit_price }}</td>
+                <td>{{ formatNumberWithCommas(item.quantity * Number(item.unit_price)) }}</td>
                 <td><button @click="deleteProduct(index)"><span>Delete</span></button></td>
               </tr>
             </tbody>
@@ -106,16 +106,18 @@ export default {
   },
 
   mounted() {
-    this.items = this.$store.state.partList;
-    console.log(this.items);
+    this.items = this.$store.state.itemsTargetQuotNo;
+
+
+    console.log(this.items, '****************');
     this.inputFinalInfo();
   },
 
   computed: {
     totalPrice() {
         const total = this.items.reduce((sum, item) => {
-            const qty = Number(item.qty) || 0;
-            const price = Number(item.unitPrice) || 0;
+            const qty = Number(item.quantity) || 0;
+            const price = Number(item.unit_price) || 0;
             return sum + qty * price;
         }, 0);
 
@@ -135,23 +137,23 @@ export default {
         const confirmed = window.confirm(`Are you sure you want to remove all of the products on the table?`);
         if (confirmed) {
             this.items = [];
-            this.$store.commit('setPartList', this.items);
+            this.$store.commit('setItemsTargetQuotNo', this.items);
         }
     },
 
     deleteProduct(index) {
-        const confirmed = window.confirm(`Are you sure you want to delete the product of ${this.items[index].newModelNo}?`);
+        const confirmed = window.confirm(`Are you sure you want to delete the product of ${this.items[index].new_model_no}?`);
         if (confirmed) {
             //console.log(index);
             this.items.splice(index, 1);
-            this.$store.commit('setPartList', this.items);
+            this.$store.commit('setItemsTargetQuotNo', this.items);
         }
     },
 
     handleClick(){
-        this.endUser = this.$store.state.endUserName || '';
-        this.yourName = this.$store.state.yourName || '';
-        this.remark = this.$store.state.remark || '';
+        this.endUser = this.items[0].customer_ref || '';
+        this.yourName = this.items[0].attention || '';
+        this.remark = this.items[0].remark || '';
         this.showModal = true;
         this.inputFinalInfo();
     },
@@ -180,17 +182,17 @@ export default {
         this.$store.commit('setRemark', this.remark);
 
         const updatedItems = this.items.map(item => {
-            const qty = Number(item.qty) || 0;
-            const price = Number(item.unitPrice) || 0;
+            const qty = Number(item.quantity) || 0;
+            const price = Number(item.unit_price) || 0;
             return {
                 ...item,
-                amount: qty * price,
+                total: qty * price,
             };
         });
 
-        this.$store.commit('setPartList', updatedItems);
+        this.$store.commit('setItemsTargetQuotNo', updatedItems);
 
-        this.$router.push('/presubmitquotation');
+        this.$router.push('/editquotationpage');
     },
     
   },

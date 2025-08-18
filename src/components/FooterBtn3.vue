@@ -1,7 +1,7 @@
 <template>
     <div class="footer">
-        <button class="back" @click="backFunc(toWhere)"><span>Back</span></button>
-        <button class="add" @click="backFunc(toWhere2)"><span>Add Parts</span></button>
+        <button v-if="true" class="back" @click="backFunc(toWhere)"><span>Back without Change</span></button>
+        <button class="add" @click="backFunc(toWhere2)"><span>Add Other Products</span></button>
         <div class="spacer"></div>
         <button class="quotation" v-bind:disabled="isButtonDisabled" v-show="ifShow2" @click="handleClick"><span>Get Quotation</span></button>      
     </div>
@@ -44,18 +44,19 @@ export default {
             .add {
                 margin-left: 10px;
                 flex: 1;
-                max-width: 180px;
+                max-width: 280px;
             }
 
             .back {
                flex: 1;
-               max-width: 180px;
+               max-width: 280px;
             }
 
             
             .back, .add, .quotation{
+                white-space: nowrap;
                 background-color:  #00AAEE;
-                width: 180px;
+                width: 280px;
                 height: 35px;
                 border: none;
                 margin: 0 40px 30px;
@@ -84,10 +85,10 @@ export default {
                 }
             }
             .spacer {
-                flex: 4;
+                flex: 1;
             }
             .quotation{
-                max-width: 200px;
+                max-width: 280px;
                 flex: 4;
                 &:disabled{
                     pointer-events: none;

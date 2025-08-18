@@ -18,6 +18,19 @@ export default createStore({
     endUserName: localStorage.getItem('endUserName') || '',
     yourName: localStorage.getItem('yourName') || '',
     remark: localStorage.getItem('remark') || '',
+
+    previousPage: localStorage.getItem('previousPage') || '',
+
+    userId: localStorage.getItem('userId') || '',
+    userName: localStorage.getItem('userName') || '',
+    token: localStorage.getItem('token') || null,
+
+    itemsTargetQuotNo: JSON.parse(localStorage.getItem('itemsTargetQuotNo') || '[]'),
+    itemsOrgQuotNo: JSON.parse(localStorage.getItem('itemsOrgQuotNo') || '[]'),
+
+    bottomEditBtnText: localStorage.getItem('bottomEditBtnText') || 'Edit',
+
+    MODE: localStorage.getItem('MODE') || 0,
   },
 
   getters: {
@@ -40,6 +53,31 @@ export default createStore({
     getRemark(state) {
       return state.remark;
     },
+
+    getUserName(state) {
+      return state.userName;
+    },
+
+    getUserId(state) {
+      return state.userId;
+    },
+
+    getItemsTargetQuotNo(state) {
+      return state.itemsTargetQuotNo;
+    },
+    getItemsOrgQuotNo(state) {
+      return state.itemsOrgQuotNo;
+    },
+
+    getBottomEditBtnText(state) {
+      return state.bottomEditBtnText;
+    },
+
+    getMODE(state) {
+      return state.MODE;
+    },
+
+    isAuthenticated: (state) => !!state.token,
   },
 
   mutations: {
@@ -50,7 +88,7 @@ export default createStore({
       localStorage.setItem('loginMode', mode);
 
       state.companyName = companyName;
-      localStorage.setItem('CompanyName', companyName);
+      localStorage.setItem('fullCompanyName', companyName);
 
       state.companyAddress = companyAddress;
       localStorage.setItem('companyAddress', companyAddress);
@@ -102,6 +140,51 @@ export default createStore({
       state.remark = remark;
       localStorage.setItem('remark', remark);
     },
+
+    setPreviousPage(state, page) {
+      state.previousPage = page;
+      localStorage.setItem('previousPage', page);
+    },
+
+    setUserName(state, userName) {
+      state.userName = userName;
+      localStorage.setItem('userName', userName);
+    },
+
+    setUserId(state, userId) {
+      state.userId = userId;
+      localStorage.setItem('userId', userId);
+    },
+
+    setToken(state, token) {
+      state.token = token;
+      localStorage.setItem('token', token);
+    },
+
+    clearToken(state) {
+      state.token = null;
+      localStorage.removeItem('token');
+      localStorage.removeItem('userName');
+    },
+
+    setItemsTargetQuotNo(state, list) {
+      state.itemsTargetQuotNo = list;
+      localStorage.setItem('itemsTargetQuotNo', JSON.stringify(list));
+    },
+    setItemsOrgQuotNo(state, list) {
+      state.itemsOrgQuotNo = list;
+      localStorage.setItem('itemsOrgQuotNo', JSON.stringify(list));
+    },
+
+    setBottomEditBtnText(state, text) {
+      state.bottomEditBtnText = text;
+      localStorage.setItem('bottomEditBtnText', text);
+    },
+
+    setMODE(state, mode) {
+      state.MODE = mode;
+      localStorage.setItem('MODE', mode);
+    }
   },
 
   actions: {
@@ -127,6 +210,22 @@ export default createStore({
     passPrice(context, value) {
       context.commit('PASSPRICE', value);
     },
+
+    updateUserName({ commit }, userName) {
+      commit('setUserName', userName);
+    },
+
+    updateUserId({ commit }, userId) {
+      commit('setUserId', userId);
+    },
+
+    updateToken({ commit }, token) {
+      commit('setToken', token);
+    },
+
+    logout({ commit }) {
+      commit('clearToken');
+    }
   },
   modules: {
   }

@@ -8,6 +8,7 @@
                 <th>no</th>
                 <th>Previous Model No.</th>
                 <th>New Model No.<br>/New Chain Number</th>
+                <th>Chain Formation</th>
                 <th>QTY</th>
                 <th>Unit</th>
                 <th>Unit Price</th>
@@ -19,11 +20,12 @@
               <tr v-for="(item, index) in items" :key="index" :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
                 <td>{{ index + 1 }}</td>
                 <td>{{ item.oldModelNo }}</td>
-                <td>{{ item.newModelNo }}</td>
+                <td>{{ item.newChainNo && item.newChainNo !== '' ? item.newChainNo : item.newModelNo }}</td>
+                <td>{{ item.chainFormation }}</td>
                 <td><input type="text" v-model="item.qty"></td>
                 <td>{{ item.unit }}</td>
-                <td>{{ item.unitPrice }}</td>
-                <td>{{ formatNumberWithCommas(item.qty * item.unitPrice) }}</td>
+                <td>{{ item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? item.chainUnitPriceNum.toFixed(2) : item.unitPrice }}</td>
+                <td>{{ formatNumberWithCommas(item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? parseInt(item.qty) * item.chainUnitPriceNum : parseInt(item.qty) * item.unitPriceNum) }}</td>
                 <td><button @click="deleteProduct(index)"><span>Delete</span></button></td>
               </tr>
             </tbody>
@@ -85,7 +87,7 @@ export default {
     return{
         title: "Edit Products",
         ifShow2: true,
-        previousPage: '/onlinepricelist',
+        previousPage: '',
         isButtonDisabled: false,
 
         showModal: false,
@@ -106,6 +108,7 @@ export default {
 
   mounted() {
     this.items = this.$store.state.partList;
+    this.previousPage = this.$store.state.previousPage;
     console.log(this.items);
     this.inputFinalInfo();
   },
@@ -114,7 +117,7 @@ export default {
     totalPrice() {
         const total = this.items.reduce((sum, item) => {
             const qty = Number(item.qty) || 0;
-            const price = Number(item.unitPrice) || 0;
+            const price = item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? item.chainUnitPriceNum : item.unitPriceNum;
             return sum + qty * price;
         }, 0);
 
@@ -180,7 +183,7 @@ export default {
 
         const updatedItems = this.items.map(item => {
             const qty = Number(item.qty) || 0;
-            const price = Number(item.unitPrice) || 0;
+            const price = item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? item.chainUnitPriceNum : item.unitPriceNum;
             return {
                 ...item,
                 amount: qty * price,
@@ -277,7 +280,7 @@ export default {
                                 width: 80px;
                             }
 
-                            &:nth-child(4) {
+                            &:nth-child(5) {
                                 width: 130px;
 
                                 input {
@@ -289,21 +292,21 @@ export default {
                                 }
                             }
 
-                            &:nth-child(5) {
-                                width: 100px;
-                            }
-
                             &:nth-child(6) {
-                                text-align: right;
-                                width: 160px;
+                                width: 100px;
                             }
 
                             &:nth-child(7) {
                                 text-align: right;
-                                width: 200px;
+                                width: 160px;
                             }
 
                             &:nth-child(8) {
+                                text-align: right;
+                                width: 200px;
+                            }
+
+                            &:nth-child(9) {
                                 width: 140px;
                                 button {
                                     width: 100px;

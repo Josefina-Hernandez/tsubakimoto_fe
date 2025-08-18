@@ -139,7 +139,7 @@
             </div>
             <div class="modal-footer">
               <button class="modal-default-button1" @click="showModalBack">Close</button>
-              <div @click.prevent="!modalButtonDisabled && addProduct()">
+              <div @click.prevent="!modalButtonDisabled && addProductNormal()">
                 <button class="modal-default-button2" :disabled="modalButtonDisabled">Add to Quotation</button>
               </div>               
             </div>
@@ -160,22 +160,23 @@
                 <div class="detail-left">
                   <div><strong>NEW Model No.:</strong> {{newCode}}</div>
                   <div><strong>Previous Model No.:</strong> {{oldCode}}</div>
-                  <div class="category-dropdown" @mouseleave="hideCategoryDropdown">
-                      <div class="category-title">Category (For frontend test only)</div>
-                      <div class="category-select">
+                  <div class="category-dropdown">
+                      <div class="category-title">Price List Name: {{ priceListName }}</div>
+                      <!-- <div class="category-select">
                           <div class="selected" @click="toggleCategoryDropdown">{{ selectedCategoryItem }}</div>
                           <div class="dropdown-list" v-show="categoryDropdownOpen">
                               <div class="dropdown-item" v-for="(item, index) in categoryItems" :key="index" @click="selectCategoryItem(item)">
                                   {{ item }}
                               </div>
                           </div>
-                      </div>
+                      </div> -->
                   </div>
                   <div class="linknum-area">
                       <div class="linknum-label">No. of Link</div>
-                      <input type="text" class="linknum-input" name="lsk" v-model.number="lskQty" @input="inputLinkQty">
-                      <div class="linknum-unit">{{ qtyUnit }}</div>
-                      <div class="red-label">Maximum length = ...LKS/PC</div>
+                      <input type="text" class="linknum-input" name="lsk" v-model.number="lskQty" @input="inputLinkQty" @focusout="moveOutLinksInput">
+                        <div class="linknum-unit">Link(s)</div>
+                        <div class="red-label">Maximum Length = {{ this.maxLinks }} LKS/PC</div>
+                        <div class="red-label">Attachment Unit: {{ this.stat }}</div>
                   </div>
                   <div class="a-dropdown" @mouseleave="hideADropdown">
                       <div class="a-label">End-link A side:</div>
@@ -220,12 +221,26 @@
                       <span>&nbsp;No Opthion</span>
                     </label>
                     <label>
-                      <input type="radio" value="option1" v-model="selectedOption">
+                      <input type="radio" value="option1" v-model="selectedOption" :disabled="!isEnabledLongLength">
                       <span>&nbsp;Long Length (T)</span>                      
                     </label>                     
                   </div>
                   <div class="remark-text">Other options, please contact TTCL</div>
                 </div>
+              </div>
+            </div>
+
+            <div class="finalcode-area">
+              <div class="final-left">
+                <div class="final-label">Chain Formation:</div>
+                <div class="final-code">{{ this.chainFormation }}</div>
+              </div>
+            </div>
+
+            <div class="finalcode-area">
+              <div class="final-left">
+                <div class="final-label">Chain Unit Price:</div>
+                <div class="final-code">{{ this.formationPrice.toFixed(2) }} THB</div>
               </div>
             </div>
 
@@ -246,7 +261,7 @@
             <div class="modal-footer2">
               <button class="modal2-default-button1" @click="showModal2 = false">Close</button>
 
-              <button class="modal2-default-button2" @click.prevent="!modalButtonDisabled2 && addProduct()" :disabled="modalButtonDisabled2">Add to Quotation</button>
+              <button class="modal2-default-button2" @click.prevent="!modalButtonDisabled2 && addProductChain()" :disabled="modalButtonDisabled2">Add to Quotation</button>
 
          
               <!--<button class="modal2-default-button3" @click="showModal2 = false">Done</button>-->
@@ -328,7 +343,7 @@
                 left: 0;
                 z-index: 1;
                 width: 100%;
-                max-height: 300px;
+                max-height: 60vh;
                 overflow-y: auto;
                 //background-color: #E7E6E6;
                 background-color: #E9EBF5;
@@ -855,7 +870,7 @@
             display: flex;
             align-items: baseline;
             justify-content: space-between;
-            margin-top: 20px;
+            margin-top: 10px;
           
             .name{
               font-size: 23px;
@@ -867,11 +882,11 @@
             display: flex;
             align-items:normal;
             justify-content: space-between;
-            margin-top: 10px;
+            margin-top: 20px;
             position: relative;
             .detail-left{
               text-align: left;
-              padding-top: 16px;
+              //padding-top: 16px;
               
               div{
                 margin-bottom: 5px;
@@ -1141,6 +1156,7 @@
               .offset-dropdown{
                   font-size: 14px;
                   margin-top: 20px;
+                  margin-bottom: 20px;
                   display: flex;
                   justify-content: start;
                   align-items: center;
@@ -1228,11 +1244,17 @@
                   display: flex;
                   align-items: center;
                   cursor: pointer;
+                  transition: background-color 0.1s ease;
+
+                  &:hover {
+                    background-color: #cfdff7;
+                  }
 
                   span{
                     vertical-align: middle;
                     display: inline-block;
-                    height: 10px;
+                    height: 16px;
+                    line-height: 16px;
                     margin-left: 10px;
                     color: red;
                     font-weight: bold;
@@ -1241,8 +1263,9 @@
                   input[type="radio"]{
                     appearance: none;
                     position: relative;
-                    width: 15px;
-                    height: 15px;
+                    margin: 2px 3px 2px 20px;
+                    width: 16px;
+                    height: 16px;
                     border-radius: 50%;
                     border: 1px solid #4472C4;
                     background-color: #E7E6E6;
@@ -1271,6 +1294,16 @@
                       height: 8px;
                     }
 
+                    &:disabled {
+                      border-color: #ccc;
+                      background-color: #f5f5f5;
+                      cursor: not-allowed;
+                    }
+
+                    &:disabled + span {
+                      color: #999;
+                    }
+
                   }
 
                 }
@@ -1279,7 +1312,7 @@
                   font-size: 12px;
                   font-weight: bold;
                   color: red;
-                  margin-top: 10px;
+                  margin-top: 13px;
               }
             }
             
@@ -1293,7 +1326,7 @@
           align-items: center;
           margin-left: 40px;
           margin-right: 40px;
-          margin-top: 40px;
+          margin-top: 20px;
 
           .final-left{
               display: flex;
@@ -1365,13 +1398,12 @@
                   margin-left: 10px;
               }
           }
-          
         }
 
         .hr{
           border-style: dashed;
           border-width: 1px 0;
-          margin: 30px 30px 40px 30px;
+          margin: 30px 30px 1% 30px;
         }
         .modal-footer2{
           margin-bottom: 10px;
@@ -1464,11 +1496,15 @@ import store from '@/store';
 
 import '@fortawesome/fontawesome-free/css/all.css';
 
+import qs from 'qs';
+
 export default {
 name: 'ChainCutting',
 
 data(){
   return{
+      isEnabledLongLength: true,
+
       windowHeight: window.innerHeight,
 
       title: "Cutting & Assembly at TTCL Warehouse",
@@ -1499,7 +1535,10 @@ data(){
       // items2: ['--', 'THB DRICE CHAIN', 'PRICE LIST NAME 2', 'PRICE LIST NAME 3', 'PRICE LIST NAME 4'],
       items1: [null, '--'],
       items2: ['--'],
-      categoryItems: ['Drive chain', 'Small size conveyor chain', 'Large size conveyor chain', 'Cableveyors', 'Top chains(ST/RT)', 'Top chains(RS)', 'Top chains(TS/TSA)'],
+
+      ruleRows: [],
+      connListForRef: [],
+      //categoryItems: ['Drive chain', 'Small size conveyor chain', 'Large size conveyor chain', 'Cableveyors', 'Top chains(ST/RT)', 'Top chains(RS)', 'Top chains(TS/TSA)'],
       aItems: ['MWJ', 'MWJK', 'MCJ', 'MCJK', 'MSJ', 'MSJK', 'FWJ', 'FCJ', 'FSJ'],
       bItems: ['R'],
       offsetItems: ['---', '2O', '2OK', '4O', '4OK', 'O', 'OK', 'R'],
@@ -1507,7 +1546,7 @@ data(){
       showWarning: false,
       dropdownOpen1: false,
       dropdownOpen2: false,
-      categoryDropdownOpen: false,
+      //categoryDropdownOpen: false,
       aDropdownOpen: false,
       bDropdownOpen: false,
       offsetDropdownOpen: false,
@@ -1875,10 +1914,14 @@ data(){
         // },
       ],
 
-      // newCode: '',
-      // oldCode: '',
       newCode: '',
       oldCode: '',
+      priceListName: '',
+      standardLinks: '',
+      maxLinks: '',
+      calCase: '',
+      stat: '',
+      unitPriceNum: 0,
 
       newChainNo: '',
 
@@ -1891,7 +1934,7 @@ data(){
 
       prevCheckedId: null,
 
-      selectedOption: 'option1',
+      selectedOption: 'option2',
 
       lskQty: 0,
 
@@ -1919,6 +1962,10 @@ data(){
       nonStocked: true,
 
       ifShowChecks: true,
+
+      connPriceData: [],
+
+      lskQtyAfterLeave: ''
   }
 },
 
@@ -1936,6 +1983,147 @@ computed: {
     let end = this.sliderPage * this.pageSize;
     if (end > this.totalItems) end = this.totalItems;
     return `Part: ${start} - ${end}`;
+  },
+
+  formationPrice() {
+    //console.log('888888888', this.connPriceData);
+    var lskQtyInt = parseInt(this.lskQty);
+    //console.log(this.selectedAItem, this.selectedBItem, this.selectedOffsetItem);
+    if (this.calCase?.trim().toUpperCase() === "DRIVE CHAIN" || this.calCase?.trim().toUpperCase() === "SMALL SIZE") {
+      if (this.selectedAItem && this.selectedAItem !== '---') {
+        if ((this.selectedBItem !== '---' && this.selectedOffsetItem === '---') || (this.selectedBItem === '---' && this.selectedOffsetItem !== '---')) {
+          var count = 0;
+          for (const each of [this.selectedAItem, this.selectedBItem, this.selectedOffsetItem]) {
+            console.log(each)
+            if (each === 'R') {
+              count += 1;
+            }
+          }
+          console.log(count)
+          const result = 1.1 * (lskQtyInt + count - 1) * this.unitPriceNum
+            + (this.selectedAItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0)
+            + (this.selectedBItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0)
+            + (this.selectedOffsetItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0);
+          console.log('case 2')
+          //console.log((lskQtyInt - 1) * this.unitPriceNum, (this.selectedBItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0), (this.selectedOffsetItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0))
+          return result;
+
+        } else if (this.selectedBItem !== '---' && this.selectedOffsetItem !== '---') {
+          const result = 1.1 * (lskQtyInt - 3) * this.unitPriceNum 
+            + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0)
+            + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0)
+            + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0);
+          console.log('case 3')
+          //console.log((lskQtyInt - 3) * this.unitPriceNum, (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0), (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0))
+          return result;
+        }
+      }
+    } else if (this.calCase?.trim().toUpperCase() === "TOPCHAIN") {
+      if (this.selectedOffsetItem !== '---') {
+        const result = (lskQtyInt - 1) * this.unitPriceNum + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0);
+        //console.log('case 6')
+        return result;
+      }
+    } else if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+      const result = lskQtyInt * this.unitPriceNum
+        + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0)
+        + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0);
+      //console.log('case 7')
+      return result;
+    }
+    
+    else {
+      const result = lskQtyInt * this.unitPriceNum;
+      //console.log('case other')
+      return result;
+    }
+  },
+
+  chainFormation() {
+    var lskQtyInt = parseInt(this.lskQty);
+
+    if (this.stat === 1) {
+      this.lskQtyAfterLeave = this.lskQty;
+      if (this.maxLinks === null) {
+        this.isEnabledLongLength = false;
+        this.selectedOption = 'option2';
+
+        if (this.standardLinks === null) {
+          return;
+        } else {
+          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          return res;
+        }
+
+      } else if (this.standardLinks === null) {
+        this.isEnabledLongLength = false;
+        return;
+      } else {
+        if (lskQtyInt > parseInt(this.maxLinks)) {
+          this.isEnabledLongLength = false;
+          this.selectedOption = 'option2';
+          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          return res;
+
+        } else {
+          this.isEnabledLongLength = true;
+
+          if (this.selectedOption === 'option2') {
+            const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+            ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+            return res;
+          } else if (this.selectedOption === 'option1') {
+            return `${this.lskQty} (LKS)/PC x 1 PC`;
+          }
+        }
+        
+      }
+      
+    } else {
+      const nearestMultiple = Math.round(parseInt(this.lskQty) / this.stat) * this.stat;
+      this.lskQtyAfterLeave = nearestMultiple.toString();
+
+      if (this.maxLinks === null) {
+        this.isEnabledLongLength = false;
+        this.selectedOption = 'option2';
+
+        if (this.standardLinks === null) {
+          return;
+        } else {
+          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          return res;
+        }
+
+      } else if (this.standardLinks === null) {
+        this.isEnabledLongLength = false;
+        return;
+      } else {
+        if (lskQtyInt > parseInt(this.maxLinks)) {
+          this.isEnabledLongLength = false;
+          this.selectedOption = 'option2';
+          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          return res;
+
+        } else {
+          this.isEnabledLongLength = true;
+
+          if (this.selectedOption === 'option2') {
+            const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+            ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+            return res;
+          } else if (this.selectedOption === 'option1') {
+            return `${this.lskQty} (LKS)/PC x 1 PC`;
+          }
+        }
+        
+      }
+    }
+
+    
   },
 },
 
@@ -1964,28 +2152,33 @@ watch: {
 
 
   selectedCategoryItem(){
-      this.setPullDownLists();
-      this.selectedAItem = '---';
-      this.selectedBItem = '---'
+      this.updateDropdowns();
+      // this.selectedAItem = '---';
+      // this.selectedBItem = '---'
   },
 
   selectedAItem() {
-      this.setPullDownLists();
-      this.selectedBItem = '---';
+      this.buildBItems();
+      // this.selectedBItem = '---';
+      // this.selectedOffsetItem = '---';
+      this.createNewChainNo();
   },
 
   selectedBItem() {
-      this.setPullDownLists();
+      this.buildOffsetItems();
+      // this.selectedOffsetItem = '---';
+      this.createNewChainNo();
   },
 
   selectedOffsetItem() {
-      this.setPullDownLists();
+      //this.updateDropdowns();
+      this.createNewChainNo();
   },
 
   isEven() {
-      this.setPullDownLists();
-      this.selectedAItem = '---';
-      this.selectedBItem = '---'
+      this.updateDropdowns();
+      // this.selectedAItem = '---';
+      // this.selectedBItem = '---'
   },
 
   lskQty(){
@@ -1999,14 +2192,7 @@ watch: {
 
     this.isEnableProceedBtn();
 
-  //   if(this.lskQty!=0){
-  //     this.showBtnBackQuotation = true;
-  //     // this.addMiddle = this.lskQty;
-  //   }else{
-  //     this.showBtnBackQuotation = false;
-  //     // this.addMiddle = '____';
-  //   }
-    this.setPullDownLists();
+    this.updateDropdowns();
   },
 
   orderQty(){
@@ -2019,6 +2205,10 @@ watch: {
     }
 
     this.isEnableProceedBtn();
+  },
+
+  selectedOption() {
+    this.createNewChainNo();
   },
 },
 
@@ -2051,6 +2241,10 @@ beforeUnmount() {
 },
 
 methods: {
+  moveOutLinksInput() {
+    this.lskQty = this.lskQtyAfterLeave;
+  },
+
   async fetchPricelistOptions() {
     const response = await axios.post(`${this.apiUrl}/master_data/get_pricelist_filter`, {
       company_id: this.selectedId1,
@@ -2148,6 +2342,7 @@ methods: {
           thbCost: thbCostFormatted,
           gp: gpFormatted,
           unitPrice: unitPriceFormatted,
+          unitPriceNum: unitPriceNum,
           detail: row[30],
           priceListName: row[15],
           stockReference: row[28],
@@ -2171,6 +2366,7 @@ methods: {
           newModelNo: row[3],
           unit: row[4],
           unitPrice: unitPriceFormatted,
+          unitPriceNum: unitPriceNum,
           detail: row[30],
           priceListName: row[15],
           stockReference: row[28],
@@ -2185,106 +2381,184 @@ methods: {
     }
   },
 
-  addProduct() {
+  addProductNormal() {
+    this.selectedDataLine.qty = this.orderQty;
+    const newItem = { ...this.selectedDataLine };
+
+    this.addedDataList.push(newItem);
+    this.$store.commit('setPartList', this.addedDataList);
+    this.cartCount += 1;
+    this.showModal = false;
+    this.showModal2 = false;
+  },
+
+  addProductChain() {
       this.selectedDataLine.qty = this.orderQty;   
-      if (this.newChainNo) {
-          this.selectedDataLine.newModelNo = this.newChainNo;
-      }
-      
+
+      this.selectedDataLine.newChainNo = this.newChainNo;
+
+      this.selectedDataLine.chainUnitPriceNum = this.formationPrice;
+      this.selectedDataLine.chainFormation = this.chainFormation;
+
+      console.log(this.selectedDataLine,'-------------');
       const newItem = { ...this.selectedDataLine };
 
       this.addedDataList.push(newItem);
       this.$store.commit('setPartList', this.addedDataList);
-      //console.log(this.addedDataList);
+      console.log(this.addedDataList);
       this.cartCount += 1
       this.showModal = false;
       this.showModal2 = false;
   },
 
-  setPullDownLists() {
-      if (this.selectedCategoryItem === 'Drive chain') {
-          if (this.isEven) {
-              this.aItems = ['MWJ', 'MWJK', 'MCJ', 'MCJK', 'MSJ', 'MSJK', 'FWJ', 'FCJ', 'FSJ'];
-              this.bItems = ['R'];
-          } else {
-              this.aItems = ['MWJ', 'MWJK', 'MCJ', 'MCJK', 'MSJ', 'MSJK', 'FWJ', 'FCJ', 'FSJ', 'R'];
-              if (this.selectedAItem === 'MWJ') {
-                  this.bItems = ['O', 'OK', 'MWJ', 'MWJ2O', 'MWJ2OK'];
-              } else if (this.selectedAItem === 'MCJ') {
-                  this.bItems = ['O', 'OK', 'MCJ', 'MCJ2O', 'MCJ2OK'];
-              } else if (this.selectedAItem === 'MSJ') {
-                  this.bItems = ['O', 'OK', 'MSJ', 'MSJ2O', 'MSJ2OK'];
-              } else if (this.selectedAItem === 'MWJK') {
-                  this.bItems = ['MWJK', 'MWJK2OK'];
-              } else if (this.selectedAItem === 'MCJK') {
-                  this.bItems = ['MCJK', 'MCJK2OK'];
-              } else if (this.selectedAItem === 'MSJK') {
-                  this.bItems = ['MSJK', 'MSJK2OK'];
-              } else if (this.selectedAItem === 'FWJ') {
-                  this.bItems = ['FWJ'];
-              } else if (this.selectedAItem === 'FCJ') {
-                  this.bItems = ['FCJ'];
-              } else if (this.selectedAItem === 'FSJ') {
-                  this.bItems = ['FSJ'];
-              } else if (this.selectedAItem === 'R') {
-                  this.bItems = ['R', 'MWJR', 'MCJR', 'MSJR'];
-              } else {
-                  this.bItems = ['---'];
-              }
-          }          
+  //去重工具
+  uniqueValues(arr) {
+    let mapped = arr.map(v => (v ? v : '---'));
+    let unique = [...new Set(mapped)];
 
-      } else if (this.selectedCategoryItem == 'Small size conveyor chain') {
-          if (this.isEven) {
-              this.aItems = ['J', 'JK'];
-              this.bItems = ['R'];
-          } else {
-              this.aItems = ['J', 'JK', 'R'];
-              if (this.selectedAItem === 'J') {
-                  this.bItems = ['L', 'O', 'OK', 'J'];
-              } else if (this.selectedAItem === 'JK') {
-                  this.bItems = ['JK', 'OK'];
-              } else if (this.selectedAItem === 'R') {
-                  this.bItems = ['R'];
-              } else {
-                  this.bItems = ['---'];
-              }
+    let nonIndex = unique.indexOf('---');
+    if (nonIndex > -1) {
+      unique.splice(nonIndex, 1);  //删除NONE的原位置
+      unique.unshift('---'); //插入到最前面
+    }
+
+    return unique;
+  },
+
+  // 过滤出当前奇偶规则
+  getFilteredRules() {
+    const eo = this.isEven ? 0 : 1;
+    return this.ruleRows.filter(r => Number(r[4]) === eo);  //r.even_odd
+  },
+
+  // 生成A列表
+  buildAItems() {
+    const rows = this.getFilteredRules();
+    this.aItems = this.uniqueValues(rows.map(r => r[1]));  //r.connA
+
+    this.selectedAItem = this.aItems[0] ? this.aItems[0] : '---';
+  },
+
+  // 生成B列表
+  buildBItems() {
+    const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
+    this.bItems = this.uniqueValues(rows.map(r => r[2]));
+
+    this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
+  },
+
+  // 生成Offset列表
+  buildOffsetItems() {
+    const rows = this.getFilteredRules().filter(r => 
+      r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem) && r[2] === (this.selectedBItem === '---' ? null : this.selectedBItem)
+    );
+    this.offsetItems = this.uniqueValues(rows.map(r => r[3]));
+
+    this.selectedOffsetItem = this.offsetItems[0] ? this.offsetItems[0] : '---';
+  },
+
+  //主入口
+  updateDropdowns() {
+    this.buildAItems();
+    this.buildBItems();
+    this.buildOffsetItems();
+  },
+
+  async fetchLinkPrice() {
+    const response = await axios.post(`${this.apiUrl}/endlink_data/get_link_price`,
+        {
+          base: this.selectedDataLine.newModelNo,
+          connList: this.connListForRef,
+          pl_name: this.selectedDataLine.priceListName,
+          unit: this.selectedDataLine.unit,
+        }
+    );
+
+    this.connPriceData = response.data.data;
+
+    if (!Array.isArray(this.connPriceData)) {
+      this.connPriceData = [];
+    }
+    //console.log(this.connPriceData);
+  },
+
+  async setPullDownLists() {
+      try {
+        const response = await axios.post(`${this.apiUrl}/endlink_data/by_code`, 
+          qs.stringify(
+            {
+              base: this.selectedDataLine.newModelNo,
+              pl_name: this.selectedDataLine.priceListName,
+              unit: this.selectedDataLine.unit,
+            }
+          ),
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded'
+            }
           }
-      } else if (this.selectedCategoryItem == 'Large size conveyor chain') {
-          this.aItems = ['P', 'R'];
-          if (this.selectedAItem === 'P') {
-              this.bItems = ['R', 'OK', 'P'];
-          } else if (this.selectedAItem === 'R') {
-              this.bItems = ['R'];
-          } else {
-              this.bItems = ['---'];
-          }
-      } else if (this.selectedCategoryItem === 'Cableveyors') {
-          this.aItems = ['1A'];
-          this.bItems = ['-2A'];
-      } else if (this.selectedCategoryItem === 'Top chains(ST/RT)') {
-          this.aItems = ['JK', 'R'];
-          this.bItems = ['R'];
-      } else if (this.selectedCategoryItem ==='Top chains(RS)') {
-          this.aItems = ['J', 'R'];
-          this.bItems = ['R'];
-      } else if (this.selectedCategoryItem === 'Top chains(TS/TSA)') {
-          this.aItems = ['PK', 'R'];
-          if (this.selectedAItem === 'PK') {
-              this.bItems = ['R', 'PK', 'OK'];
-          } else if (this.selectedAItem === 'R') {
-              this.bItems = ['R'];
-          } else {
-              this.bItems = ['---'];
-          }
+        );
+
+        const rawData = response.data;
+        this.ruleRows = rawData;
+        console.log(this.ruleRows)
+        
+        this.connListForRef = [
+          ...new Set(
+            rawData
+              .flatMap(row => [row[1], row[2], row[3]])
+              .filter(v => v !== null && v !== '')
+          )
+        ];
+        //console.log(this.connListForRef)
+
+        this.standardLinks = rawData[0][7];
+        this.maxLinks = rawData[0][8];
+        this.lskQty = Number(this.standardLinks) || 0;
+        
+        this.calCase = rawData[0][9] || '';
+        //console.log(this.calCase);
+
+        this.stat = rawData[0][6] || 1;
+
+        if (this.lskQty % 2 === 0){
+          this.isEven = true;
+        }else{
+          this.isEven = false;
+        }
+
+        await this.fetchLinkPrice();
+
+        this.updateDropdowns();
+
+        this.moveOutLinksInput();
+        this.createNewChainNo();
+
+      } catch (error) {
+        console.error("Error fetching endlink data:", error);
       }
-      
-      this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + this.selectedAItem + this.selectedBItem + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) ;
-   
-  
+  },
+
+  createNewChainNo() {
+    if (this.selectedOption === 'option2') {
+      if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+        this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L';
+      } else {
+        this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + '-' + this.selectedAItem + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
+      }
+    } else {
+      if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+        this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + '-T';
+      } else {
+        this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + '-' + this.selectedAItem + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
+      }
+    }
+    
   },
 
   toEditProductsPage() {
       this.$store.commit('setPartList', this.addedDataList);
+      this.$store.commit('setPreviousPage', '/chaincutting');
       this.$router.push('/editproducts');
   },
 
@@ -2329,9 +2603,9 @@ methods: {
     this.dropdownOpen2 = !this.dropdownOpen2;
   },
 
-  toggleCategoryDropdown() {
-      this.categoryDropdownOpen = !this.categoryDropdownOpen;
-  },
+  // toggleCategoryDropdown() {
+  //     this.categoryDropdownOpen = !this.categoryDropdownOpen;
+  // },
 
   toggleADropdown() {
       this.aDropdownOpen = !this.aDropdownOpen;
@@ -2353,9 +2627,9 @@ methods: {
     this.dropdownOpen2 = false;
   },
 
-  hideCategoryDropdown() {
-      this.categoryDropdownOpen = false;
-  },
+  // hideCategoryDropdown() {
+  //     this.categoryDropdownOpen = false;
+  // },
 
   hideADropdown() {
       this.aDropdownOpen = false;
@@ -2397,10 +2671,10 @@ methods: {
     this.sliderPage = 1;
   },
 
-  selectCategoryItem(item) {
-      this.selectedCategoryItem = item;
-      this.categoryDropdownOpen = false;
-  },
+  // selectCategoryItem(item) {
+  //     this.selectedCategoryItem = item;
+  //     this.categoryDropdownOpen = false;
+  // },
 
   selectAItem(item) {
       this.selectedAItem = item;
@@ -2428,10 +2702,10 @@ methods: {
   },
 
   handleClick(){
-    //console.log(this.selectedDataLine.unit);
     if(this.selectedDataLine.unit.toLowerCase() === 'link' || this.selectedDataLine.unit.toLowerCase() === 'ft'){
       this.showModal2=true;
       this.qtyUnit = this.selectedDataLine.unit;
+      this.unitPriceNum = this.selectedDataLine.unitPriceNum;
       this.setPullDownLists();
     }else{
       this.showModal = true;
@@ -2484,11 +2758,13 @@ methods: {
       this.isButtonDisabled = false;
       this.oldCode = item_.oldModelNo;
       this.newCode = item_.newModelNo;
+      this.priceListName = item_.priceListName;
       this.selectedDataLine = item_;
     }else{
       this.isButtonDisabled = true;
       this.oldCode = '';
       this.newCode = '';
+      this.priceListName = '';
       this.selectedDataLine = null;
     }
   },
@@ -2517,6 +2793,7 @@ methods: {
     }else{
       this.isEven = false;
     }
+    this.createNewChainNo();
   },
 
   inputOrderQty(){

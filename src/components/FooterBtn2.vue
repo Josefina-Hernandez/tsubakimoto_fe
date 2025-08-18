@@ -48,6 +48,7 @@ export default {
             
             
             .back, .quotation{
+                white-space: nowrap;
                 background-color:  #00AAEE;
                 width: 180px;
                 height: 35px;
@@ -99,6 +100,7 @@ export default {
             }
 
             .switch {
+                white-space: nowrap;
                 background-color:  #00AAEE;
                 padding: 0 30px;
                 height: 35px;
