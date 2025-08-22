@@ -125,6 +125,16 @@ export default {
     },
   },
 
+  watch: {
+    items(newVal) {
+        if (newVal.length == 0) {
+            this.isButtonDisabled = true;
+        } else {
+            this.isButtonDisabled = false;
+        }
+    }
+  },
+
   methods: {
     clearInputInfo() {
         this.endUser = '';

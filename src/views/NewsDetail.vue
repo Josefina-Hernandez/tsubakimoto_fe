@@ -36,13 +36,7 @@
 
                 prevousPage: "/news-page",
                 firstLabel: 'Information',
-                items: [
-                    {value: '1', title: 'New update of Quotation System 1', content: 'We have updated the system. 1', date: '2024-04-05',},
-                    {value: '2', title: 'New update of Quotation System 2', content: 'We have updated the system. 2', date: '2024-04-05',},
-                    {value: '3', title: 'New update of Quotation System 3', content: 'We have updated the system. 3', date: '2024-04-05',},
-                    {value: '4', title: 'New update of Quotation System 4', content: 'We have updated the system. 4', date: '2024-04-05',},
-                    {value: '5', title: 'New update of Quotation System 5', content: 'We have updated the system. 5', date: '2024-04-05',},
-                ],
+                items: [],
                 title: '',
                 content: '',
                 date: '',
@@ -82,6 +76,7 @@
                         //console.log(rawData[i]);
                     }
                     //console.log(this.items);
+                    this.items.reverse();
                 } catch (error) {
                     console.error('Error fetch news information', error);
                 }

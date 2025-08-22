@@ -1,6 +1,6 @@
 <template>
     <div class="footer">
-        <button v-if="true" class="back" @click="backFunc(toWhere)"><span>Back without Change</span></button>
+        <button v-if="false" class="back" @click="backFunc(toWhere)"><span>Back without Change</span></button>
         <button class="add" @click="backFunc(toWhere2)"><span>Add Other Products</span></button>
         <div class="spacer"></div>
         <button class="quotation" v-bind:disabled="isButtonDisabled" v-show="ifShow2" @click="handleClick"><span>Get Quotation</span></button>      
@@ -24,6 +24,7 @@ export default {
     },
 
     backFunc(backUrl) {
+        this.$store.commit('setMODE', 1);
         this.$router.push(backUrl);
     },
   },

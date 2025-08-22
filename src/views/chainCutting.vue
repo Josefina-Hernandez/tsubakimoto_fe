@@ -73,17 +73,19 @@
                 <input class="checker" type="checkbox" name="fruit" value="orange" v-model="item.checked" @change="handleSelect(item)">
               </td>
               <td>{{ item.category }}</td>
-              <td>{{ item.partNo }}</td>
+              <td>{{ String(item.partNo).padStart(5, '0') }}</td>
               <td>{{ item.oldModelNo }}</td>
               <td>{{ item.newModelNo }}</td>
               <td>{{ item.unit }}</td>
               <td v-if="loginMode === 'Tsubakimoto'">{{ item.poPrice }}</td>
               <td v-if="loginMode === 'Tsubakimoto'">{{ item.thbCost }}</td>
-              <td v-if="loginMode === 'Tsubakimoto'">{{ item.gp }}</td>
+              <td v-if="loginMode === 'Tsubakimoto'">{{ item.unitPrice == 'Quotation' ? '' :  item.gp }}</td>
               <td>{{ item.unitPrice }}</td>
               <td>{{ item.detail }}</td>
               <td>{{ item.priceListName }}</td>
-              <td :class="{blue: item.unit}" @click="rppButtonClick(item)">{{ item.stockReference }}</td>
+              <td :class="{blue: item.unit}" @click="rppButtonClick(item)">
+                <a href="http://202.149.101.188:1110/" v-if="item.stockReference === 'YES'" target='_blank'>RPP</a>
+              </td>
             </tr>
           </tbody>
         </table>  
@@ -106,7 +108,7 @@
         <button class="slider-btn" @click="goToPage(sliderPage + 1)"><i class="fas fa-chevron-right"></i></button>
         <button class="slider-btn" @click="goToPage(sliderPage + 10)"><i class="fas fa-forward"></i></button>
 
-        <div class="page-text">Page: {{ this.sliderPage }}</div>
+        <div class="page-text">Page: {{ this.sliderPage }} / {{ this.totalPage }}</div>
         <div class="part-text">{{ rangeText }}</div>
         <div class="total-text">Total Part Amount: {{ this.totalItems }}</div>
       </div>
@@ -173,7 +175,7 @@
                   </div>
                   <div class="linknum-area">
                       <div class="linknum-label">No. of Link</div>
-                      <input type="text" class="linknum-input" name="lsk" v-model.number="lskQty" @input="inputLinkQty" @focusout="moveOutLinksInput">
+                      <input type="text" class="linknum-input" name="lsk" v-model.number="inputBoxLinkQty" @input="inputLinkQty" @focusout="moveOutLinksInput">
                         <div class="linknum-unit">Link(s)</div>
                         <div class="red-label">Maximum Length = {{ this.maxLinks }} LKS/PC</div>
                         <div class="red-label">Attachment Unit: {{ this.stat }}</div>
@@ -671,9 +673,10 @@
     .part-text {
       min-width: 100px;
       font-weight: bold;
-      flex: 0.9;
+      flex: 0.7;
       text-align: right;
       font-size: 15px;
+      white-space: nowrap;
     }
     .total-text {
       min-width: 100px;
@@ -1503,6 +1506,8 @@ name: 'ChainCutting',
 
 data(){
   return{
+      MODE: 0,
+
       isEnabledLongLength: true,
 
       windowHeight: window.innerHeight,
@@ -1530,6 +1535,7 @@ data(){
       totalItems: 0,
       pageSize: 100,
       sliderPage: 1,
+      totalPage: 1,
 
       // items1: ['--', 'KTE', 'TKT', 'HRD', 'PLANET', 'NICHIDEN'],
       // items2: ['--', 'THB DRICE CHAIN', 'PRICE LIST NAME 2', 'PRICE LIST NAME 3', 'PRICE LIST NAME 4'],
@@ -1937,6 +1943,7 @@ data(){
       selectedOption: 'option2',
 
       lskQty: 0,
+      inputBoxLinkQty: 0,
 
       orderQty: 0,
       //companyName: '',
@@ -1965,7 +1972,9 @@ data(){
 
       connPriceData: [],
 
-      lskQtyAfterLeave: ''
+      lskQtyAfterLeave: '',
+
+      refDataLine: {},
   }
 },
 
@@ -2037,6 +2046,8 @@ computed: {
       //console.log('case other')
       return result;
     }
+
+    return lskQtyInt * this.unitPriceNum;
   },
 
   chainFormation() {
@@ -2049,30 +2060,30 @@ computed: {
         this.selectedOption = 'option2';
 
         if (this.standardLinks === null) {
-          return;
+          return `${lskQtyInt} (LKS)/PC x 1 PC`;
         } else {
-          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
           return res;
         }
 
       } else if (this.standardLinks === null) {
         this.isEnabledLongLength = false;
-        return;
+        return `${lskQtyInt} (LKS)/PC x 1 PC`;
       } else {
         if (lskQtyInt > parseInt(this.maxLinks)) {
           this.isEnabledLongLength = false;
           this.selectedOption = 'option2';
-          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
           return res;
 
         } else {
           this.isEnabledLongLength = true;
 
           if (this.selectedOption === 'option2') {
-            const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-            ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+            const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
+            ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
             return res;
           } else if (this.selectedOption === 'option1') {
             return `${this.lskQty} (LKS)/PC x 1 PC`;
@@ -2085,35 +2096,46 @@ computed: {
       const nearestMultiple = Math.round(parseInt(this.lskQty) / this.stat) * this.stat;
       this.lskQtyAfterLeave = nearestMultiple.toString();
 
+      let volumn;
+      if (this.standardLinks !== null) {
+        if (this.stat % 2 === 0) {
+          volumn = this.stat * Math.floor(parseInt(this.standardLinks) / this.stat);
+        } else {
+          volumn = this.stat * (Math.floor(parseInt(this.standardLinks) / this.stat) - 1)
+        }
+      } else {
+        volumn = -1;
+      }
+
       if (this.maxLinks === null) {
         this.isEnabledLongLength = false;
         this.selectedOption = 'option2';
 
         if (this.standardLinks === null) {
-          return;
+          return `${nearestMultiple} (LKS)/PC x 1 PC`;
         } else {
-          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
+          ${lskQtyInt % volumn} (LKS)/PC x 1 PC` : `${lskQtyInt % volumn} (LKS)/PC x 1 PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC`;
           return res;
         }
 
       } else if (this.standardLinks === null) {
         this.isEnabledLongLength = false;
-        return;
+        return `${nearestMultiple} (LKS)/PC x 1 PC`;
       } else {
-        if (lskQtyInt > parseInt(this.maxLinks)) {
+        if (nearestMultiple > parseInt(this.maxLinks)) {
           this.isEnabledLongLength = false;
           this.selectedOption = 'option2';
-          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
+          ${lskQtyInt % volumn} (LKS)/PC x 1 PC` : `${lskQtyInt % volumn} (LKS)/PC x 1 PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC`;
           return res;
 
         } else {
           this.isEnabledLongLength = true;
 
           if (this.selectedOption === 'option2') {
-            const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-            ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+            const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
+            ${lskQtyInt % volumn} (LKS)/PC x 1 PC` : `${lskQtyInt % volumn} (LKS)/PC x 1 PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC`;
             return res;
           } else if (this.selectedOption === 'option1') {
             return `${this.lskQty} (LKS)/PC x 1 PC`;
@@ -2210,6 +2232,10 @@ watch: {
   selectedOption() {
     this.createNewChainNo();
   },
+
+  inputBoxLinkQty(newVal) {
+    this.lskQty = newVal;
+  }
 },
 
 async mounted() {
@@ -2228,8 +2254,17 @@ async mounted() {
     this.ifShowChecks = false;
   }
 
-  this.addedDataList = this.$store.state.partList;
-  this.cartCount = this.addedDataList.length;
+  this.MODE = this.$store.state.MODE;
+  if (this.MODE == 0) {
+    this.addedDataList = this.$store.state.partList;
+    this.cartCount = this.$store.state.partList.length;
+    this.previousPage = '/selection';
+  } else {
+    this.addedDataList = this.$store.state.itemsTargetQuotNo;
+    this.refDataLine = this.$store.state.refDataLine;
+    this.cartCount = this.$store.state.itemsTargetQuotNo.length;
+    this.previousPage = '/editproducts-result';
+  }
   
   this.isEnableProceedBtn();
   await this.fetchFilterOptinons();
@@ -2291,6 +2326,7 @@ methods: {
       });
 
       this.totalItems = response.data.total;
+      this.totalPage = Math.ceil(this.totalItems / this.pageSize);
       const rawData = response.data.data;
 
       this.items_tsubaki = rawData.map(row => {
@@ -2382,17 +2418,54 @@ methods: {
   },
 
   addProductNormal() {
-    this.selectedDataLine.qty = this.orderQty;
-    const newItem = { ...this.selectedDataLine };
+    if (this.MODE == 0) {
+      this.selectedDataLine.qty = this.orderQty;
+      const newItem = { ...this.selectedDataLine };
+      console.log('55555555555', this.addedDataList);
+      console.log('11111111111', newItem);
+      this.addedDataList.push(newItem);
+      this.$store.commit('setPartList', this.addedDataList);
+      this.cartCount += 1;
+      this.showModal = false;
+      this.showModal2 = false;
 
-    this.addedDataList.push(newItem);
-    this.$store.commit('setPartList', this.addedDataList);
-    this.cartCount += 1;
-    this.showModal = false;
-    this.showModal2 = false;
+    } else {
+      this.selectedDataLine.qty = this.orderQty;
+      const newItem = { ...this.selectedDataLine };
+      console.log('55555555555', this.addedDataList);
+      console.log('11111111111', newItem);
+
+      const transformedLine = {
+        attention: this.refDataLine.attention,
+        chain_formation: this.refDataLine.chain_formation,
+        create_time: this.refDataLine.create_time,
+        customer_ref: this.refDataLine.customer_ref,
+        distributor_name: this.refDataLine.distributor_name,
+        new_model_no: newItem.newModelNo,
+        payment_terms: this.refDataLine.payment_terms,
+        pre_model_no: newItem.oldModelNo,
+        quantity: Number(newItem.qty),
+        quot_no: this.refDataLine.quot_no,
+        quot_stat: this.refDataLine.quot_stat,
+        quotation_amount: this.refDataLine.quotation_amount,
+        remark: this.refDataLine.remark,
+        total: this.refDataLine.total,
+        unit_price: newItem.unitPrice,
+        uom: newItem.unit,
+        updated_time: this.refDataLine.updated_time,
+        user_id: this.refDataLine.user_id,
+      };
+
+      this.addedDataList.push(transformedLine);
+      this.$store.commit('setItemsTargetQuotNo', this.addedDataList);
+      this.cartCount += 1;
+      this.showModal = false;
+      this.showModal2 = false;
+    }    
   },
 
   addProductChain() {
+    if (this.MODE == 0) {
       this.selectedDataLine.qty = this.orderQty;   
 
       this.selectedDataLine.newChainNo = this.newChainNo;
@@ -2400,15 +2473,61 @@ methods: {
       this.selectedDataLine.chainUnitPriceNum = this.formationPrice;
       this.selectedDataLine.chainFormation = this.chainFormation;
 
-      console.log(this.selectedDataLine,'-------------');
+      //console.log(this.selectedDataLine,'-------------');
       const newItem = { ...this.selectedDataLine };
-
+      console.log('55555555555', this.addedDataList);
+      console.log('11111111111', newItem);
+      newItem.unit = 'PC';
       this.addedDataList.push(newItem);
       this.$store.commit('setPartList', this.addedDataList);
-      console.log(this.addedDataList);
+      //console.log(this.addedDataList);
       this.cartCount += 1
       this.showModal = false;
       this.showModal2 = false;
+
+    } else {
+      this.selectedDataLine.qty = this.orderQty;   
+
+      this.selectedDataLine.newChainNo = this.newChainNo;
+
+      this.selectedDataLine.chainUnitPriceNum = this.formationPrice;
+      this.selectedDataLine.chainFormation = this.chainFormation;
+
+      //console.log(this.selectedDataLine,'-------------');
+      const newItem = { ...this.selectedDataLine };
+      console.log('55555555555', this.addedDataList);
+      console.log('11111111111', newItem);
+      newItem.unit = 'PC';
+      console.log('22222222', this.refDataLine);
+
+      const transformedLine = {
+        attention: this.refDataLine.attention,
+        chain_formation: newItem.chainFormation,
+        create_time: this.refDataLine.create_time,
+        customer_ref: this.refDataLine.customer_ref,
+        distributor_name: this.refDataLine.distributor_name,
+        new_model_no: newItem.newChainNo,
+        payment_terms: this.refDataLine.payment_terms,
+        pre_model_no: newItem.oldModelNo,
+        quantity: Number(newItem.qty),
+        quot_no: this.refDataLine.quot_no,
+        quot_stat: this.refDataLine.quot_stat,
+        quotation_amount: this.refDataLine.quotation_amount,
+        remark: this.refDataLine.remark,
+        total: this.refDataLine.total,
+        unit_price: newItem.unitPrice,
+        uom: newItem.unit,
+        updated_time: this.refDataLine.updated_time,
+        user_id: this.refDataLine.user_id,
+      };
+
+      this.addedDataList.push(transformedLine);
+      this.$store.commit('setItemsTargetQuotNo', this.addedDataList);
+      //console.log(this.addedDataList);
+      this.cartCount += 1
+      this.showModal = false;
+      this.showModal2 = false;
+    }     
   },
 
   //去重工具
@@ -2465,6 +2584,10 @@ methods: {
   },
 
   async fetchLinkPrice() {
+    if (this.connListForRef.length === 0) {
+      this.connPriceData = [];
+      return;
+    }
     const response = await axios.post(`${this.apiUrl}/endlink_data/get_link_price`,
         {
           base: this.selectedDataLine.newModelNo,
@@ -2514,7 +2637,7 @@ methods: {
 
         this.standardLinks = rawData[0][7];
         this.maxLinks = rawData[0][8];
-        this.lskQty = Number(this.standardLinks) || 0;
+        this.inputBoxLinkQty = Number(this.standardLinks) || 0;
         
         this.calCase = rawData[0][9] || '';
         //console.log(this.calCase);
@@ -2525,6 +2648,23 @@ methods: {
           this.isEven = true;
         }else{
           this.isEven = false;
+        }
+
+        //console.log('jkjkkjkjkjkjkjk', this.standardLinks);
+        if (this.standardLinks != null && !isNaN(this.standardLinks)) {
+           const boxPriceStr = await this.fetchBaselinkPrice();
+           if (boxPriceStr) {
+            const beforeRounded = Number(boxPriceStr);
+            const boxPrice = beforeRounded.toFixed(2);
+            const boxPriceNum = parseFloat(boxPrice);
+            this.unitPriceNum = Number((boxPriceNum / Number(this.standardLinks)).toFixed(2));
+
+            //console.log(this.unitPriceNum, '!!!!!!!!', boxPriceNum, typeof(this.unitPriceNum))
+           }
+           //console.log('++++++++++');
+           this.unitPriceNum = Number(this.unitPriceNum.toFixed(2));
+        } else {
+          this.unitPriceNum = Number(this.unitPriceNum.toFixed(2));
         }
 
         await this.fetchLinkPrice();
@@ -2539,27 +2679,50 @@ methods: {
       }
   },
 
+  async fetchBaselinkPrice() {
+    try {
+      const response = await axios.post(`${this.apiUrl}/cutting-assembly/get-baselink-price`, {
+        base: this.selectedDataLine.newModelNo,
+        pl_name: this.priceListName,
+      });
+      if (response.data.data) {
+        return response.data.data.unit_price;
+      } else {
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching baselink price:", error);
+      return null;
+    }
+  },
+
   createNewChainNo() {
     if (this.selectedOption === 'option2') {
       if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
         this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L';
       } else {
-        this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + '-' + this.selectedAItem + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
+        this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
       }
     } else {
       if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
         this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + '-T';
       } else {
-        this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + '-' + this.selectedAItem + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
+        this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
       }
     }
     
   },
 
   toEditProductsPage() {
+    if (this.MODE == 0) {
       this.$store.commit('setPartList', this.addedDataList);
       this.$store.commit('setPreviousPage', '/chaincutting');
       this.$router.push('/editproducts');
+    } else {
+      this.$store.commit('setItemsTargetQuotNo', this.addedDataList);
+      this.$store.commit('setPreviousPage', '/editquotationpage');
+      this.$router.push('/editproducts-result');
+    }
   },
 
   handleResize() {

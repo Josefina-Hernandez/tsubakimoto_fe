@@ -157,7 +157,7 @@
     </div>
     <div class="button-area2">
       <button @click="closePage"><span>Go Back</span></button>
-      <button @click="printQuote" :disabled="bottomEditBtnText === 'Edit'"><span>Save and Submit</span></button>
+      <button @click="handleClickSubmit" :disabled="bottomEditBtnText === 'Edit'"><span>Save and Submit</span></button>
     </div>
   </template>
   
@@ -248,11 +248,13 @@
     },
 
     mounted() {
+      const refDataLine = this.$store.state.refDataLine;
+
       this.bottomEditBtnText = this.$store.state.bottomEditBtnText;
       this.items = this.$store.state.itemsTargetQuotNo;
-      this.quotationId = this.items[0].quot_no;
+      this.quotationId = this.items.length !== 0 ? this.items[0].quot_no : refDataLine.quot_no;
       this.orgQuotationId = this.quotationId;
-      
+
       if (this.bottomEditBtnText === 'Edit') {
         this.ifShowEditBtn = false;
         this.orgItems = JSON.parse(JSON.stringify(this.items));
@@ -268,12 +270,12 @@
 
       
 
-      this.endUserName = this.items[0].customer_ref;
-      this.yourName = this.items[0].attention;
-      this.remark = this.items[0].remark;
+      this.endUserName = this.items.length !== 0 ? this.items[0].customer_ref : refDataLine.customer_ref;
+      this.yourName = this.items.length !== 0 ? this.items[0].attention : refDataLine.attention;
+      this.remark = this.items.length !== 0 ? this.items[0].remark : refDataLine.remark;
 
-      this.companyName = this.items[0].distributor_name;
-      this.paymentTerms = this.items[0].payment_terms;
+      this.companyName = this.items.length !== 0 ? this.items[0].distributor_name : refDataLine.distributor_name;
+      this.paymentTerms = this.items.length !== 0 ? this.items[0].payment_terms: refDataLine.payment_terms;
 
       if (this.companyName === 'Tsubakimoto (Thailand) Co., Ltd.') {
           this.companyAddress = "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670";
@@ -293,11 +295,8 @@
           this.companyAddress = '';
       }
       
-      this.userId = this.items[0].user_id;
-      this.createdDt = this.items[0].create_time.split(" ")[0];
-
-      
-      
+      this.userId = this.items.length !== 0 ? this.items[0].user_id : refDataLine.user_id;
+      this.createdDt = this.items.length !== 0 ? this.items[0].create_time.split(" ")[0] : refDataLine.create_time.split(" ")[0];
     },
   
     methods: {
@@ -365,36 +364,11 @@
 
       async handleClickSubmit() {
         this.ifSubmitted = true;
-        const preUploadedItems = this.items.map(item => {
-          let newItem = { ...item };
-
-          //如果有newChainNo
-          if (newItem.newChainNo) {
-            newItem.newModelNo = newItem.newChainNo;
-            delete newItem.newChainNo;
-          }
-
-          //如果有chainUnitPriceNum
-          if (newItem.chainUnitPriceNum) {
-            newItem.unitPriceNum = newItem.chainUnitPriceNum;
-            delete newItem.chainUnitPriceNum;
-          }
-
-          //删除unitPrice和checked
-          delete newItem.unitPrice;
-          delete newItem.checked;
-
-          //如果没有chainFormation, 加一个值为null
-          if (!('chainFormation' in newItem)) {
-            newItem.chainFormation = null;
-          }
-
-          return newItem;
-        });
+        console.log(this.items);
         
         try {
           const response = await axios.post(
-            `${this.apiUrl}/quotation/submit-new-quotation`,
+            `${this.apiUrl}/quotation/submit-edited-quotation`,
             {
               quotationNo: this.quotationId,
               userId: this.userId,
@@ -406,7 +380,7 @@
               remark: this.remark,
               paymentTerms: this.paymentTerms,
               quotationAmount: this.total,
-              items: preUploadedItems,
+              items: this.items,
             }
           );
 
@@ -414,6 +388,8 @@
               this.ifSubmitted = true;
               this.$store.commit('setPartList', []);
               alert (response.data.message);
+              this.ifShowEditBtn = false;
+              this.bottomEditBtnText = 'Edit';
           }
         } catch (error) {
           
@@ -459,8 +435,12 @@
 
             this.quotationId = this.orgQuotationId;
             this.items = JSON.parse(JSON.stringify(this.orgItems));
+            console.log(this.items)
             this.paymentTerms = this.items[0].payment_terms;
             this.createdDt = this.items[0].create_time.split(" ")[0];
+            this.endUserName = this.items[0].customer_ref;
+            this.yourName = this.items[0].attention;
+            this.remark = this.items[0].remark;
             this.$store.commit('setItemsTargetQuotNo', this.items);
         }
 

@@ -107,9 +107,18 @@ export default {
 
   mounted() {
     this.items = this.$store.state.itemsTargetQuotNo;
+    if(this.items.length == 0) {
+        this.items = this.$store.state.itemsOrgQuotNo;
+    }
 
+    this.$store.commit('setRefDataLine', this.items[0]);
 
     console.log(this.items, '****************');
+
+    this.endUser = this.items[0].customer_ref;
+    this.yourName = this.items[0].attention;
+    this.remark = this.items[0].remark
+
     this.inputFinalInfo();
   },
 
@@ -123,6 +132,16 @@ export default {
 
         return this.formatNumberWithCommas(total);
     },
+  },
+
+  watch: {
+    items(newVal) {
+        if (newVal.length == 0) {
+            this.isButtonDisabled = true;
+        } else {
+            this.isButtonDisabled = false;
+        }
+    }
   },
 
   methods: {
@@ -151,9 +170,9 @@ export default {
     },
 
     handleClick(){
-        this.endUser = this.items[0].customer_ref || '';
-        this.yourName = this.items[0].attention || '';
-        this.remark = this.items[0].remark || '';
+        // this.endUser = this.items[0].customer_ref || '';
+        // this.yourName = this.items[0].attention || '';
+        // this.remark = this.items[0].remark || '';
         this.showModal = true;
         this.inputFinalInfo();
     },
@@ -180,6 +199,12 @@ export default {
         this.$store.commit('setEndUserName', this.endUser);
         this.$store.commit('setYourName', this.yourName);
         this.$store.commit('setRemark', this.remark);
+
+        this.items.forEach(item => {
+            item.customer_ref = this.endUser;
+            item.attention = this.yourName;
+            item.remark = this.remark;
+        });
 
         const updatedItems = this.items.map(item => {
             const qty = Number(item.quantity) || 0;

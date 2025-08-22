@@ -1,4 +1,5 @@
-import { createStore } from 'vuex'
+import { createStore } from 'vuex';
+import { getSafeItem, setSafeItem } from '@/utils/storage';
 
 export default createStore({
   state: {
@@ -14,7 +15,8 @@ export default createStore({
     companyAddress: localStorage.getItem('companyAddress') || null,
     paymentTerms: localStorage.getItem('paymentTerms') || null,
 
-    partList: JSON.parse(localStorage.getItem('partList') || '[]'),
+    //partList: JSON.parse(localStorage.getItem('partList') || '[]'),
+    partList: getSafeItem('partList', []),
     endUserName: localStorage.getItem('endUserName') || '',
     yourName: localStorage.getItem('yourName') || '',
     remark: localStorage.getItem('remark') || '',
@@ -25,12 +27,16 @@ export default createStore({
     userName: localStorage.getItem('userName') || '',
     token: localStorage.getItem('token') || null,
 
-    itemsTargetQuotNo: JSON.parse(localStorage.getItem('itemsTargetQuotNo') || '[]'),
-    itemsOrgQuotNo: JSON.parse(localStorage.getItem('itemsOrgQuotNo') || '[]'),
+    //itemsTargetQuotNo: JSON.parse(localStorage.getItem('itemsTargetQuotNo') || '[]'),
+    itemsTargetQuotNo: getSafeItem('itemsTargetQuotNo', []),
+    //itemsOrgQuotNo: JSON.parse(localStorage.getItem('itemsOrgQuotNo') || '[]'),
+    itemsOrgQuotNo: getSafeItem('itemsOrgQuotNo', []),
 
     bottomEditBtnText: localStorage.getItem('bottomEditBtnText') || 'Edit',
 
     MODE: localStorage.getItem('MODE') || 0,
+
+    refDataLine: JSON.parse(localStorage.getItem('refDataLine') || '{}'),
   },
 
   getters: {
@@ -75,6 +81,10 @@ export default createStore({
 
     getMODE(state) {
       return state.MODE;
+    },
+
+    getRefDataLine(state) {
+      return state.refDataLine;
     },
 
     isAuthenticated: (state) => !!state.token,
@@ -184,7 +194,12 @@ export default createStore({
     setMODE(state, mode) {
       state.MODE = mode;
       localStorage.setItem('MODE', mode);
-    }
+    },
+
+    setRefDataLine(state, line) {
+      state.refDataLine = line;
+      localStorage.setItem('refDataLine', JSON.stringify(line));
+    },
   },
 
   actions: {

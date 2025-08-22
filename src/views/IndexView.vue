@@ -2,7 +2,7 @@
   <div class="index">
     <BannerContainer :firstLabel="this.firstLabel" :ifShowBtn="ifShowBtn" :ifShowLogout="ifShowLogout" :welcomeText="welcomeText.value" />
     <div class="content-container">
-      <div class="news" v-for="(row, index) in items.slice(0,1)" :key="index" @click="clickNews">
+      <div class="news" v-for="(row, index) in items.slice(-1)" :key="index" @click="clickNews">
         <div class="news-title">★Update:  【{{ row.title }}】</div>
         <div class="news-content">   {{ row.content }}</div>  
         <div class="news-date">--  date: {{ row.date }}</div>  
@@ -23,6 +23,8 @@
   import BannerContainer from '@/components/BannerContainer.vue'
   import { computed } from 'vue';
   import { useStore } from 'vuex';
+  import axios from 'axios';
+  import config from '@/config.js';
 
   export default {
     setup() {
@@ -40,16 +42,11 @@
 
     data() {
       return {
+        apiUrl: config.apiUrl,
         firstLabel: 'Information',
         ifShowBtn: false,
         ifShowLogout: true,
-        items: [
-                  {value: '1', title: 'New update of Quotation System 1', content: 'We have updated the system. 1', date: '2024-04-05',},
-                  {value: '2', title: 'New update of Quotation System 2', content: 'We have updated the system. 2', date: '2024-04-05',},
-                  {value: '3', title: 'New update of Quotation System 3', content: 'We have updated the system. 3', date: '2024-04-05',},
-                  {value: '4', title: 'New update of Quotation System 4', content: 'We have updated the system. 4', date: '2024-04-05',},
-                  {value: '5', title: 'New update of Quotation System 5', content: 'We have updated the system. 5', date: '2024-04-05',},
-                ],
+        items: [],
       };
     },
 
@@ -68,10 +65,31 @@
       toResult(){
         this.$router.push('/quotation-result');
       },
+
+      async fetchNewsInfo() {
+          this.items = [];
+          try {
+              const response = await axios.post(`${this.apiUrl}/news_info/listall`);
+              var rawData = response.data;
+              //console.log(rawData);
+              for (var i=0; i<rawData.length; i++) {
+                  this.items.push({
+                      value: rawData[i][0],
+                      title: rawData[i][1],
+                      content: (rawData[i][2] || '').replace(/\\n/g, '\n'),
+                      date: rawData[i][3] ? rawData[i][3].split(' ')[0] : '',
+                      whole_content: rawData[i][2],
+                  });
+              }
+              console.log(this.items);
+          } catch (error) {
+              console.error('Error fetch news information', error);
+          }
+      },
     },
 
     mounted() {
-      //console.log(this.loginMode);
+      this.fetchNewsInfo();
     },
 
   };
@@ -89,33 +107,46 @@
         padding: 10px 0;
         color: #7C7C7C;
         display: flex;
-        justify-content:center;
+        justify-content:space-between;
         align-items: center;
         margin-bottom: 20px;
-        margin-left: 17%;
-        margin-right: 17%;
+        margin-left: 5%;
+        margin-right: 5%;
         border-radius: 7px;
-        //height: 50px;
         border: 1px solid #00AAEE;
         cursor: pointer;
         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        padding-left: 1vw;
+        padding-right: 1vw;
         &:hover {
           background: #eef4f8;
         }
         .news-title{
+          flex: 3;
           text-align: start;
-          font-size: 20px;
+          font-size: 16px;
           font-weight: bold;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
         .news-content{
+          flex: 5;
           text-align: start;
           margin-left: 40px;
-          font-size: 20px;
+          font-size: 16px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
         .news-date{
+          flex: 1;
           text-align: start;
           margin-left: 40px;
-          font-size: 19px;
+          font-size: 16px;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
       }
       .buttons {

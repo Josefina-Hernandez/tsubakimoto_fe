@@ -63,6 +63,7 @@
                             whole_content: rawData[i][2],
                         });
                     }
+                    this.items.reverse();
                     console.log(this.items);
                 } catch (error) {
                     console.error('Error fetch news information', error);
@@ -105,7 +106,7 @@
 
                 .item{
                     display: flex;
-                    height: 50px;
+                    min-height: 50px;
                     align-items: center;
                     margin-bottom: 15px;
                     padding: 0 50px;

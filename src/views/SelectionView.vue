@@ -15,6 +15,7 @@
 // @ is an alias to /src
 import LogoBanner from '@/components/LogoBanner.vue'
 import FooterBtn from '@/components/FooterBtn.vue'
+import store from '@/store';
 
 export default {
   name: 'SelectionView',
@@ -32,10 +33,12 @@ export default {
 
   methods: {
     toOnlinePriceList() {
+        this.$store.commit('setMODE', 0);
         this.$router.push('/onlinepricelist');
     },
 
     toChainCutting() {
+        this.$store.commit('setMODE', 0);
         this.$router.push('/chaincutting');
     },
   }

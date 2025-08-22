@@ -27,10 +27,12 @@
                 </label>
             </div>
             <div class="nav-right">
+                <div class="text-right">Previous/New<br>Model No.</div>
+                <input type="text" id="cust-input" v-model="fuzzyModelNo">
                 <div class="text-right">Cust. Ref.</div>
-                <input type="text" id="cust-input">
+                <input type="text" id="cust-input" v-model="fuzzyCustRef">
                 <div class="text-right">Quotation No.</div>
-                <input type="text" id="number-input">
+                <input type="text" id="number-input" v-model="fuzzyQuotNo">
                 <button class="search">
                     <span>Search</span>
                 </button>
@@ -119,10 +121,16 @@
     import config from '@/config';
     import axios from 'axios';
 
+    import * as XLSX from 'xlsx';
+
     export default {
         name: 'QuotationResult',
         data() {
             return {
+                fuzzyModelNo: '',
+                fuzzyCustRef: '',
+                fuzzyQuotNo: '',
+
                 selectedType: 'product',
 
                 apiUrl: config.apiUrl,
@@ -169,7 +177,7 @@
             const today = new Date();
             // 计算90天前的日期
             const sevenDaysAgo = new Date();
-            sevenDaysAgo.setDate(today.getDate() - 90);
+            sevenDaysAgo.setDate(today.getDate() - 30);
 
             this.selectedDate1 = flatpickr.formatDate(sevenDaysAgo, "d-m-Y");
             this.selectedDate2 = flatpickr.formatDate(today, "d-m-Y");
@@ -253,9 +261,43 @@
                     console.error("Error fetching quotation record:", error);
                 }
             },
+            
+            async fetchFuzzyRecord() {
+                try {
+                    const response = await axios.post(`${this.apiUrl}/quotation_list/fuzzy-search`, {
+                        start_date: this.selectedDate1,
+                        end_date: this.selectedDate2,
+                        model_no: this.fuzzyModelNo,
+                        cust_ref: this.fuzzyCustRef,
+                        quot_no: this.fuzzyQuotNo,
+                    });
+                    this.tableData = response.data;
+                    console.log(this.tableData);
+                    this.createTableDataQuotMode();
 
-            deleteQuotation(row) {
+                } catch (error) {
+                    console.error("Error fetching quotation record:", error);
+                }
+            },
 
+            async deleteQuotation(row) {
+                const targetQuotNo = row.quot_no;
+                // 弹出确认框
+                const isConfirmed = window.confirm(`Are you sure to delete the quotation of ${targetQuotNo}?`);
+
+                if (!isConfirmed) {
+                    return;
+                }
+
+                try {
+                    const response = await axios.post(`${this.apiUrl}/quotation_list/delete`, {
+                        quot_no: targetQuotNo,
+                    });
+
+                    this.fetchQuotationRecord();
+                } catch (error) {
+                    console.error("Error deleting quotation record:", error);
+                }
             },
 
             toEditQuotationPage(row) {
@@ -323,10 +365,6 @@
                 return date; // 如果不是日期类型，直接返回原值
             },
 
-            downloadAll(){
-                alert("Download all files!");
-            },
-
             async downloadPdfFile(row){
                 const quotationNo = row.quot_no;
                 try {
@@ -349,7 +387,72 @@
                         alert('An error occurred while fetching the PDF file.');
                     }
                 }
-            }
+            },
+
+            downloadAll() {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                const timestamp = `${year}${month}${day}${hours}${minutes}${seconds}`;
+                const filename = `quotation_record_${timestamp}.xlsx`;
+
+                console.log(this.tableData);
+                
+                const allheaders = [
+                    'No.',
+                    'Distributor',
+                    'Created on',
+                    'Quotation No.',
+                    'Attention',
+                    'Customer Ref.',
+                    'Payment Terms',
+                    'Remark',
+                    'Previous Model No.',
+                    'New Model No.',
+                    'Chain Formation',
+                    'Price per Unit',
+                    'Quantity',
+                    'UOM',
+                    'Total Amount',
+                    'Quotation Price',
+                    'Status',
+                    'User ID',
+                ];
+
+                const allWorkSheetData = [
+                    allheaders,
+                    ...this.tableData.map((row, index) => [
+                        index + 1,
+                        row.distributor_name, 
+                        row.create_time,
+                        row.quot_no,
+                        row.attention,
+                        row.customer_ref,
+                        row.payment_terms,
+                        row.remark,
+                        row.pre_model_no,
+                        row.new_model_no,
+                        row.chain_formation,
+                        row.unit_price,
+                        row.quantity,
+                        row.uom,
+                        row.total,
+                        row.quotation_amout,
+                        row.quot_stat,
+                        row.user_id,
+                    ])
+                ];
+
+                const worksheet = XLSX.utils.aoa_to_sheet(allWorkSheetData);
+                const workbook = XLSX.utils.book_new();
+                XLSX.utils.book_append_sheet(workbook, worksheet, 'sheet1');
+
+                XLSX.writeFile(workbook, filename);
+            },
         },
 
     }
@@ -397,12 +500,12 @@
                 justify-content: space-around;
                 align-items: center;
                 .text-left {
-                    font-size: 17px;
+                    font-size: 15px;
                     white-space: nowrap;
                 }
                 #date-picker1 {
                     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-                    font-size: 17px;
+                    font-size: 15px;
                     padding: 0 10px;
                     margin-left: 15px;
                     height: 40px;
@@ -421,7 +524,7 @@
                 }
                 #date-picker2 {
                     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
-                    font-size: 17px;
+                    font-size: 15px;
                     padding: 0 10px;
                     margin-left: 5px;
                     height: 40px;
@@ -485,7 +588,7 @@
                 //margin-right: 30px;
                 
                 label {
-                    font-size: 17px;
+                    font-size: 15px;
                     display: flex;
                     align-items: center;
                     justify-content: space-between;
@@ -521,19 +624,19 @@
                 align-items: center;
                 flex: 1 1 0;
                 min-width: 0;
-                margin-left: 3vw;
+                margin-left: 1vw;
                 gap: 12px;
 
                 .text-right {
-                    font-size: 17px;
-                    margin-left: 15px;
+                    font-size: 15px;
+                    margin-left: 0px;
                     flex: 0 0 auto;
-                    //white-space: nowrap;
+                    //white-space: normal;
                 }
                 #cust-input, #number-input {
                     flex: 1 1 0;   /* 自动平分父容器的剩余空间 */
                     min-width: 0; /* 防止内容撑爆 */
-                    font-size: 17px;
+                    font-size: 13px;
                     padding: 0 10px;
                     //margin-left: 15px;
                     height: 40px;
@@ -623,6 +726,10 @@
                         td {
                             border: 2px solid #F2F2F2;
                             padding: 0 5px;
+
+                            &:nth-child(4) {
+                                white-space: nowrap;
+                            }
                         }
 
                         .num {
