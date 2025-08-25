@@ -73,7 +73,7 @@
                 <input class="checker" type="checkbox" name="fruit" value="orange" v-model="item.checked" @change="handleSelect(item)">
               </td>
               <td>{{ item.category }}</td>
-              <td>{{ String(item.partNo).padStart(5, '0') }}</td>
+              <td>{{ (item.partNo != null && item.partNo != '-') ? String(item.partNo).padStart(5, '0') : '' }}</td>
               <td>{{ item.oldModelNo }}</td>
               <td>{{ item.newModelNo }}</td>
               <td>{{ item.unit }}</td>

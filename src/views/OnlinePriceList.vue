@@ -73,7 +73,7 @@
                   <input class="checker" type="checkbox" name="fruit" value="orange" v-model="item.checked" @change="handleSelect(item)">
                 </td>
                 <td>{{ item.category }}</td>
-                <td>{{ String(item.partNo).padStart(5, '0') }}</td>
+                <td>{{ (item.partNo != null && item.partNo != '-') ? String(item.partNo).padStart(5, '0') : '' }}</td>
                 <td>{{ item.oldModelNo }}</td>
                 <td>{{ item.newModelNo }}</td>
                 <td>{{ item.unit }}</td>
@@ -175,7 +175,7 @@
                     </div>
                     <div class="linknum-area">
                         <div class="linknum-label">No. of Link</div>
-                        <input type="text" class="linknum-input" name="lsk" v-model.number="inputBoxLinkQty" @input="inputLinkQty" @focusout="moveOutLinksInput">
+                        <input type="text" class="linknum-input" name="lsk" v-model.number="inputBoxLinkQty" @input="inputLinkQty" @focusout="moveOutLinksInput">. 
                         <div class="linknum-unit">Link(s)</div>
                         <div class="red-label">Maximum Length = {{ this.maxLinks }} LKS/PC</div>
                         <div class="red-label">Attachment Unit: {{ this.stat }}</div>

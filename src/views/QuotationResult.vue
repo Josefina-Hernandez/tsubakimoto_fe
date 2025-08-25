@@ -33,7 +33,7 @@
                 <input type="text" id="cust-input" v-model="fuzzyCustRef">
                 <div class="text-right">Quotation No.</div>
                 <input type="text" id="number-input" v-model="fuzzyQuotNo">
-                <button class="search">
+                <button class="search" @click="fetchFuzzyRecord">
                     <span>Search</span>
                 </button>
             </div>
@@ -168,10 +168,21 @@
                 } else {
                     this.ifQuotMode = true;
                 }
+
+                this.$store.commit('setSelectedViewType', newVal);
             },
+
+            selectedDate1(newVal, oldVal) {
+                this.fetchFuzzyRecord();
+            },
+
+            selectedDate2(newVal, oldVal) {
+                this.fetchFuzzyRecord();
+            }
         },
 
         mounted () {
+            this.selectedType = this.$store.state.selectedViewType;
             document.addEventListener('click', this.handleClickOutside);
 
             const today = new Date();

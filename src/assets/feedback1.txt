@@ -17,3 +17,7 @@ Tsubakimoto➡PraewさんのFB修正を19日までに終わらせる。アドミ
 - トップチェーン：if conversion more than 1, divided by conversion first then multiply with no. of link
 カッティングアセンブリ
 - ドライブチェーン：切断には箱に記載されている価格を使用し、標準価格を基準に割る必要があります。
+
+
+OTHER CHAIN (TOP, LSCC, CABLEVEYOR): if colum name "Conversion" in master file ≠ 1 → UnitPrice ÷ Conversion × No. of Link.
+Cutting & Assembly: same model + Unit = Box → use BOX price ÷ Standard Link × No. of Link.

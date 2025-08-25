@@ -37,6 +37,8 @@ export default createStore({
     MODE: localStorage.getItem('MODE') || 0,
 
     refDataLine: JSON.parse(localStorage.getItem('refDataLine') || '{}'),
+
+    selectedViewType: localStorage.getItem('selectedViewType') || 'product',
   },
 
   getters: {
@@ -85,6 +87,10 @@ export default createStore({
 
     getRefDataLine(state) {
       return state.refDataLine;
+    },
+
+    getSelectedViewType(state) {
+      return state.selectedViewType;
     },
 
     isAuthenticated: (state) => !!state.token,
@@ -199,6 +205,11 @@ export default createStore({
     setRefDataLine(state, line) {
       state.refDataLine = line;
       localStorage.setItem('refDataLine', JSON.stringify(line));
+    },
+
+    setSelectedViewType(state, type) {
+      state.selectedViewType = type;
+      localStorage.setItem('selectedViewType', type);
     },
   },
 
