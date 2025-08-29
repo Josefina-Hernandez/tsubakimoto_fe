@@ -4,7 +4,7 @@
 
         <div class="buttons">
             <button class="b-child" @click="toOnlinePriceList"><span>Online Price List</span></button>
-            <button class="b-child" @click="toChainCutting"><span>Chain Cutting & Assembled at TTCL warehouse</span></button>
+            <button class="b-child" @click="toChainCutting"><span>Chain Cutting & Assembly at TTCL Warehouse</span></button>
         </div>
         <FooterBtn :ifShow2="ifShow2" :toWhere="nextPage" />
     </div>

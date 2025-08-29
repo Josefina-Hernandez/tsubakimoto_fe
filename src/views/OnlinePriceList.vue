@@ -19,7 +19,7 @@
                 <div class="custom-select">
                     <div class="selected" @click="toggleDropdown2">{{ selectedItem2 ? selectedItem2 : '--' }}</div>
                     <div class="dropdown-list" v-show="dropdownOpen2">
-                    <div class="dropdown-item" v-for="(item, index) in items2" :key="index" @click="selectItem2(item)">
+                    <div class="dropdown-item" v-for="(item, index) in sortedItems2" :key="index" @click="selectItem2(item)">
                         {{ item }}
                     </div>
                     </div>
@@ -73,14 +73,14 @@
                   <input class="checker" type="checkbox" name="fruit" value="orange" v-model="item.checked" @change="handleSelect(item)">
                 </td>
                 <td>{{ item.category }}</td>
-                <td>{{ (item.partNo != null && item.partNo != '-') ? String(item.partNo).padStart(5, '0') : '' }}</td>
+                <td>{{ (item.partNo != null && item.partNo != '-') ? (Number(item.partNo) > 9999 ? String(item.partNo).padStart(5, '0') : String(item.partNo).padStart(4, '0'))  : '' }}</td>
                 <td>{{ item.oldModelNo }}</td>
                 <td>{{ item.newModelNo }}</td>
                 <td>{{ item.unit }}</td>
                 <td v-if="loginMode === 'Tsubakimoto'">{{ item.poPrice }}</td>
                 <td v-if="loginMode === 'Tsubakimoto'">{{ item.thbCost }}</td>
-                <td v-if="loginMode === 'Tsubakimoto'">{{ item.unitPrice == 'Quotation' ? '' :  item.gp }}</td>
-                <td>{{ item.unitPrice }}</td>
+                <td v-if="loginMode === 'Tsubakimoto'">{{ item.unitPrice == 'Quotation' || item.unitPrice == null || item.unitPrice == '' ? '' :  item.gp }}</td>
+                <td>{{ (this.formatNumberWithCommas(item.unitPrice, 2) != '0.00' ? this.formatNumberWithCommas(item.unitPrice, 2) : null) || 'Quotation' }}</td>
                 <td>{{ item.detail }}</td>
                 <td>{{ item.priceListName }}</td>
                 <td :class="{blue: item.unit}" @click="rppButtonClick(item)">
@@ -175,10 +175,10 @@
                     </div>
                     <div class="linknum-area">
                         <div class="linknum-label">No. of Link</div>
-                        <input type="text" class="linknum-input" name="lsk" v-model.number="inputBoxLinkQty" @input="inputLinkQty" @focusout="moveOutLinksInput">. 
+                        <input type="text" class="linknum-input" name="lsk" v-model.number="inputBoxLinkQty" @input="inputLinkQty" @focusout="inputLinkQty">. 
                         <div class="linknum-unit">Link(s)</div>
                         <div class="red-label">Maximum Length = {{ this.maxLinks }} LKS/PC</div>
-                        <div class="red-label">Attachment Unit: {{ this.stat }}</div>
+                        <div v-show="false" class="red-label">Attachment Unit: {{ this.stat }}</div>
                     </div>
                     <div class="a-dropdown" @mouseleave="hideADropdown">
                         <div class="a-label">End-link A side:</div>
@@ -219,7 +219,7 @@
                     <div class="radio-text">Additional Requests:</div>
                     <div class="radios">
                       <label>
-                        <input type="radio" value="option2" v-model="selectedOption">
+                        <input type="radio" value="option2" v-model="selectedOption" :disabled="!isEnabledNoOption">
                         <span>&nbsp;No Opthion</span>
                       </label>
                       <label>
@@ -242,7 +242,7 @@
               <div class="finalcode-area">
                 <div class="final-left">
                   <div class="final-label">Chain Unit Price:</div>
-                  <div class="final-code">{{ this.formationPrice.toFixed(2) }} THB</div>
+                  <div class="final-code">{{ this.formatNumberWithCommas(this.formationPrice.toFixed(2), 2) }} THB</div>
                 </div>
               </div>
 
@@ -1510,6 +1510,7 @@ export default {
         MODE: 0,
 
         isEnabledLongLength: true,
+        isEnabledNoOption: true,
 
         windowHeight: window.innerHeight,
 
@@ -1518,7 +1519,7 @@ export default {
         ifShow2: true,
         previousPage: '/selection',
         switchTo: '/chaincutting',
-        switchLabelText: 'Cutting & Assembly at TTCL Warehouse',
+        switchLabelText: 'Chain Cutting & Assembly at TTCL Warehouse',
         isButtonDisabled: true,
         modalButtonDisabled: true,
       
@@ -1738,188 +1739,7 @@ export default {
             'Stock Reference (RPP)',
         ],
 
-        items_tsubaki: [
-          // {
-          //   category: 'A11',
-          //   partNo: '0001',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   poPrice: '$5',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0002',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'FT',
-          //   poPrice: '$5',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: 'Other note',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0003',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Box',
-          //   poPrice: '$5',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0004',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   poPrice: '$5',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0005',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Box',
-          //   poPrice: '¥300',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0006',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   poPrice: '¥300',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: 'Other note',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0007',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   poPrice: '$5',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0008',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Box',
-          //   poPrice: '$5',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: 'Other note',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0009',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   poPrice: '$5',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0010',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   poPrice: '$5',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0011',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   poPrice: '¥300',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0012',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Box',
-          //   poPrice: '¥300',
-          //   thbCost: '฿300',
-          //   gp: '44%',
-          //   unitPrice: '2.06',
-          //   detail: 'Other note',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-        ],
+        items_tsubaki: [],
 
         newCode: '',
         oldCode: '',
@@ -1980,6 +1800,11 @@ export default {
   },
 
   computed: {
+    sortedItems2 () {
+      return [...this.items2].sort((a, b) => 
+        a.localeCompare(b, 'en', { sensitivity: 'base' }));
+    },
+
     loginMode() {
       return this.$store.getters.getLoginMode;
     },
@@ -2055,6 +1880,9 @@ export default {
           this.selectedOption = 'option2';
 
           if (this.standardLinks === null) {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = false;
+            this.selectedOption = '';
             return `${lskQtyInt} (LKS)/PC x 1 PC`;
           } else {
             const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
@@ -2064,6 +1892,8 @@ export default {
 
         } else if (this.standardLinks === null) {
           this.isEnabledLongLength = false;
+          this.isEnabledNoOption = false;
+          this.selectedOption = '';
           return `${lskQtyInt} (LKS)/PC x 1 PC`;
         } else {
           if (lskQtyInt > parseInt(this.maxLinks)) {
@@ -2269,6 +2099,12 @@ export default {
   },
 
   methods: {
+    formatNumberWithCommas(value, i) {
+        const num = Number(value);
+        if (isNaN(num)) return value;
+        return num.toLocaleString(undefined, { minimumFractionDigits: i, maximumFractionDigits: i });
+    },
+
     moveOutLinksInput() {
       this.lskQty = this.lskQtyAfterLeave;
     },
@@ -2331,13 +2167,13 @@ export default {
 
           if (!isNaN(price)) {
             if (currency.toUpperCase().includes('EUR')) {
-              poPriceFormatted = `€ ${price.toFixed(3)}`;
+              poPriceFormatted = `€ ${this.formatNumberWithCommas(price.toFixed(3), 3)}`;
             } else if (currency.toUpperCase().includes('USD')) {
-              poPriceFormatted = `$ ${price.toFixed(2)}`;
+              poPriceFormatted = `$ ${this.formatNumberWithCommas(price.toFixed(2), 2)}`;
             } else if (currency.toUpperCase().includes('JPY')) {
-              poPriceFormatted = `¥ ${Math.round(price)}`;
+              poPriceFormatted = `¥ ${this.formatNumberWithCommas(Math.round(price), 0)}`;
             } else {
-              poPriceFormatted = `${price.toFixed(3)}`;
+              poPriceFormatted = `${this.formatNumberWithCommas(price.toFixed(3), 3)}`;
             }
           } else {
             poPriceFormatted = poPriceRaw;
@@ -2346,7 +2182,7 @@ export default {
           let thbCostRaw = row[13];
           let cost_thb = parseFloat(thbCostRaw);
           let thbCostFormatted = !isNaN(cost_thb)
-            ? `฿ ${Math.round(cost_thb)}`
+            ? `฿ ${this.formatNumberWithCommas(Math.round(cost_thb), 0)}`
             : thbCostRaw;
 
           let gpRaw = row[14];
@@ -2625,7 +2461,8 @@ export default {
 
           this.standardLinks = rawData[0][7];
           this.maxLinks = rawData[0][8];
-          this.inputBoxLinkQty = Number(this.standardLinks) || 0;
+          //this.inputBoxLinkQty = Number(this.standardLinks) || 0;
+          this.inputBoxLinkQty = 0;
           
           this.calCase = rawData[0][9] || '';
           //console.log(this.calCase);
@@ -2655,15 +2492,15 @@ export default {
     createNewChainNo() {
       if (this.selectedOption === 'option2') {
         if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
-          this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L';
+          this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L';
         } else {
-          this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
+          this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
         }
       } else {
         if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
-          this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + '-T';
+          this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + '-T';
         } else {
-          this.newChainNo = this.newCode + '+' + this.lskQtyAfterLeave.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
+          this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
         }
       }
       
@@ -2821,7 +2658,7 @@ export default {
     },
 
     handleClick(){
-      if(this.selectedDataLine.unit.toLowerCase() === 'link' || this.selectedDataLine.unit.toLowerCase() === 'ft'){
+      if(this.selectedDataLine.unit.toLowerCase() === 'link'){
         this.showModal2=true;
         this.qtyUnit = this.selectedDataLine.unit;
         this.unitPriceNum = this.selectedDataLine.unitPriceNum;
@@ -2887,7 +2724,7 @@ export default {
         this.selectedDataLine = null;
       }
 
-      if (this.selectedDataLine.unitPrice == 'Quotation') {
+      if (this.selectedDataLine.unitPrice == 'Quotation' || this.selectedDataLine.unitPrice == null || this.selectedDataLine.unitPrice == '') {
         this.isButtonDisabled = true;
       }
       console.log(this.selectedDataLine);

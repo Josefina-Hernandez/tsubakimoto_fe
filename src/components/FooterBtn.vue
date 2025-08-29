@@ -1,6 +1,6 @@
 <template>
     <div class="footer">
-        <button class="back" @click="backFunc(toWhere)"><span>Back</span></button>
+        <button class="back" @click="backFunc(toWhere)"><span>Add Other Product</span></button>
         <button class="quotation" v-bind:disabled="isButtonDisabled" v-show="ifShow2" @click="handleClick"><span>Get Quotation</span></button>      
     </div>
 </template>
@@ -41,7 +41,7 @@ export default {
             
             .back, .quotation{
                 background-color:  #00AAEE;
-                width: 180px;
+                width: 280px;
                 height: 35px;
                 border: none;
                 margin: 0 40px 30px;
@@ -70,7 +70,7 @@ export default {
                 }
             }
             .quotation{
-                width: 200px;
+                width: 280px;
 
                 &:disabled{
                     pointer-events: none;

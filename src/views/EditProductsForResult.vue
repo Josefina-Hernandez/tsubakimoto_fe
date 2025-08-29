@@ -5,7 +5,7 @@
           <table>
             <thead class="sticky-header">
               <tr>
-                <th>no</th>
+                <th>NO.</th>
                 <th>Previous Model No.</th>
                 <th>New Model No.<br>/New Chain Number</th>
                 <th>QTY</th>
@@ -22,7 +22,7 @@
                 <td>{{ item.new_model_no }}</td>
                 <td><input type="text" v-model="item.quantity"></td>
                 <td>{{ item.uom }}</td>
-                <td>{{ item.unit_price }}</td>
+                <td>{{ formatNumberWithCommas(item.unit_price) }}</td>
                 <td>{{ formatNumberWithCommas(item.quantity * Number(item.unit_price)) }}</td>
                 <td><button @click="deleteProduct(index)"><span>Delete</span></button></td>
               </tr>

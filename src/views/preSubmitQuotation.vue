@@ -151,7 +151,7 @@
         ><span>Submit Quotation</span></button>
     </div>
     <div class="button-area2">
-      <button @click="closePage"><span v-if="ifSubmitted">Back to Top</span><span v-else>Back</span></button>
+      <button @click="closePage"><span v-if="ifSubmitted">Back to Top</span><span v-else>Close</span></button>
       <button @click="printQuote" :disabled="!ifSubmitted"><span>Download PDF</span></button>
     </div>
   </template>

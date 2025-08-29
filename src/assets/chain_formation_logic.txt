@@ -92,6 +92,7 @@ case of attachment:
 ** 	some code exclude T option: in the database max is NULL 
 **	some case exclude both T-option and formation : standard is NULL	
 
+**  
 
 计算规则说明
 情境一：默认情况

@@ -523,9 +523,9 @@
 
             div {
               text-align: left;
+              white-space: pre-line;
             }
           }
-
         }
 
         .btn-area {

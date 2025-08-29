@@ -156,7 +156,7 @@
         ><span>{{ bottomEditBtnText }}</span></button>
     </div>
     <div class="button-area2">
-      <button @click="closePage"><span>Go Back</span></button>
+      <button @click="closePage"><span>Close</span></button>
       <button @click="handleClickSubmit" :disabled="bottomEditBtnText === 'Edit'"><span>Save and Submit</span></button>
     </div>
   </template>
@@ -370,6 +370,7 @@
           const response = await axios.post(
             `${this.apiUrl}/quotation/submit-edited-quotation`,
             {
+              orgQuotationNo: this.orgQuotationId,
               quotationNo: this.quotationId,
               userId: this.userId,
               distributorName: this.companyName,

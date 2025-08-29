@@ -5,7 +5,7 @@
           <table>
             <thead class="sticky-header">
               <tr>
-                <th>no</th>
+                <th>NO.</th>
                 <th>Previous Model No.</th>
                 <th>New Model No.<br>/New Chain Number</th>
                 <th>Chain Formation</th>
@@ -24,7 +24,7 @@
                 <td>{{ item.chainFormation }}</td>
                 <td><input type="text" v-model="item.qty"></td>
                 <td>{{ item.unit }}</td>
-                <td>{{ item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? item.chainUnitPriceNum.toFixed(2) : item.unitPrice }}</td>
+                <td>{{ formatNumberWithCommas(item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? item.chainUnitPriceNum.toFixed(2) : item.unitPrice) }}</td>
                 <td>{{ formatNumberWithCommas(item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? parseInt(item.qty) * item.chainUnitPriceNum : parseInt(item.qty) * item.unitPriceNum) }}</td>
                 <td><button @click="deleteProduct(index)"><span>Delete</span></button></td>
               </tr>
@@ -85,7 +85,7 @@ export default {
   name: 'EditProducts',
   data(){
     return{
-        title: "Edit Products",
+        title: "Quotation",
         ifShow2: true,
         previousPage: '',
         isButtonDisabled: false,

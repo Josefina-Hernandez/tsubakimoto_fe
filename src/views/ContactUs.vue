@@ -40,6 +40,16 @@
                         <a :href="`mailto:${agent.email}`">{{ agent.email }}</a>
                     </div>
                 </div>
+                <div v-if="agent.value === 'NICHIDEN'" class="content-wrapper">
+                    <div class="label">Contact Person:</div>
+                    <div class="content-text">{{ agent.contactPerson2 }}</div>
+                </div>
+                <div v-if="agent.value==='NICHIDEN'" class="content-wrapper">
+                    <div class="label">Email:</div>
+                    <div class="content-text">
+                        <a :href="`mailto:${agent.email2}`">{{ agent.email2 }}</a>
+                    </div>
+                </div>
             </div>
         </div>
         <div v-else class="contents">
@@ -74,6 +84,16 @@
                         <a :href="`mailto:${agent.email}`">{{ agent.email }}</a>
                     </div>
                 </div>
+                <div v-if="agent.value === 'NICHIDEN'" class="content-wrapper">
+                    <div class="label">Contact Person:</div>
+                    <div class="content-text">{{ agent.contactPerson2 }}</div>
+                </div>
+                <div v-if="agent.value==='NICHIDEN'" class="content-wrapper">
+                    <div class="label">Email:</div>
+                    <div class="content-text">
+                        <a :href="`mailto:${agent.email2}`">{{ agent.email2 }}</a>
+                    </div>
+                </div>
             </div>
         </div>
       </div>
@@ -93,7 +113,7 @@
                     {
                         value: 'KTE Corporation',
                         companyName: 'KTE CORPORATION CO., LTD.',
-                        address: '6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET, BANGKOK 10250, THAILAND',
+                        address: '37 SUKHAPIBAN 2 SOI 10, PRAWET, PRAWET, BANGKOK 10250, THAILAND',
                         contactPerson: 'Ms. Salilporn Mahattanawat (Pam), Sales Coordinator',
                         email: 'Salilporn@tsubakimoto.co.th',
                     },
@@ -115,7 +135,7 @@
                         value: 'PLANET',
                         companyName: 'PLANET T AND S CO., LTD.',
                         address: '28 KRUNGTHEP KRITHA 20 YAEK 3, THAPCHANG, SAPANSUNG, BANGKOK 10250, THAILAND',
-                        contactPerson: 'Ms. Arparwan Sanantung (Aom), Sales Coordinator',
+                        contactPerson: 'Ms. Arparwan Sanantung (Aom), Senior Sales Coordinator',
                         email: 'arparwan@tsubakimoto.co.th',
                     },
                     {
@@ -125,18 +145,27 @@
                         contactPerson: 'Ms. Chompunuch Chatbuaroy (Aum), Sales Coordinator',
                         email: 'Chompunuch@tsubakimoto.co.th',
                     },
-                    {   value: 'NICHIDEN',
-                        companyName: 'NICHIDEN TRADING BANGKOK (THAILAND) CO., LTD.',
-                        address: '159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103, SUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA, WATTANA, BANGKOK 10110, THAILAND',
-                        contactPerson: 'Ms. Chompunuch Chatbuaroy (Aum), Sales Coordinator',
-                        email: 'Chompunuch@tsubakimoto.co.th',
-                    },
+                    // {   value: 'NICHIDEN',
+                    //     companyName: 'NICHIDEN TRADING BANGKOK (THAILAND) CO., LTD.',
+                    //     address: '159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103, SUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA, WATTANA, BANGKOK 10110, THAILAND',
+                    //     contactPerson: 'Ms. Chompunuch Chatbuaroy (Aum), Sales Coordinator',
+                    //     email: 'Chompunuch@tsubakimoto.co.th',
+                    // },
+                    // {
+                    //     value: 'NICHIDEN',
+                    //     companyName: 'NICHIDEN TRADING SRIRACHA (THAILAND) CO., LTD.',
+                    //     address: '222/6 ATARA MALL SRIRACHA 2nd FL, UNIT.206, SRIRACHA NAKHON 3 RD., SRIRACHA, CHONBURI 20110',
+                    //     contactPerson: 'Ms. Sirikamon Chatjaroenpaisarn (Toey), Sales Coordinator',
+                    //     email: 'Sirikamon@tsubakimoto.co.th',
+                    // },
                     {
                         value: 'NICHIDEN',
-                        companyName: 'NICHIDEN TRADING SRIRACHA (THAILAND) CO., LTD.',
-                        address: '222/6 ATARA MALL SRIRACHA 2nd FL, UNIT.206, SRIRACHA NAKHON 3 RD., SRIRACHA, CHONBURI 20110',
+                        companyName: 'NICHIDEN TRADING (THAILAND) CO., LTD.',
+                        address: '2556, 66 TOWER, 7TH FLOOR, UNIT 704-705, SUKHUMVIT ROAD, BANG NA NUE, BANGNA, BANGKOK 10260 THAILAND',
                         contactPerson: 'Ms. Sirikamon Chatjaroenpaisarn (Toey), Sales Coordinator',
+                        contactPerson2: 'Ms. Chompunuch Chatbuaroy (Aum), Sales Coordinator',
                         email: 'Sirikamon@tsubakimoto.co.th',
+                        email2: 'Chompunuch@tsubakimoto.co.th',
                     },
                 ],
             };
@@ -218,6 +247,7 @@
                         .content-text {
                             flex: 6;
                             text-align: left;
+                            white-space: pre-line;
                             a {
                                 text-decoration: underline;
                                 color: #4975C5;

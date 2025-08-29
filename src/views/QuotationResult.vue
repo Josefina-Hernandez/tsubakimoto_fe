@@ -2,7 +2,6 @@
     <div class="index">
       
       <LogoBanner :title="title" />
-      
       <div class="main-contents">
         <div class="nav">
             <div class="nav-left">
@@ -42,7 +41,7 @@
             <table>
                 <thead>
                     <tr>
-                        <th v-for="(header, index) in (selectedType === 'product' ? tableHeaders : tableHeadersQuotMode)" :key="index">
+                        <th v-for="(header, index) in (selectedType === 'product' ? (loginMode !== 'Tsubakimoto' ? tableHeaders : tableHeaders.slice(0, -1)) : (loginMode !== 'Tsubakimoto' ? tableHeadersQuotMode : tableHeadersQuotMode.slice(0, -2)))" :key="index">
                             {{ header }}
                         </th>
                     </tr>
@@ -61,17 +60,17 @@
                         <td>{{ row.customer_ref }}</td>
                         <td v-if="!ifQuotMode">{{ row.pre_model_no }}</td>
                         <td v-if="!ifQuotMode">{{ row.new_model_no }}</td>
-                        <td v-if="!ifQuotMode" class="num">{{ row.unit_price }}</td>
-                        <td v-if="!ifQuotMode">{{ row.quantity }}</td>
+                        <td v-if="!ifQuotMode" class="num">{{ this.formatNumberWithCommas(row.unit_price) }}</td>
+                        <td v-if="!ifQuotMode">{{ this.formatNumberWithCommas(row.quantity, 0) }}</td>
                         <td v-if="!ifQuotMode">{{ row.uom }}</td>
-                        <td v-if="!ifQuotMode" class="num">{{ row.total }}</td>
-                        <td class="num">{{ row.quotation_amout }}</td>
+                        <td v-if="!ifQuotMode" class="num">{{ this.formatNumberWithCommas(row.total) }}</td>
+                        <td class="num">{{ this.formatNumberWithCommas(row.quotation_amout) }}</td>
                         <td
                         :style='{color: getColor(row.quot_stat), fontWeight: getFontweight(row.quot_stat)}'
                         >{{ row.quot_stat }}</td>
                         <td class="select-col" v-if="ifQuotMode">
                             <div class="custom-select">
-                                <div class="selected" @click="toggleDropdown(rowIndex)">{{ row.quot_stat }}</div>
+                                <div class="selected" @click="row.quot_stat !== 'Revised' && toggleDropdown(rowIndex)" :class="{'is-disabled': row.quot_stat === 'Revised'}">{{ row.quot_stat }}</div>
                                 <div class="dropdown-list" v-show="dropdownOpen[rowIndex]">
                                     <div class="dropdown-item" v-for="(rate, index) in rates" :key="index" @click="selectRate(rowIndex, rate)">
                                         {{ rate }}
@@ -85,13 +84,13 @@
                             </button>
                         </td>
                         
-                        <td class="revision-col">
-                            <button @click="toEditQuotationPage(row)">
+                        <td class="revision-col" v-if="loginMode !== 'Tsubakimoto'">
+                            <button @click="toEditQuotationPage(row)" :disabled="row.quot_stat === 'Revised' ? true : false">
                                 <span>Edit</span>
                             </button>
                         </td>
 
-                        <td class="delete-col" v-if="ifQuotMode">
+                        <td class="delete-col" v-if="ifQuotMode && loginMode !== 'Tsubakimoto'">
                             <button @click="deleteQuotation(row)">
                                 <span>Delete</span>
                             </button>
@@ -159,6 +158,12 @@
         components: {
             LogoBanner,
             ResultFooterBtn,
+        },
+
+        computed: {
+            loginMode() {
+                return this.$store.getters.getLoginMode;
+            },
         },
 
         watch: {
@@ -234,6 +239,11 @@
         },
 
         methods: {
+            formatNumberWithCommas(value, i=2) {
+                const num = Number(value);
+                if (isNaN(num)) return value;
+                return num.toLocaleString(undefined, { minimumFractionDigits: i, maximumFractionDigits: i });
+            },
             createTableDataQuotMode() {
                 const seen = new Set();
                 this.tableDataQuotMode = this.tableData.filter(
@@ -806,8 +816,18 @@
                                     color: white;
                                     background-color:#00AAEE;
                                     border-radius: 3px;
+                                    user-select: none;
                                     &:hover{
                                         background-color: #0082B3;
+                                    }
+                                }
+
+                                .is-disabled {
+                                    background-color: #999;
+                                    cursor: not-allowed;
+                                    user-select: none;
+                                    &:hover{
+                                        background-color: #999;
                                     }
                                 }
 
@@ -845,6 +865,7 @@
                                         cursor: pointer;
                                         justify-content: center;
                                         border: none;
+                                        user-select: none;
                                     }
 
                                     .dropdown-item:hover {
@@ -884,14 +905,19 @@
                                     transition: top 0.2s ease, left 0.2s ease;
                                 }
 
-                                &:hover{
+                                &:not(:disabled):hover{
                                     background-color: #028802;
                                     transform: translate(3px, 3px);
                                 }
 
-                                &:hover span {
+                                &:not(:disabled):hover span {
                                     top: 2px; 
                                     left: 2px; 
+                                }
+
+                                &:disabled {
+                                    background-color: #999;
+                                    cursor: not-allowed;
                                 }
                             }
                         }
