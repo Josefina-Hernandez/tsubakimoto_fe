@@ -6,7 +6,7 @@
             <button class="b-child" @click="toOnlinePriceList"><span>Online Price List</span></button>
             <button class="b-child" @click="toChainCutting"><span>Chain Cutting & Assembly at TTCL Warehouse</span></button>
         </div>
-        <FooterBtn :ifShow2="ifShow2" :toWhere="nextPage" />
+        <FooterBtnSelection :ifShow2="ifShow2" :toWhere="nextPage" />
     </div>
 
 </template>
@@ -14,7 +14,7 @@
 <script>
 // @ is an alias to /src
 import LogoBanner from '@/components/LogoBanner.vue'
-import FooterBtn from '@/components/FooterBtn.vue'
+import FooterBtnSelection from '@/components/FooterBtnSelection.vue'
 import store from '@/store';
 
 export default {
@@ -28,7 +28,7 @@ export default {
   },
   components: {
     LogoBanner,
-    FooterBtn,
+    FooterBtnSelection,
   },
 
   methods: {

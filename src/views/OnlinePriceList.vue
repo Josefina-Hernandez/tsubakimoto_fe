@@ -153,7 +153,7 @@
           <div class="modal-wrapper2">
             <div class="modal-container2">
               <div class="modal-body2">
-                <div class="title">Links/FT Information</div>
+                <!-- <div class="title">Links/FT Information</div> -->
                 <div class="name-qty">
                   <div class="name">{{newCode}}</div>
                   
@@ -175,7 +175,7 @@
                     </div>
                     <div class="linknum-area">
                         <div class="linknum-label">No. of Link</div>
-                        <input type="text" class="linknum-input" name="lsk" v-model.number="inputBoxLinkQty" @input="inputLinkQty" @focusout="inputLinkQty">. 
+                        <input type="text" class="linknum-input" name="lsk" v-model.number="inputBoxLinkQty" @input="inputLinkQty" @focusout="inputLinkQty">
                         <div class="linknum-unit">Link(s)</div>
                         <div class="red-label">Maximum Length = {{ this.maxLinks }} LKS/PC</div>
                         <div v-show="false" class="red-label">Attachment Unit: {{ this.stat }}</div>
@@ -1576,152 +1576,7 @@ export default {
             'Stock Reference (RPP)',
         ],
 
-        items: [
-          // {
-          //   category: 'A11',
-          //   partNo: '0001',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0002',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'FT',
-          //   unitPrice: '2.06',
-          //   detail: 'Other note',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0003',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Box',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0004',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0005',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Box',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0006',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   unitPrice: '2.06',
-          //   detail: 'Other note',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0007',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0008',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Box',
-          //   unitPrice: '2.06',
-          //   detail: 'Other note',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0009',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0010',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0011',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Link',
-          //   unitPrice: '2.06',
-          //   detail: '1Box=10FT=96Links',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-          // {
-          //   category: 'A11',
-          //   partNo: '0012',
-          //   oldModelNo: 'RS100-LMD-1',
-          //   newModelNo: 'RS100-LMD-1-CP',
-          //   unit: 'Box',
-          //   unitPrice: '2.06',
-          //   detail: 'Other note',
-          //   priceListName: 'THB DRICE CHAIN',
-          //   stockReference: 'RPP',
-          //   qty: 0,
-          // },
-        ],
+        items: [],
 
         headers_tsubaki: [
             'Select',
@@ -1823,6 +1678,9 @@ export default {
     formationPrice() {
       //console.log('888888888', this.connPriceData);
       var lskQtyInt = parseInt(this.lskQty);
+      if (lskQtyInt === 0) {
+        return 0;
+      }
       //console.log(this.selectedAItem, this.selectedBItem, this.selectedOffsetItem);
       if (this.calCase?.trim().toUpperCase() === "DRIVE CHAIN" || this.calCase?.trim().toUpperCase() === "SMALL SIZE") {
         if (this.selectedAItem === 'R' || this.selectedBItem === 'R') {
@@ -1880,10 +1738,17 @@ export default {
           this.selectedOption = 'option2';
 
           if (this.standardLinks === null) {
-            this.isEnabledLongLength = false;
-            this.isEnabledNoOption = false;
-            this.selectedOption = '';
-            return `${lskQtyInt} (LKS)/PC x 1 PC`;
+            if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+              this.isEnabledLongLength = false;
+              this.isEnabledNoOption = true;
+              this.selectedOption = 'option2';
+            } else {
+              this.isEnabledLongLength = false;
+              this.isEnabledNoOption = false;
+              this.selectedOption = '';
+            }
+            //return `${lskQtyInt} (LKS)/PC x 1 PC`;
+            return '';
           } else {
             const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
             ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
@@ -1891,12 +1756,19 @@ export default {
           }
 
         } else if (this.standardLinks === null) {
-          this.isEnabledLongLength = false;
-          this.isEnabledNoOption = false;
-          this.selectedOption = '';
-          return `${lskQtyInt} (LKS)/PC x 1 PC`;
+          if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = true;
+            this.selectedOption = 'option2'
+          } else {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = false;
+            this.selectedOption = '';
+          }
+          //return `${lskQtyInt} (LKS)/PC x 1 PC`;
+          return '';
         } else {
-          if (lskQtyInt > parseInt(this.maxLinks)) {
+          if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= parseInt(this.standardLinks)) {
             this.isEnabledLongLength = false;
             this.selectedOption = 'option2';
             const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
@@ -1923,10 +1795,9 @@ export default {
 
         let volumn;
         if (this.standardLinks !== null) {
-          if (this.stat % 2 === 0) {
-            volumn = this.stat * Math.floor(parseInt(this.standardLinks) / this.stat);
-          } else {
-            volumn = this.stat * (Math.floor(parseInt(this.standardLinks) / this.stat) - 1)
+          volumn = this.stat * Math.floor(parseInt(this.standardLinks) / this.stat);
+          if (volumn % 2 !== 0) {
+            volumn = volumn - this.stat;
           }
         } else {
           volumn = -1;
@@ -1937,7 +1808,17 @@ export default {
           this.selectedOption = 'option2';
 
           if (this.standardLinks === null) {
-            return `${nearestMultiple} (LKS)/PC x 1 PC`;
+            if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+              this.isEnabledLongLength = false;
+              this.isEnabledNoOption = true;
+              this.selectedOption = 'option2';
+            } else {
+              this.isEnabledLongLength = false;
+              this.isEnabledNoOption = false;
+              this.selectedOption = '';
+            }
+            //return `${lskQtyInt} (LKS)/PC x 1 PC`;
+            return '';
           } else {
             const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
             ${lskQtyInt % volumn} (LKS)/PC x 1 PC` : `${lskQtyInt % volumn} (LKS)/PC x 1 PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC`;
@@ -1945,10 +1826,19 @@ export default {
           }
 
         } else if (this.standardLinks === null) {
-          this.isEnabledLongLength = false;
-          return `${nearestMultiple} (LKS)/PC x 1 PC`;
+          if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = true;
+            this.selectedOption = 'option2';
+          } else {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = false;
+            this.selectedOption = '';
+          }
+          //return `${lskQtyInt} (LKS)/PC x 1 PC`;
+          return '';
         } else {
-          if (nearestMultiple > parseInt(this.maxLinks)) {
+          if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= volumn) {
             this.isEnabledLongLength = false;
             this.selectedOption = 'option2';
             const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !== 0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
@@ -2356,7 +2246,7 @@ export default {
 
     //去重工具
     uniqueValues(arr) {
-      let mapped = arr.map(v => (v ? v : '---'));
+      let mapped = arr.map(v => (v && v !== 'none' ? v : '---'));
       let unique = [...new Set(mapped)];
 
       let nonIndex = unique.indexOf('---');
@@ -2724,10 +2614,10 @@ export default {
         this.selectedDataLine = null;
       }
 
-      if (this.selectedDataLine.unitPrice == 'Quotation' || this.selectedDataLine.unitPrice == null || this.selectedDataLine.unitPrice == '') {
+      if (this.selectedDataLine && (this.selectedDataLine.unitPrice == 'Quotation' || this.selectedDataLine.unitPrice == null || this.selectedDataLine.unitPrice == '')) {
         this.isButtonDisabled = true;
       }
-      console.log(this.selectedDataLine);
+      // console.log(this.selectedDataLine);
     },
 
     openQuotationPage(){
@@ -2747,8 +2637,24 @@ export default {
     },
 
     inputLinkQty(){
-      this.lskQty = this.lskQty.toString().replace(/[^\d]/g, '');
-      var numTemp = parseInt(this.lskQty);
+      this.inputBoxLinkQty = this.inputBoxLinkQty.toString().replace(/[^\d]/g, '');
+
+      if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR" && this.standardLinks === null){
+        let val = parseInt(this.inputBoxLinkQty, 10);
+        if (isNaN(val)) {
+          val = 1;
+        }
+        if (val < 1) {
+          val = 1;
+        }
+        if (val > 999) {
+          val = 999;
+        }
+
+        this.inputBoxLinkQty = val;
+      }
+      
+      var numTemp = parseInt(this.inputBoxLinkQty);
       if (numTemp % 2 === 0){
         this.isEven = true;
       }else{

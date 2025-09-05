@@ -80,7 +80,8 @@
               <td v-if="loginMode === 'Tsubakimoto'">{{ item.poPrice }}</td>
               <td v-if="loginMode === 'Tsubakimoto'">{{ item.thbCost }}</td>
               <td v-if="loginMode === 'Tsubakimoto'">{{ item.unitPrice == 'Quotation' || item.unitPrice == null || item.unitPrice == '' ? '' :  item.gp }}</td>
-              <td>{{ (this.formatNumberWithCommas(item.unitPrice, 2) != '0.00' ? this.formatNumberWithCommas(item.unitPrice * 1.1, 2) : null) || 'Quotation' }}</td>
+              <!-- <td>{{ (this.formatNumberWithCommas(item.unitPrice, 2) != '0.00' ? this.formatNumberWithCommas(item.unitPrice * 1.1, 2) : null) || 'Quotation' }}</td> -->
+               <td>Please add quantity</td>
               <td>{{ item.detail }}</td>
               <td>{{ item.priceListName }}</td>
               <td :class="{blue: item.unit}" @click="rppButtonClick(item)">
@@ -153,7 +154,7 @@
         <div class="modal-wrapper2">
           <div class="modal-container2">
             <div class="modal-body2">
-              <div class="title">Links/FT Information</div>
+              <!-- <div class="title">Links/FT Information</div> -->
               <div class="name-qty">
                 <div class="name">{{newCode}}</div>
                 
@@ -1677,6 +1678,9 @@ computed: {
   formationPrice() {
     //console.log('888888888', this.connPriceData);
     var lskQtyInt = parseInt(this.lskQty);
+    if (lskQtyInt === 0) {
+      return 0;
+    }
     //console.log(this.selectedAItem, this.selectedBItem, this.selectedOffsetItem);
     if (this.calCase?.trim().toUpperCase() === "DRIVE CHAIN" || this.calCase?.trim().toUpperCase() === "SMALL SIZE") {
       if (this.selectedAItem && this.selectedAItem !== '---') {
@@ -1714,7 +1718,7 @@ computed: {
         return result;
       }
     } else if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
-      const result = 1.1 * lskQtyInt * this.unitPriceNum
+      const result = lskQtyInt * this.unitPriceNum
         + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0)
         + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0);
       //console.log('case 7')
@@ -1740,10 +1744,17 @@ computed: {
         this.selectedOption = 'option2';
 
         if (this.standardLinks === null) {
-          this.isEnabledLongLength = false;
-          this.isEnabledNoOption = false;
-          this.selectedOption = '';
-          return `${lskQtyInt} (LKS)/PC x 1 PC`;
+          if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = true;
+            this.selectedOption = 'option2';
+          } else {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = false;
+            this.selectedOption = '';
+          }
+          //return `${lskQtyInt} (LKS)/PC x 1 PC`;
+          return '';
         } else {
           const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
           ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
@@ -1751,12 +1762,19 @@ computed: {
         }
 
       } else if (this.standardLinks === null) {
-        this.isEnabledLongLength = false;
-        this.isEnabledNoOption = false;
-        this.selectedOption = '';
-        return `${lskQtyInt} (LKS)/PC x 1 PC`;
+        if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+          this.isEnabledLongLength = false;
+          this.isEnabledNoOption = true;
+          this.selectedOption = 'option2';
+        } else {
+          this.isEnabledLongLength = false;
+          this.isEnabledNoOption = false;
+          this.selectedOption = '';
+        }
+        //return `${lskQtyInt} (LKS)/PC x 1 PC`;
+        return '';
       } else {
-        if (lskQtyInt > parseInt(this.maxLinks)) {
+        if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= parseInt(this.standardLinks)) {
           this.isEnabledLongLength = false;
           this.selectedOption = 'option2';
           const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
@@ -1783,10 +1801,9 @@ computed: {
 
       let volumn;
       if (this.standardLinks !== null) {
-        if (this.stat % 2 === 0) {
-          volumn = this.stat * Math.floor(parseInt(this.standardLinks) / this.stat);
-        } else {
-          volumn = this.stat * (Math.floor(parseInt(this.standardLinks) / this.stat) - 1)
+        volumn = this.stat * Math.floor(parseInt(this.standardLinks) / this.stat);
+        if (volumn % 2 !== 0) {
+          volumn = volumn - this.stat;
         }
       } else {
         volumn = -1;
@@ -1797,7 +1814,17 @@ computed: {
         this.selectedOption = 'option2';
 
         if (this.standardLinks === null) {
-          return `${nearestMultiple} (LKS)/PC x 1 PC`;
+          if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = true;
+            this.selectedOption = 'option2';
+          } else {
+            this.isEnabledLongLength = false;
+            this.isEnabledNoOption = false;
+            this.selectedOption = '';
+          }
+          //return `${lskQtyInt} (LKS)/PC x 1 PC`;
+          return '';
         } else {
           const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
           ${lskQtyInt % volumn} (LKS)/PC x 1 PC` : `${lskQtyInt % volumn} (LKS)/PC x 1 PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC`;
@@ -1805,10 +1832,19 @@ computed: {
         }
 
       } else if (this.standardLinks === null) {
-        this.isEnabledLongLength = false;
-        return `${nearestMultiple} (LKS)/PC x 1 PC`;
+        if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
+          this.isEnabledLongLength = false;
+          this.isEnabledNoOption = true;
+          this.selectedOption = 'option2';
+        } else {
+          this.isEnabledLongLength = false;
+          this.isEnabledNoOption = false;
+          this.selectedOption = '';
+        }
+        //return `${lskQtyInt} (LKS)/PC x 1 PC`;
+        return '';
       } else {
-        if (nearestMultiple > parseInt(this.maxLinks)) {
+        if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= volumn) {
           this.isEnabledLongLength = false;
           this.selectedOption = 'option2';
           const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
@@ -2223,7 +2259,7 @@ methods: {
 
   //去重工具
   uniqueValues(arr) {
-    let mapped = arr.map(v => (v ? v : '---'));
+    let mapped = arr.map(v => (v && v !== 'none' ? v : '---'));
     let unique = [...new Set(mapped)];
 
     let nonIndex = unique.indexOf('---');
@@ -2623,10 +2659,10 @@ methods: {
       this.selectedDataLine = null;
     }
 
-    if (this.selectedDataLine.unitPrice == 'Quotation' || this.selectedDataLine.unitPrice == null || this.selectedDataLine.unitPrice == '') {
+    if (this.selectedDataLine && (this.selectedDataLine.unitPrice == 'Quotation' || this.selectedDataLine.unitPrice == null || this.selectedDataLine.unitPrice == '')) {
         this.isButtonDisabled = true;
     }
-    console.log(this.selectedDataLine);
+    // console.log(this.selectedDataLine);
   },
 
   openQuotationPage(){
@@ -2646,7 +2682,23 @@ methods: {
   },
 
   inputLinkQty(){
-    this.lskQty = this.lskQty.toString().replace(/[^\d]/g, '');
+    this.inputBoxLinkQty = this.inputBoxLinkQty.toString().replace(/[^\d]/g, '');
+
+    if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR" && this.standardLinks === null){
+      let val = parseInt(this.inputBoxLinkQty, 10);
+      if (isNaN(val)) {
+        val = 1;
+      }
+      if (val < 1) {
+        val = 1;
+      }
+      if (val > 999) {
+        val = 999;
+      }
+
+      this.inputBoxLinkQty = val;
+    }
+
     var numTemp = parseInt(this.lskQty);
     if (numTemp % 2 === 0){
       this.isEven = true;
