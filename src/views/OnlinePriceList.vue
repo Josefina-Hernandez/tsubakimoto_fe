@@ -1943,6 +1943,7 @@ export default {
     },
 
     selectedOption() {
+      this.buildBItems();
       this.createNewChainNo();
     },
 
@@ -2278,6 +2279,36 @@ export default {
       this.bItems = this.uniqueValues(rows.map(r => r[2]));
 
       this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
+
+      if (this.priceListName?.trim().toUpperCase() === 'DRIVE CHAIN') {
+        if (this.standardLinks != null && parseInt(this.inputBoxLinkQty) < this.standardLinks && this.selectedOption === 'option2') {
+          if (this.selectedAItem === 'R') {
+            this.bItems = ['R'];
+            this.selectedBItem = 'R';
+          }
+        } else if (this.standardLinks != null && this.maxLinks != null && this.standardLinks <= parseInt(this.inputBoxLinkQty) <= this.maxLinks) {
+          if (this.selectedOption === 'option2') {
+            if (this.selectedAItem === 'R') {
+              this.bItems = this.uniqueValues(
+                rows.map(r => r[2]).filter(item => item !== 'R')
+              );
+              this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
+            }
+          } else if (this.selectedOption === 'option1') {
+            if (this.selectedAItem === 'R') {
+              this.bItems = ['R'];
+              this.selectedBItem = 'R';
+            }
+          }
+        } else if (this.maxLinks != null && parseInt(this.inputBoxLinkQty) > this.maxLinks && this.selectedOption === 'option2') {
+          if (this.selectedAItem === 'R') {
+            this.bItems = this.uniqueValues(
+                rows.map(r => r[2]).filter(item => item !== 'R')
+              );
+              this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
+          }
+        }
+      }
     },
 
     // 生成Offset列表
@@ -2660,6 +2691,24 @@ export default {
       }else{
         this.isEven = false;
       }
+
+      if (this.priceListName?.trim().toUpperCase() === "DRIVE CHAIN") {
+        if (this.standardLinks != null && numTemp < this.standardLinks) {
+          if (this.isEven == false) {
+            this.isEnabledNoOption = true;
+            this.isEnabledLongLength = false;
+            this.selectedOption = 'option2';
+          }
+        }
+        else if (this.maxLinks != null && numTemp > this.maxLinks) {
+          if (this.isEven == false) {
+            this.isEnabledNoOption = true;
+            this.isEnabledLongLength = false;
+            this.selectedOption = 'option2';
+          }
+        }
+      }
+
       this.createNewChainNo();
     },
 

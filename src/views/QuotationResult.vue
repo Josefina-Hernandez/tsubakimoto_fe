@@ -40,15 +40,35 @@
         <div class="table-container">
             <table>
                 <thead>
-                    <tr>
+                    <!-- <tr>
                         <th v-for="(header, index) in (selectedType === 'product' ? (loginMode !== 'Tsubakimoto' ? tableHeaders : tableHeaders.slice(0, -1)) : (loginMode !== 'Tsubakimoto' ? tableHeadersQuotMode : tableHeadersQuotMode.slice(0, -2)))" :key="index">
                             {{ header }}
+                        </th>
+                    </tr> -->
+                    <tr>
+                        <th
+                            v-for="(header, index) in displayHeaders"
+                            :key="index"
+                            @click="onHeaderClick(header)"
+                            :class="{
+                                'sortable': isSortable(header),
+                                'sorted-asc': sortHeader === header && sortOrder === 'asc',
+                                'sorted-desc': sortHeader === header && sortOrder === 'desc',
+                                'unsortable': !isSortable(header),
+                            }"
+                        >
+                            <span>{{ header }}</span>
+                            <span v-if="isSortable(header)" class="sort-indicator">
+                                <template v-if="sortHeader === header && sortOrder === 'asc'">▲</template>
+                                <template v-else-if="sortHeader === header && sortOrder === 'desc'">▼</template>
+                                <template v-else>⇅</template>
+                            </span>
                         </th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    <tr v-for="(row, rowIndex) in (selectedType === 'product' ? tableData : tableDataQuotMode)" :key="rowIndex">
+                    <tr v-for="(row, rowIndex) in (selectedType === 'product' ? sortedTableData : sortedTableDataQuot)" :key="rowIndex">
                         <!-- <td v-for="(cell, cellIndex) in row.slice(0, -1)" :key="cellIndex">
                             {{ formatDateTime(cell) }}
                         </td> -->
@@ -121,6 +141,7 @@
     import axios from 'axios';
 
     import * as XLSX from 'xlsx';
+import DistributorsPageVue from './admin/DistributorsPage.vue';
 
     export default {
         name: 'QuotationResult',
@@ -147,11 +168,16 @@
                 selectedDate1: null,
                 selectedDate2: null,
 
-                tableHeadersQuotMode : ["No", "Distributor", "Created on", "Quotation No.", "Attention", "Customer Ref.", "Quotation Price", "Status", "Order Setting", "PDF View/DL", "Edit", "Delete"],
+                tableHeadersQuotMode : ["Row", "Distributor", "Created on", "Quotation No.", "Attention", "Customer Ref.", "Quotation Price", "Status", "Order Setting", "PDF View/DL", "Edit", "Delete"],
 
-                tableHeaders: ["No", "Distributor", "Created on", "Quotation No.", "Attention", "Customer Ref.", "Previous Model No.", "New Model No.", "Price per Unit", "Quantity", "UOM","Total aomout", "Quotation Price", "Status", "PDF View/DL", "Edit"],
+                tableHeaders: ["Row", "Distributor", "Created on", "Quotation No.", "Attention", "Customer Ref.", "Previous Model No.", "New Model No.", "Price per Unit", "Quantity", "UOM","Total amount", "Quotation Price", "Status", "PDF View/DL", "Edit"],
                 tableData: [],
                 tableDataQuotMode: [],
+
+                sortHeader: null,
+                sortOrder: null,
+
+                watchDtEnabled: true,
             };
         },
 
@@ -163,6 +189,64 @@
         computed: {
             loginMode() {
                 return this.$store.getters.getLoginMode;
+            },
+
+            //当前显示的表头，用于v-for渲染<th>
+            displayHeaders() {
+                if (this.selectedType === 'product') {
+                    return this.loginMode !== 'Tsubakimoto'
+                        ? this.tableHeaders
+                        : this.tableHeaders.slice(0, -1);
+                } else {
+                    return this.loginMode !== 'Tsubakimoto'
+                        ? this.tableHeadersQuotMode
+                        : this.tableHeadersQuotMode.slice(0, -2);
+                }
+            },
+
+            // 排序后的数据源（根据当前模式返回对应数组）
+            sortedTableData() {
+                // product 模式：tableData
+                const rows = [...this.tableData];
+                return this.applySort(rows, this.mapHeaderToFieldProduct);
+            },
+
+            sortedTableDataQuot() {
+                // quotation 模式：tableDataQuotMode
+                const rows = [...this.tableDataQuotMode];
+                return this.applySort(rows, this.mapHeaderToFieldQuot);
+            },
+
+            // 表头 -> 字段 的映射（product视图）
+            mapHeaderToFieldProduct() {
+                return {
+                   'Distributor': 'distributor_name',
+                    'Created on': 'create_time',
+                    'Quotation No.': 'quot_no',
+                    'Attention': 'attention',
+                    'Customer Ref.': 'customer_ref',
+                    'Previous Model No.': 'pre_model_no',
+                    'New Model No.': 'new_model_no',
+                    'Price per Unit': 'unit_price',
+                    'Quantity': 'quantity',
+                    'UOM': 'uom',
+                    'Total amount': 'total',              // 这里拼写按现有表头
+                    'Quotation Price': 'quotation_amout',
+                    'Status': 'quot_stat', 
+                };
+            },
+
+            // 表头 -> 字段 的映射（quotation视图）
+            mapHeaderToFieldQuot() {
+                return {
+                    'Distributor': 'distributor_name',
+                    'Created on': 'create_time',
+                    'Quotation No.': 'quot_no',
+                    'Attention': 'attention',
+                    'Customer Ref.': 'customer_ref',
+                    'Quotation Price': 'quotation_amout',
+                    'Status': 'quot_stat',
+                };
             },
         },
 
@@ -178,15 +262,20 @@
             },
 
             selectedDate1(newVal, oldVal) {
-                this.fetchFuzzyRecord();
+                if (this.watchDtEnabled) {
+                    this.fetchFuzzyRecord();
+                }
             },
 
             selectedDate2(newVal, oldVal) {
-                this.fetchFuzzyRecord();
+                if (this.watchDtEnabled) {
+                    this.fetchFuzzyRecord();
+                }            
             }
         },
 
         mounted () {
+            this.watchDtEnabled = false;
             this.selectedType = this.$store.state.selectedViewType;
             document.addEventListener('click', this.handleClickOutside);
 
@@ -231,7 +320,11 @@
                 }
             });
 
-            this.fetchQuotationRecord();         
+            //this.fetchQuotationRecord(); 
+            this.$nextTick(() => {
+                this.watchDtEnabled = true;
+                this.fetchFuzzyRecord();
+            });        
         },
 
         beforeUnmount(){
@@ -239,6 +332,108 @@
         },
 
         methods: {
+            // 解析 "dd-mm-YYYY HH:mm[:ss]" 或 "dd-mm-YYYY" -> 毫秒时间戳
+            parseDMY(str) {
+                if (!str || typeof str !== 'string') return NaN;
+                const m = str.match(/^(\d{2})-(\d{2})-(\d{4})(?:\s+(\d{2}):(\d{2})(?::(\d{2}))?)?$/);
+                if (!m) return NaN;
+                const [, dd, mm, yyyy, HH='00', MM='00', SS='00'] = m;
+                // 用本地时区生成时间（避免 Date.parse 把 d-m-Y 识别失败）
+                return new Date(
+                    Number(yyyy),
+                    Number(mm) - 1,
+                    Number(dd),
+                    Number(HH),
+                    Number(MM),
+                    Number(SS)
+                ).getTime();
+            },
+
+            // 判断字段名是否是 d-m-Y 格式的日期字段（目前只处理 create_time）
+            isDMYDateField(field) {
+                return field === 'create_time';
+            },
+
+            //哪些表头不可排序
+            isSortable(header) {
+                const notSortable = new Set(['Row', 'PDF View/DL', 'Edit', 'Delete', 'Order Setting']);
+                return !notSortable.has(header);
+            },
+
+            //点击表头：三态切换（asc->desc->null)
+            onHeaderClick(header) {
+                if (!this.isSortable(header)) return;
+
+                if (this.sortHeader !== header) {
+                    this.sortHeader = header;
+                    this.sortOrder = 'asc';
+                } else if (this.sortOrder === 'asc') {
+                    this.sortOrder = 'desc';
+                } else {
+                    this.sortHeader = null;
+                    this.sortOrder = null;
+                }
+            },
+
+            //对rows应用排序（根据当前sortHeader/sortOrder）
+            applySort(rows, headerMap) {
+                if (!this.sortHeader || !this.sortOrder) return rows;
+
+                const field = headerMap[this.sortHeader];
+                if (!field) return rows;
+
+                const order = this.sortOrder === 'asc' ? 1 : -1
+
+                return rows.sort((a, b) => this.compare(a[field], b[field], field) * order);
+            },
+
+            //智能比较： 数字 > 日期 > 字符串
+            compare(a, b, field) {
+                // 统一空值，按空值排后原则
+                const isEmpty = (v) => v === undefined || v === null || v === '';
+                const va = isEmpty(a) ? null : a;
+                const vb = isEmpty(b) ? null : b;
+                if (va === null && vb === null) return 0;
+                if (va === null) return 1;  //空值靠后
+                if (vb === null) return -1;
+
+                //d-m-Y 比较，专门用于create_time
+                if (this.isDMYDateField(field)) {
+                    const ta = this.parseDMY(String(va));
+                    const tb = this.parseDMY(String(vb));
+                    const aOK = !isNaN(ta), bOK = !isNaN(tb);
+                    if (aOK && bOK) {
+                        if (ta < tb) return -1;
+                        if (ta > tb) return 1;
+                        return 0;
+                    }
+                }
+
+                //数字比较
+                const na = Number(va), nb = Number(vb);
+                const isNumA = !isNaN(na), isNumB = !isNaN(nb);
+                if (isNumA && isNumB) {
+                    if (na < nb) return -1;
+                    if (na > nb) return 1;
+                    return 0;
+                }
+
+                //日期比较，支持YYYY-MM-DD / YYYY-MM-DD HH:mm / d-m-Y 等
+                const da = Date.parse(va), db = Date.parse(vb);
+                if (!isNaN(da) && !isNaN(db)) {
+                    if (da < db) return -1;
+                    if (da > db) return 1;
+                    return 0;
+                }
+
+                //字符串比较，忽略大小写
+                const sa = String(va).toLowerCase();
+                const sb = String(vb).toLowerCase();
+                if (sa < sb) return -1;
+                if (sa > sb) return 1;
+                return 0;
+            },
+
             formatNumberWithCommas(value, i=2) {
                 const num = Number(value);
                 if (isNaN(num)) return value;
@@ -284,6 +479,13 @@
             },
             
             async fetchFuzzyRecord() {
+                let distributor;
+                if (this.loginMode === 'Tsubakimoto') {
+                    distributor = null;
+                } else {
+                    distributor = this.$store.state.companyName;
+                }
+
                 try {
                     const response = await axios.post(`${this.apiUrl}/quotation_list/fuzzy-search`, {
                         start_date: this.selectedDate1,
@@ -291,6 +493,7 @@
                         model_no: this.fuzzyModelNo,
                         cust_ref: this.fuzzyCustRef,
                         quot_no: this.fuzzyQuotNo,
+                        distributor: distributor,
                     });
                     this.tableData = response.data;
                     console.log(this.tableData);
@@ -424,7 +627,7 @@
                 console.log(this.tableData);
                 
                 const allheaders = [
-                    'No.',
+                    'Row',
                     'Distributor',
                     'Created on',
                     'Quotation No.',
@@ -446,7 +649,7 @@
 
                 const allWorkSheetData = [
                     allheaders,
-                    ...this.tableData.map((row, index) => [
+                    ...this.sortedTableData.map((row, index) => [
                         index + 1,
                         row.distributor_name, 
                         row.create_time,
@@ -736,6 +939,25 @@
                         white-space: normal;
                         word-wrap: break-word;
                         padding: 0 5px;
+
+                        &.sortable {
+                            cursor: pointer;
+                        }
+                        &.unsortable {
+                            cursor: default;
+                        }
+                        .sort-indicator {
+                            margin-left: 1px;
+                            font-size: 15px;
+                            opacity: 0.7;
+                        }
+
+                        &.sorted-asc {
+                            color: #028802;
+                        }
+                        &.sorted-desc {
+                            color: #920404
+                        }
                     }
                 }
 

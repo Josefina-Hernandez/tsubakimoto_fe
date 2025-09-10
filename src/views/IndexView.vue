@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <BannerContainer :firstLabel="this.firstLabel" :ifShowBtn="ifShowBtn" :ifShowLogout="ifShowLogout" :welcomeText="welcomeText.value" />
+    <BannerContainer :firstLabel="this.firstLabel" :ifShowBtn="ifShowBtn" :ifShowLogout="ifShowLogout" />
     <div class="content-container">
       <div class="news" v-for="(row, index) in items.slice(-1)" :key="index" @click="clickNews">
         <div class="news-title">★Update:  【{{ row.title }}】</div>

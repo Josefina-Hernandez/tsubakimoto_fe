@@ -98,7 +98,7 @@ export default {
                 { label: 'TSUBACO KTE (BKK)', value: 'kte_bkk' },
                 { label: 'TSUBACO KTE (SRIRACHA)', value: 'kte_sri' },
                 { label: 'KTE CORPORATION', value: 'kte_corp' },
-                { label: 'HDR', value: 'hdr' },
+                { label: 'HRD', value: 'hrd' },
                 { label: 'PLANET T AND S', value: 'planet' },
             ],
 

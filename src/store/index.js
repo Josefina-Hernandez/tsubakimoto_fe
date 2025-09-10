@@ -11,6 +11,7 @@ export default createStore({
     Price: 0,
 
     loginMode: localStorage.getItem('loginMode') || null,
+    companyId: localStorage.getItem('companyId') || -1,
     companyName: localStorage.getItem('fullCompanyName') || null,
     companyAddress: localStorage.getItem('companyAddress') || null,
     paymentTerms: localStorage.getItem('paymentTerms') || null,
@@ -98,10 +99,13 @@ export default createStore({
 
   mutations: {
     setLoginMode(state, payload) {
-      const { mode, companyName, companyAddress, paymentTerms } = payload;
+      const { mode, companyId, companyName, companyAddress, paymentTerms } = payload;
 
       state.loginMode = mode;
       localStorage.setItem('loginMode', mode);
+
+      state.companyId = companyId;
+      localStorage.setItem('companyId', companyId);
 
       state.companyName = companyName;
       localStorage.setItem('fullCompanyName', companyName);

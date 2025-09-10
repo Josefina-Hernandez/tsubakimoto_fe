@@ -66,10 +66,10 @@
                   <div class="mode-label">Delivery Mode</div>
                   <div class="mode">:TRUCK</div>
               </div>
-              <div class="period-line">
+              <!-- <div class="period-line">
                   <div class="period-label">Delivery Period</div>
                   <div class="period">:8 WEEKS BY AIR</div>
-              </div>
+              </div> -->
               <div class="validity-line">
                   <div class="validity-label">Validity Terms</div>
                   <div class="validity">:15 DAYS</div>
@@ -134,7 +134,7 @@
           <div class="sign-area">
               <div>Created by Online Pricelist System</div>
               <hr class="hr-sign" />
-              <div>Arparwan Sanantung</div>
+              <!-- <div>Arparwan Sanantung</div> -->
           </div>
         </div>
         <div class="bottom-text">

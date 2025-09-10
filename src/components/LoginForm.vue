@@ -186,6 +186,7 @@ export default {
         computed: {
             ...mapState(['loginMode']),
             payload () {
+                let companyId = 0;
                 let companyName = '';
                 let companyAddress = '';
                 let paymentTerms = '';
@@ -224,45 +225,54 @@ export default {
                 //     paymentTerms = '';
                 // }
                 if (this.companyCode === 'ttcl_admin' || this.companyCode === 'ttcl_user') {
+                    companyId = 0;
                     companyName = 'Tsubakimoto (Thailand) Co., Ltd.';
                     companyAddress = "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670";
                     paymentTerms = '30 days Aft Mth End Close';
                 } else if (this.companyCode === 'kte_bkk') {
+                    companyId = 9;
                     companyName = 'TSUBAKO KTE CO., LTD. (Bangkok)';
                     companyAddress = "952 RAMALAND BLDG., 17TH FLOOR, RAMA\nIV ROAD SURIYAWONG, BANGRAK\nBANGKOK 10500\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
                 } else if (this.companyCode === 'kte_sri') {
+                    companyId = 13;
                     companyName = 'TSUBACO KTE CO., LTD. (Pattaya)';
                     companyAddress = "4/222 HARBOR MALL OFFICE, ROOM 5B-01\nMOO 10 SUKHUMVIT RD.TUNGSUKLA,\nSRIRACHA,\nCHONBURI 20230\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
                 } else if (this.companyCode === 'kte_corp') {
+                    companyId = 8;
                     companyName = 'KTE CORPORATION CO., LTD.';
                     companyAddress = "6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET,\nBANGKOK 10250\nTHAILAND";
                     paymentTerms = '60 days Aft Mth End Close';
                 } else if (this.companyCode === 'nichiden') {
+                    companyId = 12;
                     companyName = 'NICHIDEN TRADING (THAILAND) CO., LTD.';
                     companyAddress = "159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103\nSUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA,\nWATTANA,\nBANGKOK 10110\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
                 } else if (this.companyCode === 'hrd') {
+                    companyId = 11;
                     companyName = 'HRD (THAILAND) CO., LTD.';
                     companyAddress = "BANGNA TOWERS-A, 2ND. FL., 2/3 MOO 14\nBANGNA-TRAD RD., K.M.6.5, BANGKAEW,\nBANGPLEE\nSAMUTPRAKARN 10540\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
                 } else if (this.companyCode === 'planet') {
+                    companyId = 10;
                     companyName = 'PLANET T AND S CO., LTD.';
                     companyAddress = "28 KRUNGTHEP KRITHA 20 YAEK 3,\nTHAPCHANG, SAPANSUNG,\nBANGKOK 10250\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
                 } else {
+                    companyId = -1;
                     companyName = '';
                     companyAddress = '';
                     paymentTerms = '';
                 }
                 return {
                     mode: this.options.find(item => item.value == this.companyCode)?.label,
+                    companyId,
                     companyName,
                     companyAddress,
                     paymentTerms,
                 };
-            }
+            },
         },
 
         methods: {
