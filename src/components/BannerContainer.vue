@@ -145,7 +145,7 @@
           .link-label {
             transition: transform 0.3s;
             &:hover {
-              transform: translate(5px, -5px) scale(1.3);
+              transform: translate(5px, -5px) scale(1.1);
             }
           }
     
@@ -158,7 +158,7 @@
 
             transition: transform 0.5s;
             &:hover {
-              transform: translate(5px, -5px) scale(1.2);
+              transform: translate(5px, -5px) scale(1.1);
             }
     
             .dropdown-content {
@@ -189,7 +189,7 @@
     
               a:hover {
                 background-color: rgba(13, 143, 200, 0); // 50% 透明度
-                transform: translate(0px, -5px) scale(1.2);
+                transform: translate(0px, -5px) scale(1.1);
               }
             }
           }

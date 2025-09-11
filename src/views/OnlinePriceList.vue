@@ -1981,8 +1981,13 @@ export default {
     }
 
     this.isEnableProceedBtn();
-    await this.fetchFilterOptinons();
-    this.fetchMasterData();
+    if (this.ifShowDistributors) {
+      await this.fetchFilterOptinons();
+      this.fetchMasterData();
+    } else {
+      this.selectedId1 = this.$store.state.companyId;
+      await this.fetchPricelistOptions();
+    }   
   },
 
   beforeUnmount() {
@@ -2293,6 +2298,9 @@ export default {
                 rows.map(r => r[2]).filter(item => item !== 'R')
               );
               this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
+            } else {
+              this.buildOffsetItems();
+              this.createNewChainNo();
             }
           } else if (this.selectedOption === 'option1') {
             if (this.selectedAItem === 'R') {
@@ -2306,6 +2314,9 @@ export default {
                 rows.map(r => r[2]).filter(item => item !== 'R')
               );
               this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
+          } else {
+            this.buildOffsetItems();
+            this.createNewChainNo();
           }
         }
       }
