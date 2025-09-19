@@ -1724,9 +1724,7 @@ export default {
           + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0);
         //console.log('case 7')
         return result;
-      }
-      
-      else {
+      } else {
         const result = lskQtyInt * this.unitPriceNum;
         //console.log('case other')
         return result;
@@ -1837,8 +1835,13 @@ export default {
             //return `${lskQtyInt} (LKS)/PC x 1 PC`;
             return '';
           } else {
-            const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
-            ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+            let res;
+            if (lskQtyInt <= parseInt(this.standardLinks)) {
+              res =  `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
+            } else {
+              res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+              ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+            }
             return res;
           }
 
@@ -1859,12 +1862,18 @@ export default {
             this.standardLinks = this.maxLinks;
           }
 
-          if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= volumn) {
+          if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= parseInt(this.standardLinks)) {
             this.isEnabledLongLength = false;
             this.isEnabledNoOption = true;
             this.selectedOption = 'option2';
-            const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !== 0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
-            ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+
+            let res;
+            if (lskQtyInt <= parseInt(this.standardLinks)) {
+              res = `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
+            } else {
+              res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !== 0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+              ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+            }
             return res;
 
           } else {
@@ -2300,9 +2309,14 @@ export default {
 
     // 生成B列表
     buildBItems() {
-      const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
-      this.bItems = this.uniqueValues(rows.map(r => r[2]));
-
+      if (this.calCase?.trim().toUpperCase() === 'CABLEVEYOR') {
+        const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? 'none' : this.selectedAItem));
+        this.bItems = this.uniqueValues(rows.map(r => r[2]));
+      } else {
+        const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
+        this.bItems = this.uniqueValues(rows.map(r => r[2]));
+      }
+      
       this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
 
       if (this.priceListName?.trim().toUpperCase() === 'DRIVE CHAIN') {
@@ -2400,7 +2414,7 @@ export default {
 
           const rawData = response.data;
           this.ruleRows = rawData;
-          console.log(this.ruleRows)
+          //console.log(this.ruleRows)
           
           this.connListForRef = [
             ...new Set(
@@ -2444,13 +2458,13 @@ export default {
     createNewChainNo() {
       if (this.selectedOption === 'option2') {
         if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
-          this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L';
+          this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem !== '---'  ? '-' : '') + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
         } else {
           this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
         }
       } else {
         if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
-          this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + '-T';
+          this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem !== '---'  ? '-' : '') + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
         } else {
           this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
         }

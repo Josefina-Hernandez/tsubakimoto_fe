@@ -125,7 +125,7 @@
         // }
         filteredTableLines() {
           return this.tableLines.filter((_, index) => {
-            return index === 2 || (index !==0 && this.isAdmin === true);
+            return index === 2 || (this.isAdmin === true);
           });
         },
       },

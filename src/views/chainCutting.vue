@@ -1731,9 +1731,7 @@ computed: {
         + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0);
       //console.log('case 7')
       return result;
-    }
-    
-    else {
+    } else {
       const result = 1.1 * lskQtyInt * this.unitPriceNum;
       //console.log('case other')
       return result;
@@ -1844,8 +1842,14 @@ computed: {
           //return `${lskQtyInt} (LKS)/PC x 1 PC`;
           return '';
         } else {
-          const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
-          ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+          let res;
+          if (lskQtyInt <= parseInt(this.standardLinks)) {
+            res =  `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
+          } else {
+            res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+            ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+          }
+          
           return res;
         }
 
@@ -1866,12 +1870,19 @@ computed: {
           this.standardLinks = this.maxLinks;
         }
 
-        if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= volumn) {
+        if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= parseInt(this.standardLinks)) {
           this.isEnabledLongLength = false;
           this.isEnabledNoOption = true;
           this.selectedOption = 'option2';
-          const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
-          ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+
+          let res;
+          if (lskQtyInt <= parseInt(this.standardLinks)) {
+            res = `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
+          } else {
+            res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+            ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+          }
+          
           return res;
 
         } else {
@@ -2179,8 +2190,8 @@ methods: {
     if (this.MODE == 0) {
       this.selectedDataLine.qty = this.orderQty;
       const newItem = { ...this.selectedDataLine };
-      console.log('55555555555', this.addedDataList);
-      console.log('11111111111', newItem);
+      //console.log('55555555555', this.addedDataList);
+      //console.log('11111111111', newItem);
       this.addedDataList.push(newItem);
       this.$store.commit('setPartList', this.addedDataList);
       this.cartCount += 1;
@@ -2190,8 +2201,8 @@ methods: {
     } else {
       this.selectedDataLine.qty = this.orderQty;
       const newItem = { ...this.selectedDataLine };
-      console.log('55555555555', this.addedDataList);
-      console.log('11111111111', newItem);
+      //console.log('55555555555', this.addedDataList);
+      //console.log('11111111111', newItem);
 
       const transformedLine = {
         attention: this.refDataLine.attention,
@@ -2233,8 +2244,8 @@ methods: {
 
       //console.log(this.selectedDataLine,'-------------');
       const newItem = { ...this.selectedDataLine };
-      console.log('55555555555', this.addedDataList);
-      console.log('11111111111', newItem);
+      //console.log('55555555555', this.addedDataList);
+      //console.log('11111111111', newItem);
       newItem.unit = 'PC';
       this.addedDataList.push(newItem);
       this.$store.commit('setPartList', this.addedDataList);
@@ -2253,10 +2264,10 @@ methods: {
 
       //console.log(this.selectedDataLine,'-------------');
       const newItem = { ...this.selectedDataLine };
-      console.log('55555555555', this.addedDataList);
-      console.log('11111111111', newItem);
+      //console.log('55555555555', this.addedDataList);
+      //console.log('11111111111', newItem);
       newItem.unit = 'PC';
-      console.log('22222222', this.refDataLine);
+      //console.log('22222222', this.refDataLine);
 
       const transformedLine = {
         attention: this.refDataLine.attention,
@@ -2318,9 +2329,14 @@ methods: {
 
   // 生成B列表
   buildBItems() {
-    const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
-    this.bItems = this.uniqueValues(rows.map(r => r[2]));
-
+    if (this.calCase?.trim().toUpperCase() === 'CABLEVEYOR') {
+      const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? 'none' : this.selectedAItem));
+      this.bItems = this.uniqueValues(rows.map(r => r[2]));
+    } else {
+      const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
+      this.bItems = this.uniqueValues(rows.map(r => r[2]));
+    }
+    
     this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
 
     if (this.priceListName?.trim().toUpperCase() === 'DRIVE CHAIN') {
@@ -2418,7 +2434,7 @@ methods: {
 
         const rawData = response.data;
         this.ruleRows = rawData;
-        console.log(this.ruleRows)
+        //console.log(this.ruleRows)
         
         this.connListForRef = [
           ...new Set(
@@ -2494,13 +2510,13 @@ methods: {
   createNewChainNo() {
     if (this.selectedOption === 'option2') {
       if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
-        this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L';
+        this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem !== '---'  ? '-' : '') + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
       } else {
         this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem);
       }
     } else {
       if (this.calCase?.trim().toUpperCase() === "CABLEVEYOR") {
-        this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + '-T';
+        this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem !== '---'  ? '-' : '') + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
       } else {
         this.newChainNo = this.newCode + '+' + this.lskQty.toString() + 'L' + (this.selectedAItem !== '---' || this.selectedBItem !== '---' || this.selectedOffsetItem !== '---' ? '-' : '') + (this.selectedAItem === '---' ? '' : this.selectedAItem) + (this.selectedBItem === '---' ? '' : this.selectedBItem) + (this.selectedOffsetItem === '---' ? '' : this.selectedOffsetItem) + '-T';
       }
