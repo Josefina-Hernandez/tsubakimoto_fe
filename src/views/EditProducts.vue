@@ -22,7 +22,7 @@
                 <td>{{ item.oldModelNo }}</td>
                 <td>{{ item.newChainNo && item.newChainNo !== '' ? item.newChainNo : item.newModelNo }}</td>
                 <td>{{ item.chainFormation }}</td>
-                <td><input type="text" v-model="item.qty"></td>
+                <td><input type="text" v-model="item.qty" @input="updateFormation(item)"></td>
                 <td>{{ item.unit }}</td>
                 <td>{{ formatNumberWithCommas(item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? item.chainUnitPriceNum.toFixed(2) : item.unitPrice) }}</td>
                 <td>{{ formatNumberWithCommas(item.chainUnitPriceNum && item.chainUnitPriceNum !== 0 ? parseInt(item.qty) * item.chainUnitPriceNum : parseInt(item.qty) * item.unitPriceNum) }}</td>
@@ -108,6 +108,7 @@ export default {
 
   mounted() {
     this.items = this.$store.state.partList;
+    this.items.forEach(it => this.initFormation(it));
     this.previousPage = this.$store.state.previousPage;
     console.log(this.items);
     this.inputFinalInfo();
@@ -136,6 +137,33 @@ export default {
   },
 
   methods: {
+    initFormation(item) {
+        if (!item.chainFormation) return;
+        const matches = item.chainFormation.match(/x\s+(\d+)\s+PC/g);
+        if (!matches) return;
+
+        const nums = matches.map(m => parseInt(m.match(/\d+/)[0], 10));
+
+        const base = nums.map(n => n / Number(item.qty || 1));
+
+        item._baseNumbers = base;
+
+
+    },
+
+    updateFormation(item) {
+        item.qty = item.qty.replace(/\D/g,'');
+        if (!item._baseNumbers) return;
+        const qty = Number(item.qty) || 0;
+
+        // 替换每一个匹配到的数字
+        let index = 0;
+        item.chainFormation = item.chainFormation.replace(
+            /x\s+\d+\s+PC/g,
+            m => `x ${item._baseNumbers[index++] * qty} PC`
+        );
+    },
+
     clearInputInfo() {
         this.endUser = '';
         this.yourName = '';

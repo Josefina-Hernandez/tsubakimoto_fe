@@ -1702,11 +1702,19 @@ computed: {
           return result;
 
         } else if (this.selectedBItem !== '---' && this.selectedOffsetItem !== '---') {
-          const result = 1.1 * (lskQtyInt - 3) * this.unitPriceNum 
+          let result;
+          if (this.selectedOffsetItem === '4O' || this.selectedOffsetItem === '4OK') {
+            result = 1.1 * (lskQtyInt - 5) * this.unitPriceNum 
             + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0)
             + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0)
             + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0);
-          console.log('case 3')
+          } else {
+            result = 1.1 * (lskQtyInt - 3) * this.unitPriceNum 
+            + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0)
+            + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0)
+            + (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0);
+          }
+          //console.log('case 3')
           //console.log((lskQtyInt - 3) * this.unitPriceNum, (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0), (parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0))
           return result;
         }
@@ -1735,6 +1743,10 @@ computed: {
   },
 
   chainFormation() {
+    if (this.newCode.startsWith('AL') || this.newCode.startsWith('BL')) {
+      return '';
+    }
+
     var lskQtyInt = parseInt(this.lskQty);
 
     if (this.stat === 1) {
@@ -1756,8 +1768,8 @@ computed: {
           //return `${lskQtyInt} (LKS)/PC x 1 PC`;
           return '';
         } else {
-          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !== 0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks)) * this.orderQty} PC,
+          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x ${this.orderQty} PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks)) * this.orderQty} PC`;
           return res;
         }
 
@@ -1774,22 +1786,28 @@ computed: {
         //return `${lskQtyInt} (LKS)/PC x 1 PC`;
         return '';
       } else {
+        if (parseInt(this.standardLinks) > parseInt(this.maxLinks)) {
+          this.standardLinks = this.maxLinks;
+        }
+
         if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= parseInt(this.standardLinks)) {
           this.isEnabledLongLength = false;
+          this.isEnabledNoOption = true;
           this.selectedOption = 'option2';
-          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+          const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks)) * this.orderQty} PC,
+          ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x ${this.orderQty} PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks)) * this.orderQty} PC`;
           return res;
 
         } else {
           this.isEnabledLongLength = true;
+          this.isEnabledNoOption = true;
 
           if (this.selectedOption === 'option2') {
-            const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC,
-            ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x 1 PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks))} PC`;
+            const res = lskQtyInt % parseInt(this.standardLinks) !== 0 ? (Math.floor(lskQtyInt / parseInt(this.standardLinks)) !==0 ? `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks)) * this.orderQty} PC,
+            ${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % parseInt(this.standardLinks)} (LKS)/PC x ${this.orderQty} PC`) : `${this.standardLinks} (LKS)/PC x ${Math.floor(lskQtyInt / parseInt(this.standardLinks)) * this.orderQty} PC`;
             return res;
           } else if (this.selectedOption === 'option1') {
-            return `${this.lskQty} (LKS)/PC x 1 PC`;
+            return `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
           }
         }
         
@@ -1826,8 +1844,8 @@ computed: {
           //return `${lskQtyInt} (LKS)/PC x 1 PC`;
           return '';
         } else {
-          const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
-          ${lskQtyInt % volumn} (LKS)/PC x 1 PC` : `${lskQtyInt % volumn} (LKS)/PC x 1 PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC`;
+          const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+          ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
           return res;
         }
 
@@ -1844,22 +1862,28 @@ computed: {
         //return `${lskQtyInt} (LKS)/PC x 1 PC`;
         return '';
       } else {
+        if (parseInt(this.standardLinks) > parseInt(this.maxLinks)) {
+          this.standardLinks = this.maxLinks;
+        }
+
         if (lskQtyInt > parseInt(this.maxLinks) || lskQtyInt <= volumn) {
           this.isEnabledLongLength = false;
+          this.isEnabledNoOption = true;
           this.selectedOption = 'option2';
-          const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
-          ${lskQtyInt % volumn} (LKS)/PC x 1 PC` : `${lskQtyInt % volumn} (LKS)/PC x 1 PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC`;
+          const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+          ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
           return res;
 
         } else {
           this.isEnabledLongLength = true;
+          this.isEnabledNoOption = true;
 
           if (this.selectedOption === 'option2') {
-            const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC,
-            ${lskQtyInt % volumn} (LKS)/PC x 1 PC` : `${lskQtyInt % volumn} (LKS)/PC x 1 PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn)} PC`;
+            const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+            ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
             return res;
           } else if (this.selectedOption === 'option1') {
-            return `${this.lskQty} (LKS)/PC x 1 PC`;
+            return `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
           }
         }
         
@@ -1902,6 +1926,7 @@ watch: {
 
   selectedAItem() {
       this.buildBItems();
+      this.buildOffsetItems();
       // this.selectedBItem = '---';
       // this.selectedOffsetItem = '---';
       this.createNewChainNo();
@@ -2621,7 +2646,6 @@ methods: {
 
   selectOffsetItem(item) {
       this.selectedOffsetItem = item;
-      
       this.offsetDropdownOpen = false;
   },
 

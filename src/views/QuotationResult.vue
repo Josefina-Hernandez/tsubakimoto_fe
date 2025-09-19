@@ -73,7 +73,7 @@
                             {{ formatDateTime(cell) }}
                         </td> -->
                         <td>{{ rowIndex + 1 }}</td>
-                        <td>{{ row.distributor_name }}</td>
+                        <td v-if="loginMode === 'Tsubakimoto'">{{ row.distributor_name }}</td>
                         <td>{{ row.create_time }}</td>
                         <td>{{ row.quot_no }}</td>
                         <td>{{ row.attention }}</td>
@@ -275,6 +275,14 @@ import DistributorsPageVue from './admin/DistributorsPage.vue';
         },
 
         mounted () {
+            if (this.loginMode === 'Tsubakimoto') {
+                this.tableHeadersQuotMode = ["Row", "Distributor", "Created on", "Quotation No.", "Attention", "Customer Ref.", "Quotation Price", "Status", "Order Setting", "PDF View/DL", "Edit", "Delete"];
+                this.tableHeaders = ["Row", "Distributor", "Created on", "Quotation No.", "Attention", "Customer Ref.", "Previous Model No.", "New Model No.", "Price per Unit", "Quantity", "UOM","Total amount", "Quotation Price", "Status", "PDF View/DL", "Edit"];
+            } else {
+                this.tableHeadersQuotMode = ["Row", "Created on", "Quotation No.", "Attention", "Customer Ref.", "Quotation Price", "Status", "Order Setting", "PDF View/DL", "Edit", "Delete"];
+                this.tableHeaders = ["Row", "Created on", "Quotation No.", "Attention", "Customer Ref.", "Previous Model No.", "New Model No.", "Price per Unit", "Quantity", "UOM","Total amount", "Quotation Price", "Status", "PDF View/DL", "Edit"];
+            }
+
             this.watchDtEnabled = false;
             this.selectedType = this.$store.state.selectedViewType;
             document.addEventListener('click', this.handleClickOutside);

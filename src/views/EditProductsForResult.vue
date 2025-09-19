@@ -8,6 +8,7 @@
                 <th>NO.</th>
                 <th>Previous Model No.</th>
                 <th>New Model No.<br>/New Chain Number</th>
+                <th>Chain Formation</th>
                 <th>QTY</th>
                 <th>Unit</th>
                 <th>Unit Price</th>
@@ -20,7 +21,8 @@
                 <td>{{ index + 1 }}</td>
                 <td>{{ item.pre_model_no }}</td>
                 <td>{{ item.new_model_no }}</td>
-                <td><input type="text" v-model="item.quantity"></td>
+                <td>{{ item.chain_formation }}</td>
+                <td><input type="text" v-model="item.quantity" @input="updateFormation(item)"></td>
                 <td>{{ item.uom }}</td>
                 <td>{{ formatNumberWithCommas(item.unit_price) }}</td>
                 <td>{{ formatNumberWithCommas(item.quantity * Number(item.unit_price)) }}</td>
@@ -107,6 +109,7 @@ export default {
 
   mounted() {
     this.items = this.$store.state.itemsTargetQuotNo;
+    this.items.forEach(it => this.initFormation(it));
     if(this.items.length == 0) {
         this.items = this.$store.state.itemsOrgQuotNo;
     }
@@ -145,6 +148,33 @@ export default {
   },
 
   methods: {
+    initFormation(item) {
+        if (!item.chain_formation) return;
+        const matches = item.chain_formation.match(/x\s+(\d+)\s+PC/g);
+        if (!matches) return;
+
+        const nums = matches.map(m => parseInt(m.match(/\d+/)[0], 10));
+
+        const base = nums.map(n => n / Number(item.quantity || 1));
+
+        item._baseNumbers = base;
+
+
+    },
+
+    updateFormation(item) {
+        item.quantity = item.quantity.replace(/\D/g,'');
+        if (!item._baseNumbers) return;
+        const qty = Number(item.quantity) || 0;
+
+        // 替换每一个匹配到的数字
+        let index = 0;
+        item.chain_formation = item.chain_formation.replace(
+            /x\s+\d+\s+PC/g,
+            m => `x ${item._baseNumbers[index++] * qty} PC`
+        );
+    },
+
     clearInputInfo() {
         this.endUser = '';
         this.yourName = '';
@@ -305,7 +335,7 @@ export default {
                                 width: 80px;
                             }
 
-                            &:nth-child(4) {
+                            &:nth-child(5) {
                                 width: 130px;
 
                                 input {
@@ -317,21 +347,21 @@ export default {
                                 }
                             }
 
-                            &:nth-child(5) {
-                                width: 100px;
-                            }
-
                             &:nth-child(6) {
-                                text-align: right;
-                                width: 160px;
+                                width: 100px;
                             }
 
                             &:nth-child(7) {
                                 text-align: right;
-                                width: 200px;
+                                width: 160px;
                             }
 
                             &:nth-child(8) {
+                                text-align: right;
+                                width: 200px;
+                            }
+
+                            &:nth-child(9) {
                                 width: 140px;
                                 button {
                                     width: 100px;
