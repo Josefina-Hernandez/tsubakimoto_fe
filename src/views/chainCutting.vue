@@ -49,7 +49,7 @@
                 </div>
                 <div class="divider"></div>
                 <span>Search</span>
-                <input v-model="searchText" type="text" placeholder="Pevious/New Model No.">
+                <input v-model="searchText" type="text" placeholder="Pevious/New Model No." @keyup.enter="searchPrice">
                 <button @click="searchPrice"><span>Search</span></button>
               </div>
               <div class="warning" v-show="showWarning">
@@ -68,9 +68,13 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(item, index) in loginMode === 'Tsubakimoto' ? items_tsubaki : items" :key="index" :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
+            <tr v-for="(item, index) in loginMode === 'Tsubakimoto' ? items_tsubaki : items" :key="index" :class="[index % 2 === 0 ? 'even-row' : 'odd-row', 'hover-row']"
+            @mouseenter="hoverIndex = index"
+            @mouseleave="hoverIndex = null"
+            @click="toggleCheck(item)"
+            >
               <td>
-                <input class="checker" type="checkbox" name="fruit" value="orange" v-model="item.checked" @change="handleSelect(item)">
+                <input class="checker" type="checkbox" name="fruit" value="orange" v-model="item.checked" @change="handleSelect(item)" @click.stop>
               </td>
               <td>{{ item.category }}</td>
               <td>{{ (item.partNo != null && item.partNo != '-') ? (Number(item.partNo) > 9999 ? String(item.partNo).padStart(5, '0') : String(item.partNo).padStart(4, '0'))  : '' }}</td>
@@ -558,6 +562,7 @@
               width: 20px;
               height: 20px;
               display: inline-block;
+              cursor: pointer;
             }
 
             &.blue{
@@ -572,6 +577,11 @@
 
           &.odd-row {
             background-color: #CFD5EA;
+          }
+
+          &.hover-row:hover {
+            background-color: #b9c5ec;
+            cursor: pointer;
           }
         }
       }
@@ -1507,6 +1517,8 @@ name: 'ChainCutting',
 
 data(){
   return{
+      hoverIndex: null,
+
       MODE: 0,
 
       isEnabledLongLength: true,
@@ -2039,6 +2051,11 @@ beforeUnmount() {
 },
 
 methods: {
+  toggleCheck(item) {
+    item.checked = !item.checked;
+    this.handleSelect(item);
+  },
+
   formatNumberWithCommas(value, i) {
       const num = Number(value);
       if (isNaN(num)) return value;
