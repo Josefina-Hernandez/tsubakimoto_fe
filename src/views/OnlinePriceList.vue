@@ -2326,11 +2326,12 @@ export default {
 
     // 生成B列表
     buildBItems() {
+      let rows;
       if (this.calCase?.trim().toUpperCase() === 'CABLEVEYOR') {
-        const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? 'none' : this.selectedAItem));
+        rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? 'none' : this.selectedAItem));
         this.bItems = this.uniqueValues(rows.map(r => r[2]));
       } else {
-        const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
+        rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
         this.bItems = this.uniqueValues(rows.map(r => r[2]));
       }
       
@@ -2342,7 +2343,7 @@ export default {
             this.bItems = ['R'];
             this.selectedBItem = 'R';
           }
-        } else if (this.standardLinks != null && this.maxLinks != null && this.standardLinks <= parseInt(this.inputBoxLinkQty) <= this.maxLinks) {
+        } else if (this.standardLinks != null && this.maxLinks != null && parseInt(this.inputBoxLinkQty) >= this.standardLinks && parseInt(this.inputBoxLinkQty) <= this.maxLinks) {
           if (this.selectedOption === 'option2') {
             if (this.selectedAItem === 'R') {
               this.bItems = this.uniqueValues(

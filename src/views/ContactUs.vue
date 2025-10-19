@@ -69,11 +69,11 @@
                 </div>
             </div>
             <div class="company-wrapper" v-for="(agent, index) in matchedAgents" :key="index">
-                <div class="company-name">{{ agent.companyName }}</div>
+                <!-- <div class="company-name">{{ agent.companyName }}</div>
                 <div class="content-wrapper">
                     <div class="label">Address:</div>
                     <div class="content-text">{{ agent.address }}</div>
-                </div>
+                </div> -->
                 <div class="content-wrapper">
                     <div class="label">Contact Person:</div>
                     <div class="content-text">{{ agent.contactPerson }}</div>
@@ -119,7 +119,7 @@
                     },
                     {
                         value: 'KTE Bangkok',
-                        companyName: 'TSUBAKO KTE CO., LTD. (Bangkok)',
+                        companyName: 'TSUBACO KTE CO., LTD. (Bangkok)',
                         address: '952 RAMALAND BLDG., 17TH FLOOR, RAMA IV ROAD SURIYAWONG, BANGRAK BANGKOK 10500, THAILAND',
                         contactPerson: 'Ms. Chompunuch Chatbuaroy (Aum), Sales Coordinator',
                         email: 'Chompunuch@tsubakimoto.co.th',

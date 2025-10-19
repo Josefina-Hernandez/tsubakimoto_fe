@@ -206,6 +206,27 @@ const routes = [
     component: () => import('../views/admin/DistributorsPage.vue')
   },
 
+  {
+    path: '/admin/history',
+    name: 'history',
+
+    component: () => import('../views/admin/FileHistory.vue')
+  },
+
+  {
+    path: '/admin/code-updating',
+    name: 'code-updating',
+
+    component: () => import('../views/admin/CodeUpdating.vue')
+  },
+
+  {
+    path: '/admin/code-adding',
+    name: 'code-adding',
+
+    component: () => import('../views/admin/CodeAdding.vue')
+  },
+
 ]
 
 const router = createRouter({

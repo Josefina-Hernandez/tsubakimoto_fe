@@ -231,7 +231,7 @@ export default {
                     paymentTerms = '30 days Aft Mth End Close';
                 } else if (this.companyCode === 'kte_bkk') {
                     companyId = 9;
-                    companyName = 'TSUBAKO KTE CO., LTD. (Bangkok)';
+                    companyName = 'TSUBACO KTE CO., LTD. (Bangkok)';
                     companyAddress = "952 RAMALAND BLDG., 17TH FLOOR, RAMA\nIV ROAD SURIYAWONG, BANGRAK\nBANGKOK 10500\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
                 } else if (this.companyCode === 'kte_sri') {

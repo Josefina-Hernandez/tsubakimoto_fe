@@ -37,8 +37,22 @@
       const store = useStore();
       const loginMode = computed(() => store.getters.getLoginMode);
 
+      const welcomeMap = {
+        "Tsubakimoto": 'Welcome! TTCL',
+        "KTE Bangkok": 'Welcome! TSUBACO KTE CO., LTD. (Bangkok)',
+        "KTE Pattaya": 'Welcome! TSUBACO KTE CO., LTD. (Pattaya)',
+        "KTE Corporation": "Welcome! KTE CORPORATION CO., LTD.",
+        "NICHIDEN": 'Welcome! NICHIDEN TRADING (THAILAND) CO., LTD.',
+        "HRD": 'Welcome! HRD (THAILAND) CO., LTD.',
+        "PLANET": "Welcome! PLANET T AND S CO., LTD.",
+      };
+
+      // const welcomeText = computed(() => 
+      // loginMode.value === 'Tsubakimoto' ? 'Welcome! TTCL' : `Welcome! ${loginMode.value}`);
+
       const welcomeText = computed(() => 
-      loginMode.value === 'Tsubakimoto' ? 'Welcome! TTCL' : `Welcome! ${loginMode.value}`);
+        welcomeMap[loginMode.value] ?? `Welcome! ${loginMode.value}`
+      );
 
       return {
         loginMode,
@@ -115,7 +129,7 @@
         .welcome{
           margin-left: auto;
           margin-right: 5vw;
-          font-size: 28px;
+          font-size: 22px;
           font-weight: bold;
           float: right;
           margin-top: 0px;

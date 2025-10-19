@@ -148,7 +148,7 @@
         <div></div>
         <button @click="handleClickSubmit"
             :class="{'edit-mode': bottomEditBtnText === 'Edit', 'save-mode': bottomEditBtnText === 'Save Edition',}" :disabled="ifSubmitted"
-        ><span>Submit Quotation</span></button>
+        ><span>Save Quotation</span></button>
     </div>
     <div class="button-area2">
       <button @click="closePage"><span v-if="ifSubmitted">Back to Top</span><span v-else>Close</span></button>

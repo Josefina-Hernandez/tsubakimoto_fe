@@ -3,32 +3,62 @@
         <BannerAdmin />
 
         <h3>Price List File Upload</h3>
-        <div class="radios">
-            <label class="custom-radio">
-                <input type="radio" value="all" v-model="selectedMode" />
-                <span class="radio-circle"></span>
-                <div class="text">Upload All Data</div>
-            </label>
-            <label class="custom-radio">
-                <input type="radio" value="part" v-model="selectedMode" />
-                <span class="radio-circle"></span>
-                <div class="text">Upload Part Data</div>
-            </label>
+
+        <div class="jpy-banner">JPY Cost</div>
+
+        <div class="jpy-wrapper">
+            <div class="label">Upload JPY Cost</div>
+            <button @click="triggerFileInput(1)"><span>Select File</span></button>
+            <input type="text" v-model="filePath1" readonly @click="triggerFileInput(1)">
+            <button><span>Upload</span></button>
+            <!-- 隐藏的文件输入 -->
+            <input type="file" ref="fileInput1" @change="handleFileChange(1)" style="display: none;" accept=".xlsx">
         </div>
 
-        <div class="nav-price">
-            <button @click="triggerFileInput"><span>Select File</span></button>
-            <input type="text" v-model="filePath" readonly @click="triggerFileInput">
-            <button @click="uploadExcelFile"><span>Upload</span></button>
-            <!-- 隐藏的文件输入 -->
-            <input type="file" ref="fileInput" @change="handleFileChange" style="display: none;" accept=".xlsx">
+        <div class="master-banner-wrapper">
+            <div class="master-banner">Master File</div>
+
+            <div class="custom-dropdown" ref="dropdown">
+              <div class="dropdown-selected" @click="toggleDropdown">
+                {{ selectedOption }}
+              </div>
+              <div class="dropdown-options" v-if="isOpen">
+                <div class="dropdown-option" v-for="(option, index) in options" :key="index" @click="selectOption(option, index)">
+                  {{ option }}
+                </div>
+              </div>
+            </div>
+        </div>
+        
+        <div class="master-dl-wrapper">
+            <div class="label">Download Excel File</div>
+            <button><span>Download</span></button>
+        </div>
+
+        <div class="master-up-wrapper">
+            <div class="label">Upload Excel File</div>
+            <button @click="triggerFileInput(2)"><span>Select File</span></button>
+            <input type="text" v-model="filePath2" readonly @click="triggerFileInput(2)">
+            <button><span>Upload</span></button>
+            <input type="file" ref="fileInput2" @change="handleFileChange(2)" style="display: none;" accept=".xlsx">
+        </div>
+
+        <div class="last-wrapper">
+            <div class="left">
+                <div class="label">Show Upload History</div>
+                <button @click="toHistory"><span>History</span></button>
+            </div>
+            <div class="right">
+                <div class="label">Price List Code Updating</div>
+                <button @click="toCodeUpdating"><span>Upldate/Delete</span></button>
+                <button @click="toCodeAdding"><span>Add</span></button>
+            </div>
         </div>
 
         <div class="table-container">
             <table>
                 <thead>
                     <tr>
-                        <th class="first">No.</th>
                         <th v-for="(header, index) in tableHeaders" :key="index">
                             {{ header }}
                         </th>
@@ -39,11 +69,6 @@
                     <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex">
                             {{ formatDateTime(cell) }}
-                        </td>
-                        <td class="btn-td">
-                            <button @click="downloadFile(row)">
-                                <span>Download</span>
-                            </button>
                         </td>
                     </tr>
                 </tbody>
@@ -64,13 +89,49 @@ import BannerAdmin from '@/components/admin/BannerAdmin.vue'
 export default {
     data(){
         return{
+            isOpen: false,
+            selectedOption: '',
+
+            options: [
+                'Drive Chain',
+                'Sprocket',
+                'Small Size',
+                'JPY Chain(KTE/Tsubaco)',
+                'JPY Chain(Planet)',
+                'Warehouse',
+                'KTE Stock',
+                'JPY PTUC(KTE)',
+                'JPY PTUC(Other dist)',
+                'SCG Group(CHAIN)',
+                'SCG Group(Cam Clutch)',
+                'Kableschlepp',
+                'Sugar Stock',
+            ],
+
             rows: 8,
             columns: 4,
             apiUrl: config.apiUrl,
             user_list: [],
-            selectedMode: 'all',
+            // selectedMode: 'all',
 
-            tableHeaders: ["Date", "File Name", "Update by", "All/Part", "Status", "Download"],
+            tableHeaders: [
+                'Category',
+                'Part No.',
+                'Old Model No.',
+                'New Chain/Model No.',
+                'Unit',
+                'Manufacturer\'s Suggested Retail Price',
+                'New Cost',
+                '% Diff for Cost',
+                'PO Multiplier',
+                'PO Price JPY/USD',
+                'Cost THB',
+                'GP',
+                'SP THB(Show in PLS)',
+                'SP THB After Cost Update',
+                '% Diff for SP',
+                'Pricelist Name',
+            ],
 
             tableData: [
                     ["1",  new Date("2024-08-18T14:30:00"), "Pricelist_20240818_new", "Admin", "All", "Complete",],
@@ -89,7 +150,10 @@ export default {
                     ["14",  new Date("2024-03-10T14:30:00"), "Pricelist_20240310_new", "Admin", "All", "Complete",],
                 ],
             
-            filePath: '',
+            filePath1: '',
+            filePath2: '',
+            file1: null,
+            file2: null,
         };
     },
     
@@ -97,11 +161,45 @@ export default {
         BannerAdmin,
     },
 
-    mounted(){
+    mounted() {
+        document.addEventListener('click', this.handleClickOutside);
+
+        this.selectedOption = this.options && this.options[0] ? this.options[0] : '';
         this.fetchData();
     },
 
+    beforeUnmount() {
+        document.removeEventListener('click', this.handleClickOutside);
+    },
+
     methods: {
+        toCodeAdding() {
+            this.$router.push('/admin/code-adding');
+        },
+        toCodeUpdating() {
+            this.$router.push('/admin/code-updating');
+        },
+
+        toHistory() {
+            this.$router.push('/admin/history');
+        },
+
+        toggleDropdown() {
+            this.isOpen = !this.isOpen;
+        },
+
+        selectOption(option, index) {
+            this.selectedOption = option;
+            this.isOpen = false;
+        },
+
+        handleClickOutside(event) {
+            const dropdown = this.$refs.dropdown;
+            if (dropdown && !dropdown.contains(event.target)) {
+                this.isOpen = false;
+            }
+        },
+
         uploadExcelFile(){
             if (!this.filePath) {
                 alert('Please select the excel file first!');
@@ -116,19 +214,38 @@ export default {
             alert("Uploaded " + type + ' file ' + this.filePath + "!"  );
         },
 
-        triggerFileInput() {
-            this.$refs.fileInput.click();
-        },
-
-        handleFileChange(event) {
-            const file = event.target.files[0];
-            if (file) {
-                this.filePath = file.name; // 设置文件名到输入框
+        triggerFileInput(index) {
+            if (index === 1) {
+                this.file1 = null;
+                this.filePath1 = '';
+                this.$refs.fileInput1.click();
+            } else if (index === 2) {
+                this.file2 = null;
+                this.filePath2 = '';
+                this.$refs.fileInput2.click();
             }
         },
 
-        downloadFile(index){
-            alert("Download file " + index[2] + " !");
+        handleFileChange(index) {
+            const file = this.$refs[`fileInput${index}`].files[0];
+
+            if (file) {
+                if (index === 1) {
+                    this.file1 = file;
+                    this.filePath1 = file.name;
+                } else if (index === 2) {
+                    this.file2 = file;
+                    this.filePath2 = file.name;
+                }
+            } else {
+                if (index === 1) {
+                    this.file1 = null;
+                    this.filePath1 = '';
+                } else if (index === 2) {
+                    this.file2 = null;
+                    this.filePath2 = '';
+                }
+            }
         },
 
         formatDateTime(date) {
@@ -175,86 +292,305 @@ export default {
     h3{
         margin-left: 6%;
         text-align: left;
-        font-size: 21px;
+        font-size: 19px;
     }
-    .radios {
+    .jpy-banner {
         margin-left: 6%;
-        display: flex; /* 使用 flex 布局 */
-        flex-direction: column; /* 垂直排列 */
-        align-items: flex-start; /* 对齐到最左边 */
-        gap: 10px; /* 为每个 radio 按钮添加间距 */
-        margin-top: 25px;
+        text-align: center;
+        font-size: 15px;
+        margin-top: 10px;
 
-        .custom-radio {
-                display: flex; /* 在 div 内部使用 flex 布局 */
-                align-items: center; /* 垂直居中对齐 radio 按钮和文本 */
+        width: 337px;
+
+        background: linear-gradient(to bottom, #6699ff 0%, #3366cc 100%);
+        //border: 1px solid #204a87;
+        border-radius: 6px;
+        color: white;
+        font-weight: bold;
+        padding: 6px 20px;
+        box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.5),
+                    inset 0 -2px 3px rgba(0, 0, 0, 0.4),
+                    0 2px 4px rgba(0, 0, 0, 0.3);
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        //cursor: pointer;
+        transition: all 0.2s ease-in-out;
+    }
+    .jpy-wrapper {
+        margin-left: 6%;
+        margin-top: 10px;
+        display: flex;
+        align-items: center;
+        .label {
+            font-size: 17px;
+            text-align: left;
+            width: 170px;
+        }
+        button {
+            margin-left: 1vw;
+            height: 24px;
+            width: 150px;
+            border-radius: 5px;
+            background-color: #4472c4;
+            border: none;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+
+            &:hover {
+                background-color: #284782;
+                transform: translate(2px, 2px);
+            }
+
+            span {
+                font-size: 15px;
                 position: relative;
-                padding-left: 40px;
-                cursor: pointer;
+                top: 0;
+                left: 0;
+                transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+            }
 
-                input[type="radio"] {
-                    left: 0;
-                    top: 0;
-                    position: absolute;
-                    opacity: 0; /* 隐藏原有的 radio 按钮 */
-                }
-
-                .radio-circle {
-                    position: absolute;
-                    left: 0;
-                    top: 50%;
-                    transform: translateY(-50%);
-                    width: 20px; /* 圆圈的直径 */
-                    height: 20px; /* 圆圈的直径 */
-                    border-radius: 50%; /* 使其变成圆形 */
-                    border: 1px solid #4472C4; /* 圆圈的边框 */
-                    background-color: #eff3f8; /* 圆圈的背景颜色 */
-                }
-
-                input[type="radio"]:checked + .radio-circle {
-                    background-color: #4472C4; /* 选中时的背景颜色 */
-                    border-color: #4472C4; /* 选中时的边框颜色 */
-                }
-
-                input[type="radio"]:checked + .radio-circle::after {
-                    content: '';
-                    position: absolute;
-                    left: 50%;
-                    top: 50%;
-                    transform: translate(-50%, -50%);
-                    width: 10px; /* 内部小圆点的直径 */
-                    height: 10px; /* 内部小圆点的直径 */
-                    border-radius: 50%; /* 内部小圆点的圆形 */
-                    background-color: #eff3f8; /* 内部小圆点的颜色 */
-                }
-                .text{
-                    font-size: 18px; /* 调整文本的字体大小 */
-                    line-height: 1.5; /* 调整文本行高以确保垂直居中 */
-                    margin-left: 10px;
-                }
+            &:hover span{
+                top: 2px;
+                left: 2px;
+            }
+        }
+        input {
+            margin-left: 1vw;
+            height: 24px;
+            width: 350px;
+            border-radius: 4px;
+            border: 1px solid grey;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 0 10px;
+            vertical-align: middle;
+            font-size: 13px;
+            transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+            cursor: pointer;
         }
     }
 
-    .nav-price{
-        display: flex;
+    .master-banner-wrapper {
         margin-left: 6%;
-        margin-top: 30px;
-        button{
-                width: 150px;
-                height: 40px;
-                border-radius: 5px;
-                background-color: #4472C4;
-                border: none;
-                color: white;
-                font-size: 17px;
-                cursor: pointer;
+        margin-top: 24px;
+        display: flex;
+        align-items: center;
+        .master-banner {
+            text-align: center;
+            font-size: 15px;
+            width: 337px;
+            min-width: 337px;
+            background: linear-gradient(to bottom, #6699ff 0%, #3366cc 100%);
+            //border: 1px solid #204a87;
+            border-radius: 6px;
+            color: white;
+            font-weight: bold;
+            padding: 6px 20px;
+            box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.5),
+                        inset 0 -2px 3px rgba(0, 0, 0, 0.4),
+                        0 2px 4px rgba(0, 0, 0, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+            //cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
 
-                &:hover{
-                    background-color: #284782;
+        .custom-dropdown{
+            position: relative;
+            margin-left: 1vw;
+            
+            .dropdown-selected{
+                font-size: 15px;
+                width: 350px;
+                height: 30px;
+                padding: 0 10px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #f0f0f0;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
+                transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+
+                &::after {
+                    content: '';
+                    border-left: 6px solid transparent;
+                    border-right: 6px solid transparent;
+                    border-top: 6px solid #333;
+                    margin-left: 10px;
+                    display: inline-block;
                 }
 
-                span{
-                    position: relative; /* 添加相对定位 */
+                &:hover {
+                    background-color: #f0f4f8; /* 鼠标悬停时改变背景色 */
+                    outline: none; /* 去除默认的聚焦边框 */
+                    box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.4); /* 聚焦时的轮廓阴影 */
+                }
+            }
+
+            .dropdown-options{
+                font-size: 15px;
+                display: block;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 350px;
+                border: 1px solid #ccc;
+                border-radius: 5px;
+                background-color: #fff;
+                z-index: 1000;
+
+                max-height: 400px;
+                overflow-y: auto;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 添加轮廓阴影 */
+                
+
+                .dropdown-option{
+                    padding: 10px;
+                    cursor: pointer;
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    &:hover{
+                    background-color: #f0f0f0;
+                    }
+                }
+            }
+        }
+    }
+    
+
+    .master-dl-wrapper {
+        margin-left: 6%;
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        .label {
+            font-size: 17px;
+            text-align: left;
+            width: 170px;
+        }
+        button {
+            margin-left: 1vw;
+            height: 24px;
+            width: 150px;
+            border-radius: 5px;
+            background-color: #4472c4;
+            border: none;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+
+            &:hover {
+                background-color: #284782;
+                transform: translate(2px, 2px);
+            }
+
+            span {
+                font-size: 15px;
+                position: relative;
+                top: 0;
+                left: 0;
+                transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+            }
+
+            &:hover span{
+                top: 2px;
+                left: 2px;
+            }
+        }
+    }
+
+    .master-up-wrapper {
+        margin-left: 6%;
+        margin-top: 15px;
+        display: flex;
+        align-items: center;
+        .label {
+            font-size: 17px;
+            text-align: left;
+            width: 170px;
+        }
+        button {
+            margin-left: 1vw;
+            height: 24px;
+            width: 150px;
+            border-radius: 5px;
+            background-color: #4472c4;
+            border: none;
+            color: white;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+
+            &:hover {
+                background-color: #284782;
+                transform: translate(2px, 2px);
+            }
+
+            span {
+                font-size: 15px;
+                position: relative;
+                top: 0;
+                left: 0;
+                transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+            }
+
+            &:hover span{
+                top: 2px;
+                left: 2px;
+            }
+        }
+        input {
+            margin-left: 1vw;
+            height: 24px;
+            width: 350px;
+            border-radius: 4px;
+            border: 1px solid grey;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            padding: 0 10px;
+            font-size: 13px;
+            transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+            cursor: pointer;
+        }
+    }
+
+    .last-wrapper {
+        margin-left: 6%;
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+
+        .left {
+            display: flex;
+            align-items: center;
+            .label {
+                font-size: 17px;
+                text-align: left;
+                width: 170px;
+            }
+            button {
+                margin-left: 1vw;
+                height: 24px;
+                width: 150px;
+                border-radius: 5px;
+                background-color: #4472c4;
+                border: none;
+                color: white;
+                cursor: pointer;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+                transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+
+                &:hover {
+                    background-color: #284782;
+                    transform: translate(2px, 2px);
+                }
+
+                span {
+                    font-size: 15px;
+                    position: relative;
                     top: 0;
                     left: 0;
                     transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
@@ -265,27 +601,60 @@ export default {
                     left: 2px;
                 }
             }
-        input{
-            width: 450px;
-            margin-left: 30px;
-            margin-right: 30px;
-            border: 1px solid #e0dede;
-            border-radius: 5px;
-            font-size: 17px;
-            color: #656363;
-            padding: 0 10px;
-            cursor: pointer;
+        }
+        .right {
+            margin-left: 25vw;
+            display: flex;
+            align-items: center;
+            .label {
+                font-size: 17px;
+                text-align: left;
+                width: 200px;
+                white-space: nowrap;
+            }
+            button {
+                margin-left: 1vw;
+                height: 24px;
+                width: 150px;
+                border-radius: 5px;
+                background-color: #4472c4;
+                border: none;
+                color: white;
+                cursor: pointer;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+                transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+
+                &:hover {
+                    background-color: #284782;
+                    transform: translate(2px, 2px);
+                }
+
+                span {
+                    font-size: 15px;
+                    position: relative;
+                    top: 0;
+                    left: 0;
+                    transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+                }
+
+                &:hover span{
+                    top: 2px;
+                    left: 2px;
+                }
+            }
         }
     }
 
     .table-container {
             margin-top: 20px;
-            margin-left: 5%;
-            margin-right: 5%;
-            width: 90%;
-            height: 420px; /* 固定表格高度 */
+            margin-left: 2%;
+            margin-right: 2%;
+            width: 96%;
+            height: 50vh; /* 固定表格高度 */
             overflow-y: auto; /* 启用垂直滚动条 */
             border: 1px solid #ddd;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.5);
+
 
             //will-change: scroll-position; /* 提示浏览器优化滚动性能 */
             //backface-visibility: hidden; /* 避免元素闪烁或位移 */
@@ -295,86 +664,58 @@ export default {
                     border-collapse: collapse;
 
                     thead {
-                        background-color: #F2F2F2;
+                        background-color: #4472C4;
                         //background-color: #03e995;
+                        color: white;
                         opacity: 1;
                         position: sticky;
                         top: 0px;
                         z-index: 1; /* 使表头在滚动时保持在顶部 */
-                        height: 50px;
+                        height: 35px;
+                        
 
                         tr {                        
                             th {
-                                //border: 1px solid white;
+                                font-size: 13px;
+                                font-weight: normal;
+                                padding: 0 10px;
                             }
-                            
-                            .first {
-                                width: 50px; /* 调整宽度，根据需要设置具体的值 */
-                                text-align: center; /* 可选：将内容居中 */
-                                padding: 0 15px;
-                            }
+                        
                         }
                     }
 
                     tbody {
                         tr {
-                            height: 50px;
+                            //height: 50px;
                             border: 2px solid #F2F2F2 ;
-                            
-                            .btn-td{
-                                width: 90px;
-                                padding-right: 15px;
-                                button {
-                                    margin-left: 20px;
-                                    background-color:  #00AAEE;
-                                    width: 100px;
-                                    height: 30px;
-                                    border: none;
-                                    border-radius: 3px;
-                                    color: white;
-                                    font-size: 14px;
-                                    cursor: pointer;
-
-                                    span {
-                                        position: relative; 
-                                        top: 0;
-                                        left: 0;
-                                        transition: top 0.2s ease, left 0.2s ease;
-                                    }
-
-                                    &:hover{
-                                        background-color: #0082B3;
-                                    }
-
-                                    &:hover span {
-                                        top: 2px; 
-                                        left: 2px; 
-                                    }
-                                }
+                            td {
+                                font-size: 13px;
+                                padding: 3px 5px;
                             }
-
-
                         }
                 }
             }
         }
     .lower-btn{
             position: relative;
-            margin-top: 30px;
+            margin-top: 10px;
             display: flex;
             button{
-                margin-left: 6%;
+                margin-left: 2%;
                 width: 150px;
-                height: 40px;
+                height: 28px;
                 border-radius: 5px;
                 background-color: #4472C4;
                 border: none;
                 color: white;
                 font-size: 17px;
                 cursor: pointer;
+                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+                transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
                 &:hover{
                     background-color: #284782;
+                    transform: translate(2px, 2px);
                 }
 
                 span{

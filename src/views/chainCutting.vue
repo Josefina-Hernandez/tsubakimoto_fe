@@ -1699,17 +1699,17 @@ computed: {
         if ((this.selectedBItem !== '---' && this.selectedOffsetItem === '---') || (this.selectedBItem === '---' && this.selectedOffsetItem !== '---')) {
           var count = 0;
           for (const each of [this.selectedAItem, this.selectedBItem, this.selectedOffsetItem]) {
-            console.log(each)
+            //console.log(each)
             if (each === 'R') {
               count += 1;
             }
           }
-          console.log(count)
+          //console.log(count)
           const result = 1.1 * (lskQtyInt + count - 1) * this.unitPriceNum
             + (this.selectedAItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedAItem)?.unit_price) || 0)
             + (this.selectedBItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0)
             + (this.selectedOffsetItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0);
-          console.log('case 2')
+          //console.log('case 2')
           //console.log((lskQtyInt - 1) * this.unitPriceNum, (this.selectedBItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedBItem)?.unit_price) || 0), (this.selectedOffsetItem === '---' ? 0 : parseFloat(this.connPriceData.find(item => item.conn_show === this.selectedOffsetItem)?.unit_price) || 0))
           return result;
 
@@ -2346,11 +2346,12 @@ methods: {
 
   // 生成B列表
   buildBItems() {
+    let rows;
     if (this.calCase?.trim().toUpperCase() === 'CABLEVEYOR') {
-      const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? 'none' : this.selectedAItem));
+      rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? 'none' : this.selectedAItem));
       this.bItems = this.uniqueValues(rows.map(r => r[2]));
     } else {
-      const rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
+      rows = this.getFilteredRules().filter(r => r[1] === (this.selectedAItem === '---' ? null : this.selectedAItem));
       this.bItems = this.uniqueValues(rows.map(r => r[2]));
     }
     
@@ -2362,7 +2363,7 @@ methods: {
           this.bItems = ['R'];
           this.selectedBItem = 'R';
         }
-      } else if (this.standardLinks != null && this.maxLinks != null && this.standardLinks <= parseInt(this.inputBoxLinkQty) <= this.maxLinks) {
+      } else if (this.standardLinks != null && this.maxLinks != null && parseInt(this.inputBoxLinkQty) >= this.standardLinks && parseInt(this.inputBoxLinkQty) <= this.maxLinks) {
         if (this.selectedOption === 'option2') {
           if (this.selectedAItem === 'R') {
             this.bItems = this.uniqueValues(
@@ -2428,8 +2429,17 @@ methods: {
 
     if (!Array.isArray(this.connPriceData)) {
       this.connPriceData = [];
+      return;
     }
     //console.log(this.connPriceData);
+    this.ruleRows = this.ruleRows.filter(r => {
+      const keys = [r[1], r[2], r[3]].filter(Boolean);
+      const hasInvalid = this.connPriceData.some(item => 
+        keys.includes(item.conn_show) && (item.stock_reference != "YES" && item.stock_reference != "TBD")
+      );
+
+      return !hasInvalid;
+    });
   },
 
   async setPullDownLists() {

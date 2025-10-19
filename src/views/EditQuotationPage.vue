@@ -157,7 +157,7 @@
     </div>
     <div class="button-area2">
       <button @click="closePage"><span>Close</span></button>
-      <button @click="handleClickSubmit" :disabled="bottomEditBtnText === 'Edit'"><span>Save and Submit</span></button>
+      <button @click="handleClickSubmit" :disabled="bottomEditBtnText === 'Edit'"><span>Save</span></button>
     </div>
   </template>
   

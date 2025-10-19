@@ -105,7 +105,8 @@
       padding: 40px;
       .news {
         padding: 10px 0;
-        color: #7C7C7C;
+        //color: #7C7C7C;
+        color: #fc426a;
         display: flex;
         justify-content:space-between;
         align-items: center;
