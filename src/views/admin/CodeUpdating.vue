@@ -13,13 +13,14 @@
         <div class="table-container">
             <table>
                 <colgroup>
+                    <col style="width: 3%;" />
                     <col style="width: 5%;" />
-                    <col style="width: 5%;" />
-                    <col style="width: 15%;" />
-                    <col style="width: 15%;" />
-                    <col style="width: 5%;" />
-                    <col style="width: 5%;" />
-                    <col style="width: 18%;" />
+                    <col style="width: 9%;" />
+                    <col style="width: 12%;" />
+                    <col style="width: 10%;" />
+                    <col style="width: 4%;" />
+                    <col style="width: 4%;" />
+                    <col style="width: 10%;" />
                     <col style="width: 10%;" />
                     <col style="width: 6%;" />
                     <col style="width: 7%;" />
@@ -35,7 +36,7 @@
                 <tbody>
                     <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row.slice(0, -1)" :key="cellIndex">
-                            <template v-if="cellIndex === 4 || cellIndex === 5">
+                            <template v-if="cellIndex === 4 || cellIndex === 5 || cellIndex === 6">
                                 <select 
                                     v-model="row[cellIndex]" 
                                     class="custom-select"
@@ -126,6 +127,7 @@ export default {
                 'Part No.',
                 'Old Model No.',
                 'New Chain/Model No.',
+                'Pricelist Name',
                 'Stock Reference (RPP)',
                 'Cutting Assembly',
                 'Detail',
@@ -135,10 +137,12 @@ export default {
             ],
 
             tableData: [],
+            originalData: [],
 
             dropdownOptions: {
-                4: ['--', 'YES', 'TBD'],
-                5: ['--', 'YES'],
+                4: ['--'],
+                5: ['--', 'YES', 'TBD'],
+                6: ['--', 'YES'],
             },
 
             rowChanged: [],
@@ -157,6 +161,8 @@ export default {
     },
 
     mounted(){
+        this.fetchPricelistOptions();
+
         this.fetchData();
     },
 
@@ -174,6 +180,35 @@ export default {
     },
 
     methods: {
+        async fetchPricelistOptions() {
+            try {
+                const response = await axios.get(`${this.apiUrl}/master_data/get-pricelist-names`);
+                if (response.data.status === "success") {
+                    this.dropdownOptions[4] = response.data.data; // 将后端返回的数组直接赋值给下拉菜单
+
+                } else {
+                    alert(`⚠️ Failed to load pricelist names: ${response.data.message}`);
+                }
+            } catch (error) {
+                console.error("Error fetching pricelist names:", error);
+                alert(`❌ Failed to load pricelist names: ${error.message}`);
+            }
+        },
+
+        checkRowChanged(rowIndex) {
+            const current = this.tableData[rowIndex];
+            const original = this.originalData[rowIndex];
+
+            const normalize = (v) => {
+                if (v === null || v === undefined || v === '' || v === '--') return '';
+                return String(v).trim();
+            }
+
+            const isChanged = current.length !== original.length || current.some((val, i) => normalize(val) !== normalize(original[i]));
+
+            this.rowChanged[rowIndex] = isChanged;
+        },
+
         handleInput(rowIndex, cellIndex, event) {
             let value = event.target.value
             
@@ -190,12 +225,11 @@ export default {
             // 更新数据
             this.tableData[rowIndex][cellIndex] = value;
 
-            // 标记此行已经修改
-            this.rowChanged[rowIndex] = true;
+            this.checkRowChanged(rowIndex);
         },
 
         markRowChanged(rowIndex) {
-            this.rowChanged[rowIndex] = true;
+            this.checkRowChanged(rowIndex)
         },
 
         async saveRow(rowIndex) {
@@ -210,7 +244,15 @@ export default {
                     `${this.apiUrl}/admin/updating-page-save-line`,
                     { row: rowData }
                 );
-                //console.log('Save success:', response.data);
+                
+                if (response.data.status === 'success') {
+                    //保存成功-同步原始数据
+                    this.originalData[rowIndex] = JSON.parse(JSON.stringify(rowData));
+                    this.rowChanged[rowIndex] = false;
+                } else {
+                    alert('Save failed: ' + response.data.message);
+                    this.rowChanged[rowIndex] = true;
+                }
 
             } catch (error) {
                 console.error('Save failed:', error);
@@ -219,10 +261,34 @@ export default {
             }
         },
 
-        deleteRow(rowIndex) {
-            this.tableData.splice(rowIndex, 1);
-            this.rowChanged.splice(rowIndex, 1);
+        async deleteRow(rowIndex) {
+            const rowData = this.tableData[rowIndex];
+            const newModelNo = rowData[3];
+
+            const confirmDelete = window.confirm(`Are you sure to delete "${newModelNo}"?`);
+            if (!confirmDelete) return;
+
+            try {
+                const response = await axios.post(
+                    `${this.apiUrl}/admin/updating-page-delete-line`,
+                    { id: rowData[9] }
+                );
+
+                if (response.data.status === 'success') {
+                    alert(`"${newModelNo}" deleted successfully!`);
+
+                    this.tableData.splice(rowIndex, 1);
+                    this.rowChanged.splice(rowIndex, 1);
+                    this.originalData.splice(rowIndex, 1);
+                } else {
+                    alert(`Delete failed: ${response.data.message} || 'Unkown error'`);
+                }
+            } catch (error) {
+                console.error('Delete failed:', error);
+                alert('Delete failed!');
+            }
         },
+
 
         goBack() {
             this.$router.push(`/admin/price-list`);
@@ -273,11 +339,14 @@ export default {
                 this.totalPage = Math.ceil(this.totalItems / this.pageSize);
                 const rawData = response.data.data;
                 rawData.forEach(row => {
-                    if (!row[4]) row[4] = '--';
                     if (!row[5]) row[5] = '--';
+                    if (!row[6]) row[6] = '--';
                 });
                 this.tableData = rawData;
-                this.rowChanged = this.tableData.map(() => false)
+                // 存一份原始副本（深拷贝）
+                this.originalData = JSON.parse(JSON.stringify(rawData));
+
+                this.rowChanged = this.tableData.map(() => false);
 
             } catch (error) {
                 console.error("Error fetching master data:", error);
@@ -450,7 +519,7 @@ export default {
                             select {
                                 width: 100%;
                                 height: 35px;
-                                font-size: 13px;
+                                font-size: 12px;
                                 border: 1px solid #ccc;
                                 border-radius: 3px;
                                 box-sizing: border-box;
@@ -458,6 +527,12 @@ export default {
                                 color: #333;
                                 transition: all 0.2s ease;
                                 //text-align: center;
+                                white-space: nowrap;
+                                overflow: hidden;
+                                text-overflow: ellipsis;
+                                appearance: none;          /* 隐藏系统默认箭头（可选） */
+
+                                cursor: pointer;
 
                                 &:hover {
                                     background-color: #f0f4f8;

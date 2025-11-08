@@ -17,9 +17,11 @@
 
                 <tbody>
                     <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
-                        <td v-for="(cell, cellIndex) in row" :key="cellIndex">
-                            {{ formatDateTime(cell) }}
+                        <td>{{ rowIndex + 1 }}</td>
+                        <td v-for="([key, value]) in getVisibleEntries(row)" :key="key">
+                            {{ key === 'date' ? formatDate(value) : value }}
                         </td>
+                        <td>Complete</td>
                         <td class="btn-td">
                             <button @click="downloadFile(row)">
                                 <span>Download</span>
@@ -47,9 +49,8 @@ export default {
             rows: 8,
             columns: 4,
             apiUrl: config.apiUrl,
-            user_list: [],
 
-            tableHeaders: ["Date", "File Name", "Update by", "All/Part", "Status", "Download"],
+            tableHeaders: ["Date", "File Name", "Type", "Status", "Download"],
 
             tableData: [
                     ["1",  new Date("2024-08-18T14:30:00"), "Pricelist_20240818_new", "Admin", "All", "Complete",],
@@ -79,28 +80,44 @@ export default {
     },
 
     methods: {
-        downloadFile(index){
-            alert("Download file " + index[2] + " !");
+        getVisibleEntries(row) {
+            return Object.entries(row).filter(([k]) => k !== 'file_path');
         },
 
-        formatDateTime(date) {
-            if (date instanceof Date && !isNaN(date)) {
-                    // 格式化为 YYYY-MM-DD HH:mm
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                const hours = String(date.getHours()).padStart(2, '0');
-                const minutes = String(date.getMinutes()).padStart(2, '0');
-                return `${year}-${month}-${day} ${hours}:${minutes}`;
+        downloadFile(row) {
+            if (!row.file_path) {
+                alert("File path not found!");
+                return;
             }
-            return date; // 如果不是日期类型，直接返回原值
+
+            const fileUrl = `${this.apiUrl}/admin/download-excel?path=${encodeURIComponent(row.file_path)}`;
+
+            // 触发下载
+            window.open(fileUrl, "_blank");
         },
 
-        fetchData() {
-            axios.get(`${this.apiUrl}/users`)
+        formatDate(dateStr) {
+        if (!dateStr) return '';
+
+        const date = new Date(dateStr);
+            if (isNaN(date)) return dateStr; // 防止解析失败
+
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            const seconds = String(date.getSeconds()).padStart(2, '0');
+
+            return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+        },
+
+        async fetchData() {
+            await axios.get(`${this.apiUrl}/admin/history-combined`)
             .then(response => {
                 //console.log(response.data);
-                this.user_list = response.data;
+                this.tableData = response.data.data;
                 console.log(response.data);
             })
             .catch(error => {

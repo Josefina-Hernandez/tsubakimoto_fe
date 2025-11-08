@@ -229,46 +229,46 @@ export default {
     }
 
     .lower-btn{
-            position: absolute;
-            width: 100%;
-            display: flex;
-            justify-content: start;
-            align-items: center;
-            flex-direction: row;
-            bottom: 0px;
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        flex-direction: row;
+        bottom: 0px;
 
-            button{
-                margin-left: 100px;
-                margin-bottom: 40px;
-                width: 180px;
-                height: 35px;
-                border-radius: 5px;
-                background-color: #4472C4;
-                border: none;
-                color: white;
-                font-size: 17px;
-                cursor: pointer;
-                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
-                transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+        button{
+            margin-left: 100px;
+            margin-bottom: 40px;
+            width: 180px;
+            height: 35px;
+            border-radius: 5px;
+            background-color: #4472C4;
+            border: none;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
-                &:hover{
-                    background-color: #284782;
-                    transform: translate(3px, 3px);
-                }
+            &:hover{
+                background-color: #284782;
+                transform: translate(3px, 3px);
+            }
 
-                span{
-                    position: relative; /* 添加相对定位 */
-                    top: 0;
-                    left: 0;
-                    transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
-                }
+            span{
+                position: relative; /* 添加相对定位 */
+                top: 0;
+                left: 0;
+                transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+            }
 
-                &:hover span{
-                    top: 2px;
-                    left: 2px;
-                }
+            &:hover span{
+                top: 2px;
+                left: 2px;
             }
         }
+    }
 
 </style>
 

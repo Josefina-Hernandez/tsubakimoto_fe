@@ -227,6 +227,13 @@ const routes = [
     component: () => import('../views/admin/CodeAdding.vue')
   },
 
+  {
+    path: '/admin/admin-exchange',
+    name: 'admin-exchange',
+
+    component: () => import('../views/admin/AdminExchange.vue')
+  },
+
 ]
 
 const router = createRouter({

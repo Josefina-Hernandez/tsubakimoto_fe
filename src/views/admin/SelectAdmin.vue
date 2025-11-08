@@ -10,7 +10,7 @@
       <a href="#/admin/user" class="button"><span>User Account Management</span></a>
       <!--<a href="#/admin/quotation-results" class="button"><span>Quotation Results</span></a>-->
       <a href="#/admin/price-list" class="button"><span>Price List</span></a>
-      <a href="#/admin/distributors-page" class="button"><span>Monthly Exchange</span></a>
+      <a href="#/admin/admin-exchange" class="button"><span>Monthly Exchange</span></a>
     </div>
     <div class="footer">
       <button @click="backToLogin">Logout</button>

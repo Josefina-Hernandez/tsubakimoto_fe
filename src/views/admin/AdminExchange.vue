@@ -1,7 +1,7 @@
 <template>
     <div class="index">
       
-      <BannerContainer :firstLabel="this.firstLabel" :ifShowBtn="true" />
+      <BannerAdmin />
 
       <div class="lower-area">
         <div class="content-container">
@@ -24,9 +24,9 @@
             <table>
               <thead>
                 <th></th>
-                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../assets/flags/jpy.png')})` }"></span><span>JPY</span></th>
-                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../assets/flags/usd.png')})` }"></span><span>USD</span></th>
-                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../assets/flags/eur.png')})` }"></span><span>EUR</span></th>
+                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../../assets/flags/jpy.png')})` }"></span><span>JPY</span></th>
+                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../../assets/flags/usd.png')})` }"></span><span>USD</span></th>
+                <th class="flag-icon"><span class="line-flag" :style="{ backgroundImage: `url(${require('../../assets/flags/eur.png')})` }"></span><span>EUR</span></th>
               </thead>
               <tbody>
                 <tr v-for="line, index in filteredTableLines" :key="index">
@@ -43,11 +43,14 @@
             <div> {{ this.currentRow[13] }} </div>
           </div>
         </div>
-        <!-- <div class="btn-area" v-if="isShowingUpdateBtn">
+        <div class="btn-area" v-if="isShowingUpdateBtn">
           <input type="file" ref="fileInput" accept=".xlsx" @change="handleFileChange" hidden />
           <button class="update" @click="triggerSelect">Update Current Rate</button>
-        </div>      -->
+        </div>    
       </div>
+      <div class="lower-btn">
+        <button @click="goBack"><span>Back</span></button>
+      </div> 
     </div>
     <teleport to='body'>
       <div v-if="isUploading" class="modal-loading">
@@ -61,7 +64,7 @@
     import { computed, nextTick } from 'vue';
     import { mapGetters, useStore } from 'vuex';
     import config from '@/config.js';
-    import BannerContainer from '@/components/BannerContainer.vue'
+    import BannerAdmin from '@/components/admin/BannerAdmin.vue'
     import axios from 'axios';
     
     export default {
@@ -104,7 +107,7 @@
         };
       },
       components: {
-        BannerContainer,
+        BannerAdmin,
       },
       computed: {
         ...mapGetters(['getLoginMode']),
@@ -148,6 +151,10 @@
       },
 
       methods: {
+        goBack(){
+            this.$router.push('/admin/select')
+        },
+        
         formatDateTime(input) {
           const date = new Date(input);
           const hours = date.getHours().toString().padStart(2, '0');
@@ -332,7 +339,7 @@
       .lower-area {
         display: flex;
         .content-container {
-          padding: 20px 120px 0 40px;
+          padding: 20px 40px 0;
           //border: 1px solid red;
           margin-left: 20px;
           margin-right: 20px;
@@ -479,7 +486,7 @@
                     font-size: 18px;
                   }
                   .rate-txt{
-                    background-color: #53C5F4;
+                    background-color: #4472C4;
                     color: white;
                     margin: 0 20px;
                     flex: 2;
@@ -493,7 +500,7 @@
                     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
                   }
                   .amount-txt{
-                    background-color: #53C5F4;
+                    background-color: #4472C4;
                     color: white;
                     flex: 2;
                     display: flex;
@@ -538,7 +545,7 @@
           padding-right: 50px;
           .update{
             height: 50px;
-            background-color: #53C5F4;
+            background-color: #4472C4;
             color: white;
             border-radius: 10px;
             border: none;
@@ -547,13 +554,55 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.4); /* 添加轮廓阴影 */
             transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
               &:hover{
-                background-color: #0082B3;
+                background-color: #284782;
                 transform: translate(3px, 3px);
               }
             cursor: pointer;
           }
         }
       }
+
+      .lower-btn{
+        position: absolute;
+        width: 100%;
+        display: flex;
+        justify-content: start;
+        align-items: center;
+        flex-direction: row;
+        bottom: 0px;
+
+        button{
+            margin-left: 100px;
+            margin-bottom: 40px;
+            width: 180px;
+            height: 35px;
+            border-radius: 5px;
+            background-color: #4472C4;
+            border: none;
+            color: white;
+            font-size: 17px;
+            cursor: pointer;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.5);
+            transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
+
+            &:hover{
+                background-color: #284782;
+                transform: translate(3px, 3px);
+            }
+
+            span{
+                position: relative; /* 添加相对定位 */
+                top: 0;
+                left: 0;
+                transition: top 0.2s ease, left 0.2s ease; /* 添加过渡效果 */
+            }
+
+            &:hover span{
+                top: 2px;
+                left: 2px;
+            }
+        }
+      }   
     }
 
     .modal-loading {

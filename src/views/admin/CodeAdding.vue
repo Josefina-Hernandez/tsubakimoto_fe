@@ -5,8 +5,8 @@
         <h3>Pricelist Code Addition</h3>
 
         <div class="filter-wrapper">
-            <div class="label">Master File Name</div>
-            <div class="custom-dropdown" ref="dropdown">
+            <!-- <div class="label">Detail View</div> -->
+            <!-- <div class="custom-dropdown" ref="dropdown">
               <div class="dropdown-selected" @click="toggleDropdown">
                 {{ selectedOption }}
               </div>
@@ -15,7 +15,7 @@
                   {{ option }}
                 </div>
               </div>
-            </div>
+            </div> -->
         </div>
 
         <div class="table-container">
@@ -31,11 +31,33 @@
                 <tbody>
                     <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex">
-                            <textarea name="" v-model="row[cellIndex]" rows="1"></textarea>
+
+                            <template v-if="[4, 9, 11, 17, 18].includes(cellIndex)">
+                                <select v-model="row[cellIndex]" 
+                                        :class="getInputClass(cell, cellIndex)">
+                                <option :value="['17', '18'].includes(String(cellIndex)) ? '' : ''">
+                                    {{ ['17', '18'].includes(String(cellIndex)) ? '--' : '-Select' }}
+                                </option>
+                                <option v-for="option in getSelectOptions(cellIndex)" 
+                                        :key="option" 
+                                        :value="option">
+                                    {{ option }}
+                                </option>
+                                </select>
+                            </template>
+
+                            <template v-else>
+                                <textarea 
+                                    v-model="row[cellIndex]" 
+                                    rows="1"
+                                    :class="getInputClass(row[cellIndex], cellIndex)"
+                                    @input="handleInput(rowIndex, cellIndex, $event)"
+                                ></textarea>
+                            </template>
                             <!-- <input type="text" v-model="row[cellIndex]"> -->
                         </td>
                         <td>
-                            <button class="circle-rm-btn" @click="handleRemove">
+                            <button class="circle-rm-btn" @click="handleRemove(rowIndex)">
                                 -
                             </button>
                         </td>
@@ -46,10 +68,10 @@
         </div>
 
         <div class="add-btn-wrapper">
-            <button class="circle-add-btn" @click="handleAdd">
+            <button class="circle-add-btn" @click="handleAddLine">
                 +
             </button>
-            <button class="btn-add">Add</button>
+            <button class="btn-add" @click="handleAdd">Add</button>
         </div>
         
         <div class="lower-btn">
@@ -81,6 +103,7 @@ export default {
                 'Unit',
                 'Manufacturer\'s Suggested Retail Price',
                 'Converse on to FT',
+                'PO MUL',
                 '(TTCL Internal Use) PO Price',
                 'PO Price Currency',
                 'Remark',
@@ -88,7 +111,7 @@ export default {
                 'Standard Price',
                 'Dist. PL MUL',
                 'Dist. Ex Rate',
-                'Status',
+                'Detail',
                 'Supplier Name',
                 'Stock Reference (RPP)',
                 'Cutting Assembly',
@@ -97,6 +120,7 @@ export default {
 
             tableData: [
                 ['',
+                '',
                 '',
                 '',
                 '',
@@ -173,27 +197,93 @@ export default {
     },
 
     methods: {
-        handleAdd() {
-            this.tableData.push([
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-                '',
-            ]);
+        handleRemove(index) {
+                if (this.tableData.length > 1) {
+                    // 如果多于1行 → 正常删除
+                    this.tableData.splice(index, 1);
+                } else {
+                    // 如果只剩最后一行 → 清空这一行内容
+                    this.tableData[0] = new Array(this.tableData[0].length).fill('');
+                }
+        },
+
+        handleAddLine() {
+            this.tableData.push(new Array(19).fill(''));
+        },
+
+        handleInput(rowIndex, cellIndex, event) {
+            let value = event.target.value;
+            
+            // 自动大写逻辑
+            if ([0, 2, 3, 16].includes(cellIndex)) {
+                value = value.toUpperCase();
+            }
+
+            // 仅数字（整数）
+            if (cellIndex === 1) {
+                value = value.replace(/[^0-9]/g, '');
+            }
+
+            // 整数或小数
+            if ([5, 6, 7, 8, 12, 13, 14].includes(cellIndex)) {
+                value = value.replace(/[^0-9.]/g, '');
+                // 避免多个小数点
+                const parts = value.split('.');
+                if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
+            }
+
+            this.tableData[rowIndex][cellIndex] = value;
+        },
+
+        // 选择框选项定义
+        getSelectOptions(cellIndex) {
+            if (cellIndex === 4) return ['BOX', 'FT', 'PC', 'REEL', 'SET'];
+            if (cellIndex === 9) return ['EUR', 'JPY', 'USD'];
+            if (cellIndex === 11) return [
+                'DRIVE CHAIN',
+                'SMALL SIZE CONVEYOR CHAIN',
+                'SPROCKET',
+                'KABELSCHLEPP',
+                'SCG GROUP (CAM CLUTCH)',
+                'SCG GROUP (CHAIN)',
+                'WAREHOUSE PRICELIST',
+                'KTE STOCK',
+                'OTHER CHAIN (TOP CH., LSCC, CABLEVEYOR)',
+                'PTUC PRODUCT (KTE)',
+                'PTUC PRODUCT',
+                'SUGAR STOCK',
+            ];
+            
+            if (cellIndex === 17) return ['YES', 'TBD'];
+            if (cellIndex === 18) return ['YES'];
+            return [];
+        },
+
+        // 必填项样式
+        getInputClass(value, cellIndex) {
+            // 定义必填列索引
+            const mustFill = [3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16];
+
+            // 非必填列，直接返回空
+            if (!mustFill.includes(cellIndex)) return '';
+
+            // 判断是 select 还是 textarea
+            const isSelect = [4, 8, 10, 16, 17].includes(cellIndex);
+
+            // 如果是选择框
+            if (isSelect) {
+                if (value === '' || value === '-Select' || value === null) {
+                return 'required-field';
+                }
+            } 
+            // 如果是输入框
+            else {
+                if (value === '' || value === null) {
+                return 'required-field';
+                }
+            }
+
+            return '';
         },
 
         toggleDropdown() {
@@ -232,6 +322,68 @@ export default {
             }
             return date; // 如果不是日期类型，直接返回原值
         },
+
+        async handleAdd() {
+            // 1️⃣ 检查所有行的必填项
+            const mustFillCols = [3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 16];
+            const selectCols = [4, 9, 11, 17, 18];
+
+            let missingCells = []; // 记录未填单元格
+            let validRows = [];
+
+            this.tableData.forEach((row, rowIndex) => {
+                let hasMissing = false;
+
+                mustFillCols.forEach((colIndex) => {
+                    const value = row[colIndex];
+
+                    // 判断是否为空或未选择
+                    const isSelect = selectCols.includes(colIndex);
+                    const invalid =
+                        (isSelect && (value === '' || value === '-Select' || value === 'None')) ||
+                        (!isSelect && (value === '' || value === null));
+
+                    if (invalid) {
+                        hasMissing = true;
+                        // 加上标记样式
+                        this.tableData[rowIndex][colIndex] = value;
+                    }
+                });
+
+                if (hasMissing) {
+                    missingCells.push(rowIndex + 1); // 用于提示第几行
+                } else {
+                    validRows.push(row);
+                }
+            });
+
+            // 2️⃣ 如果有未填项 → 弹窗提示
+            if (missingCells.length > 0) {
+                alert(`Please fill in all required fields!`);
+                return;
+            }
+            console.log(validRows)
+            // 3️⃣ 若全部通过 → 发送后端
+            try {
+                const response = await axios.post(
+                    `${this.apiUrl}/admin/adding-page-add-line`,
+                    { rows: validRows } // 可一次发多行
+                );
+
+                if (response.data.status === 'success') {
+                    alert('✅ Data added successfully!');
+                    // 清空表格或重置
+                    this.tableData = [
+                        new Array(18).fill('')
+                    ];
+                } else {
+                    alert(`❌ Add failed: ${response.data.message || 'Unknown error'}`);
+                }
+            } catch (error) {
+                console.error('Add failed:', error);
+                alert('❌ Add request failed. Please check your connection.');
+            }
+        }
 
         // async fetchData(page) {
         //     this.prevCheckedId = null;
@@ -287,69 +439,69 @@ export default {
             //cursor: pointer;
             transition: all 0.2s ease-in-out;
         }
-        .custom-dropdown{
-            position: relative;
-            margin-left: 1vw;
+        // .custom-dropdown{
+        //     position: relative;
+        //     margin-left: 1vw;
             
-            .dropdown-selected{
-                font-size: 15px;
-                width: 350px;
-                height: 30px;
-                padding: 0 10px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                background-color: #f0f0f0;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
-                transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
+        //     .dropdown-selected{
+        //         font-size: 15px;
+        //         width: 350px;
+        //         height: 30px;
+        //         padding: 0 10px;
+        //         border: 1px solid #ccc;
+        //         border-radius: 5px;
+        //         background-color: #f0f0f0;
+        //         cursor: pointer;
+        //         display: flex;
+        //         align-items: center;
+        //         justify-content: space-between;
+        //         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* 添加轮廓阴影 */
+        //         transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
 
-                &::after {
-                    content: '';
-                    border-left: 6px solid transparent;
-                    border-right: 6px solid transparent;
-                    border-top: 6px solid #333;
-                    margin-left: 10px;
-                    display: inline-block;
-                }
+        //         &::after {
+        //             content: '';
+        //             border-left: 6px solid transparent;
+        //             border-right: 6px solid transparent;
+        //             border-top: 6px solid #333;
+        //             margin-left: 10px;
+        //             display: inline-block;
+        //         }
 
-                &:hover {
-                    background-color: #f0f4f8; /* 鼠标悬停时改变背景色 */
-                    outline: none; /* 去除默认的聚焦边框 */
-                    box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.4); /* 聚焦时的轮廓阴影 */
-                }
-            }
-            .dropdown-options{
-                font-size: 15px;
-                display: block;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                width: 350px;
-                border: 1px solid #ccc;
-                border-radius: 5px;
-                background-color: #fff;
-                z-index: 1000;
+        //         &:hover {
+        //             background-color: #f0f4f8; /* 鼠标悬停时改变背景色 */
+        //             outline: none; /* 去除默认的聚焦边框 */
+        //             box-shadow: 0px 0px 0px 3px rgba(66, 153, 225, 0.4); /* 聚焦时的轮廓阴影 */
+        //         }
+        //     }
+        //     .dropdown-options{
+        //         font-size: 15px;
+        //         display: block;
+        //         position: absolute;
+        //         top: 100%;
+        //         left: 0;
+        //         width: 350px;
+        //         border: 1px solid #ccc;
+        //         border-radius: 5px;
+        //         background-color: #fff;
+        //         z-index: 1000;
 
-                max-height: 400px;
-                overflow-y: auto;
-                box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 添加轮廓阴影 */
+        //         max-height: 400px;
+        //         overflow-y: auto;
+        //         box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* 添加轮廓阴影 */
                 
 
-                .dropdown-option{
-                    padding: 10px;
-                    cursor: pointer;
-                    display: flex;
-                    align-items: center;
-                    justify-content: space-between;
-                    &:hover{
-                    background-color: #f0f0f0;
-                    }
-                }
-            }
-        }
+        //         .dropdown-option{
+        //             padding: 10px;
+        //             cursor: pointer;
+        //             display: flex;
+        //             align-items: center;
+        //             justify-content: space-between;
+        //             &:hover{
+        //             background-color: #f0f0f0;
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     .table-container {
@@ -402,7 +554,8 @@ export default {
                     border: 2px solid #F2F2F2 ;
                     
                     td{
-                        text-align: center;
+                        //text-align: center;
+                        vertical-align: top;
                         textarea {
                             font-size: 13px;
                             width: 100%;
@@ -425,7 +578,49 @@ export default {
                             }
                         }
 
+                        select {
+                            width: 100%;
+                            min-height: 50px;
+                            font-size: 12px;
+                            border: 1px solid #ccc;
+                            border-radius: 2px;
+                            box-sizing: border-box;
+                            //padding: 0 10px;
+                            color: #333;
+                            transition: all 0.2s ease;
+                            text-align: center;
+
+                            appearance: none;          // ✅ 去掉浏览器默认样式
+                            //background: white url("data:image/svg+xml;charset=UTF-8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8'><path fill='%23333' d='M1 1l5 5 5-5'/></svg>") no-repeat right 10px center;
+                            background-size: 9px;
+                            padding-right: 0px;       // 留出下拉箭头空间
+                            line-height: 1.4; /* ✅ 拉高文字区域 */
+                            transition: all 0.2s ease;
+
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            appearance: none;          /* 隐藏系统默认箭头（可选） */
+
+                            cursor: pointer;
+
+                            &:hover {
+                                background-color: #f0f4f8;
+                            }
+
+                            &:focus {
+                                outline: none;
+                                box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.5);
+                            }
+                        }
+
+                        .required-field {
+                            background-color: #fff8cc; /* 浅黄色 */
+                            border: 2px solid red;
+                        }
+
                         .circle-rm-btn {
+                            margin-top: 8px;
                             width: 30px;
                             height: 30px;
                             border-radius: 50%;                // ✅ 圆形
