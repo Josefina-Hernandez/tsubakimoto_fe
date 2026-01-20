@@ -88,7 +88,7 @@
                 <td>{{ item.detail }}</td>
                 <td>{{ item.priceListName }}</td>
                 <td :class="{blue: item.unit}" @click="rppButtonClick(item)">
-                  <a href="http://202.149.101.188:1110/" v-if="item.stockReference === 'YES'" target='_blank'>RPP</a>
+                  <a href="http://202.149.101.188:1110/" v-if="item.stockReference === 'YES'" v-show="item.priceListName !== 'KTE STOCK' && item.priceListName !== 'SUGAR STOCK'" target='_blank'>RPP</a>
                 </td>
               </tr>
             </tbody>
@@ -1531,7 +1531,7 @@ export default {
         ifShow2: true,
         previousPage: '/selection',
         switchTo: '/chaincutting',
-        switchLabelText: 'Chain Cutting & Assembly at TTCL Warehouse',
+        switchLabelText: 'Cutting & Assembly at TTCL Warehouse',
         isButtonDisabled: true,
         modalButtonDisabled: true,
       
@@ -1851,8 +1851,31 @@ export default {
             if (lskQtyInt <= parseInt(this.standardLinks)) {
               res =  `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
             } else {
-              res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
-              ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+              // res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !==0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+              // ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+              if (lskQtyInt % volumn !== 0) {
+                  // 有余数
+                  if (Math.floor(lskQtyInt / volumn) !== 0) {
+                      // 有整除部分
+                      if (Math.floor(lskQtyInt / volumn) > 1 && ((lskQtyInt % volumn) + volumn) <= parseInt(this.standardLinks)) {
+                        res = `
+                            ${volumn} (LKS)/PC x ${((Math.floor(lskQtyInt / volumn) - 1) * this.orderQty)} PC,
+                            ${(lskQtyInt % volumn) + volumn} (LKS)/PC x ${this.orderQty} PC
+                        `;
+                      } else {
+                        res = `
+                            ${volumn} (LKS)/PC x ${(Math.floor(lskQtyInt / volumn) * this.orderQty)} PC,
+                            ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC
+                        `;
+                      }
+                  } else {
+                      // 只有余数
+                      res = `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`;
+                  }
+              } else {
+                  // 完全整除
+                  res = `${volumn} (LKS)/PC x ${(Math.floor(lskQtyInt / volumn) * this.orderQty)} PC`;
+              }
             }
             return res;
           }
@@ -1883,8 +1906,31 @@ export default {
             if (lskQtyInt <= parseInt(this.standardLinks)) {
               res = `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
             } else {
-              res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !== 0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
-              ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+              // res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) !== 0 ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+              // ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+              if (lskQtyInt % volumn !== 0) {
+                  // 有余数
+                  if (Math.floor(lskQtyInt / volumn) !== 0) {
+                      // 有整除部分
+                      if (Math.floor(lskQtyInt / volumn) > 1 && ((lskQtyInt % volumn) + volumn) <= parseInt(this.standardLinks)) {
+                        res = `
+                            ${volumn} (LKS)/PC x ${((Math.floor(lskQtyInt / volumn) - 1) * this.orderQty)} PC,
+                            ${(lskQtyInt % volumn) + volumn} (LKS)/PC x ${this.orderQty} PC
+                        `;
+                      } else {
+                        res = `
+                            ${volumn} (LKS)/PC x ${(Math.floor(lskQtyInt / volumn) * this.orderQty)} PC,
+                            ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC
+                        `;
+                      }
+                  } else {
+                      // 只有余数
+                      res = `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`;
+                  }
+              } else {
+                  // 完全整除
+                  res = `${volumn} (LKS)/PC x ${(Math.floor(lskQtyInt / volumn) * this.orderQty)} PC`;
+              }
             }
             return res;
 
@@ -1892,9 +1938,33 @@ export default {
             this.isEnabledLongLength = true;
             this.isEnabledNoOption = true;
 
+            let res;
             if (this.selectedOption === 'option2') {
-              const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
-              ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+              // const res = lskQtyInt % volumn !== 0 ? (Math.floor(lskQtyInt / volumn) ? `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC,
+              // ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC` : `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`) : `${volumn} (LKS)/PC x ${Math.floor(lskQtyInt / volumn) * this.orderQty} PC`;
+              if (lskQtyInt % volumn !== 0) {
+                  // 有余数
+                  if (Math.floor(lskQtyInt / volumn) !== 0) {
+                      // 有整除部分
+                      if (Math.floor(lskQtyInt / volumn) > 1 && ((lskQtyInt % volumn) + volumn) <= parseInt(this.standardLinks)) {
+                        res = `
+                            ${volumn} (LKS)/PC x ${((Math.floor(lskQtyInt / volumn) - 1) * this.orderQty)} PC,
+                            ${(lskQtyInt % volumn) + volumn} (LKS)/PC x ${this.orderQty} PC
+                        `;
+                      } else {
+                        res = `
+                            ${volumn} (LKS)/PC x ${(Math.floor(lskQtyInt / volumn) * this.orderQty)} PC,
+                            ${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC
+                        `;
+                      }
+                  } else {
+                      // 只有余数
+                      res = `${lskQtyInt % volumn} (LKS)/PC x ${this.orderQty} PC`;
+                  }
+              } else {
+                  // 完全整除
+                  res = `${volumn} (LKS)/PC x ${(Math.floor(lskQtyInt / volumn) * this.orderQty)} PC`;
+              }
               return res;
             } else if (this.selectedOption === 'option1') {
               return `${this.lskQty} (LKS)/PC x ${this.orderQty} PC`;
@@ -2195,6 +2265,7 @@ export default {
     addProductNormal() {
       if (this.MODE == 0) {
         this.selectedDataLine.qty = this.orderQty;
+        this.selectedDataLine.type = 'Online Price List';
         const newItem = { ...this.selectedDataLine };
         this.addedDataList.push(newItem);
         this.$store.commit('setPartList', this.addedDataList);
@@ -2204,9 +2275,11 @@ export default {
 
       } else {
         this.selectedDataLine.qty = this.orderQty;
+        this.selectedDataLine.type = 'Online Price List';
         const newItem = { ...this.selectedDataLine };
 
         const transformedLine = {
+          type: newItem.type ?? '',
           attention: this.refDataLine.attention,
           chain_formation: this.refDataLine.chain_formation,
           create_time: this.refDataLine.create_time,
@@ -2237,7 +2310,8 @@ export default {
 
     addProductChain() {
       if (this.MODE == 0) {
-        this.selectedDataLine.qty = this.orderQty;   
+        this.selectedDataLine.qty = this.orderQty; 
+        this.selectedDataLine.type = 'Online Price List';  
 
         this.selectedDataLine.newChainNo = this.newChainNo;
 
@@ -2255,7 +2329,8 @@ export default {
         this.showModal2 = false;
 
       } else {
-        this.selectedDataLine.qty = this.orderQty;   
+        this.selectedDataLine.qty = this.orderQty;
+        this.selectedDataLine.type = 'Online Price List';   
 
         this.selectedDataLine.newChainNo = this.newChainNo;
 
@@ -2267,6 +2342,7 @@ export default {
         newItem.unit = 'PC';
 
         const transformedLine = {
+          type: newItem.type ?? '',
           attention: this.refDataLine.attention,
           chain_formation: newItem.chainFormation,
           create_time: this.refDataLine.create_time,
@@ -2337,7 +2413,7 @@ export default {
       
       this.selectedBItem = this.bItems[0] ? this.bItems[0] : '---';
 
-      if (this.priceListName?.trim().toUpperCase() === 'DRIVE CHAIN') {
+      if (this.priceListName?.trim().toUpperCase() === 'DRIVE CHAIN' || (this.priceListName?.trim().toUpperCase() === 'KTE STOCK' && this.calCase?.trim().toUpperCase() === 'DRIVE CHAIN')) {
         if (this.standardLinks != null && parseInt(this.inputBoxLinkQty) < this.standardLinks && this.selectedOption === 'option2') {
           if (this.selectedAItem === 'R') {
             this.bItems = ['R'];

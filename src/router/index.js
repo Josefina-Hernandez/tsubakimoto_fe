@@ -234,6 +234,13 @@ const routes = [
     component: () => import('../views/admin/AdminExchange.vue')
   },
 
+  {
+    path: '/admin/distributor-products',
+    name: 'distributor-products',
+
+    component: () => import('../views/admin/DistributorProducts.vue')
+  },
+
 ]
 
 const router = createRouter({

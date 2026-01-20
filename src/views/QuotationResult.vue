@@ -27,11 +27,11 @@
             </div>
             <div class="nav-right">
                 <div class="text-right">Previous/New<br>Model No.</div>
-                <input type="text" id="cust-input" v-model="fuzzyModelNo">
+                <input type="text" id="cust-input" v-model="fuzzyModelNo" @keyup.enter="fetchFuzzyRecord">
                 <div class="text-right">Cust. Ref.</div>
-                <input type="text" id="cust-input" v-model="fuzzyCustRef">
+                <input type="text" id="cust-input" v-model="fuzzyCustRef" @keyup.enter="fetchFuzzyRecord">
                 <div class="text-right">Quotation No.</div>
-                <input type="text" id="number-input" v-model="fuzzyQuotNo">
+                <input type="text" id="number-input" v-model="fuzzyQuotNo" @keyup.enter="fetchFuzzyRecord">
                 <button class="search" @click="fetchFuzzyRecord">
                     <span>Search</span>
                 </button>

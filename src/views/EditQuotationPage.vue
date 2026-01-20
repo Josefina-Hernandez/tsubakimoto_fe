@@ -279,14 +279,15 @@
 
       if (this.companyName === 'Tsubakimoto (Thailand) Co., Ltd.') {
           this.companyAddress = "388 Exchange Tower, 19th Floor Unit 1902,\nSukumvit Road, Klongtoey, Bangkok 10110,\nThailand\nTEL: +66(2)262-0667/8/9 FAX: +66(2)262-0670";
-      } else if (this.companyName === 'TSUBAKO KTE CO., LTD. (Bangkok)') {
+      } else if (this.companyName === 'TSUBACO KTE CO., LTD. (Bangkok)') {
           this.companyAddress = "952 RAMALAND BLDG., 17TH FLOOR, RAMA\nIV ROAD SURIYAWONG, BANGRAK\nBANGKOK 10500\nTHAILAND";
       } else if (this.companyName === 'TSUBACO KTE CO., LTD. (Pattaya)') {
           this.companyAddress = "4/222 HARBOR MALL OFFICE, ROOM 5B-01\nMOO 10 SUKHUMVIT RD.TUNGSUKLA,\nSRIRACHA,\nCHONBURI 20230\nTHAILAND";
       } else if (this.companyName === 'KTE CORPORATION CO., LTD.') {
-          this.companyAddress = "6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET,\nBANGKOK 10250\nTHAILAND";
+          //this.companyAddress = "6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET,\nBANGKOK 10250\nTHAILAND";
+          this.companyAddress = "37 SUKHAPIBAN 2 SOI 10, PRAWET, PRAWET,\nBANGKOK 10250\nTHAILAND";
       } else if (this.companyName === 'NICHIDEN TRADING (THAILAND) CO., LTD.') {
-          this.companyAddress = "159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103\nSUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA,\nWATTANA,\nBANGKOK 10110\nTHAILAND";
+          this.companyAddress = "2556, 66 TOWER, 7TH FLOOR, UNIT 704-705, SUKHUMVIT ROAD, BANG NA NUE, BANGNA,\nBANGKOK 10260\nTHAILAND";
       } else if (this.companyName === 'HRD (THAILAND) CO., LTD.') {
           this.companyAddress = "BANGNA TOWERS-A, 2ND. FL., 2/3 MOO 14\nBANGNA-TRAD RD., K.M.6.5, BANGKAEW,\nBANGPLEE\nSAMUTPRAKARN 10540\nTHAILAND";
       } else if (this.companyName === 'PLANET T AND S CO., LTD.') {

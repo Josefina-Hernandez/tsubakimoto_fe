@@ -6,6 +6,7 @@
             <thead class="sticky-header">
               <tr>
                 <th>NO.</th>
+                <th>Type</th>
                 <th>Previous Model No.</th>
                 <th>New Model No.<br>/New Chain Number</th>
                 <th>Chain Formation</th>
@@ -19,6 +20,7 @@
             <tbody>
               <tr v-for="(item, index) in items" :key="index" :class="index % 2 === 0 ? 'even-row' : 'odd-row'">
                 <td>{{ index + 1 }}</td>
+                <td>{{ item.type ?? ''}}</td>
                 <td>{{ item.oldModelNo }}</td>
                 <td>{{ item.newChainNo && item.newChainNo !== '' ? item.newChainNo : item.newModelNo }}</td>
                 <td>{{ item.chainFormation }}</td>
@@ -318,7 +320,7 @@ export default {
                                 width: 80px;
                             }
 
-                            &:nth-child(5) {
+                            &:nth-child(6) {
                                 width: 130px;
 
                                 input {
@@ -330,21 +332,21 @@ export default {
                                 }
                             }
 
-                            &:nth-child(6) {
-                                width: 100px;
-                            }
-
                             &:nth-child(7) {
-                                text-align: right;
-                                width: 160px;
+                                width: 100px;
                             }
 
                             &:nth-child(8) {
                                 text-align: right;
-                                width: 200px;
+                                width: 160px;
                             }
 
                             &:nth-child(9) {
+                                text-align: right;
+                                width: 200px;
+                            }
+
+                            &:nth-child(10) {
                                 width: 140px;
                                 button {
                                     width: 100px;

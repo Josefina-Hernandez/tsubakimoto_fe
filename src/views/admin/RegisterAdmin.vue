@@ -84,14 +84,13 @@ export default {
             apiUrl: config.apiUrl,
 
             selectedOption: '',
-            accessType: '',
+            accessType: 'user',
 
             name: '',
             email: '',
             password: '',
 
             options: [
-                { label: 'TTCL (Admin)', value: 'ttcl_admin' },
                 { label: 'TTCL (User)', value: 'ttcl_user' },
                 { label: 'NICHIDEN TRADING', value: 'nichiden' },
                 { label: 'TSUBACO KTE (BKK)', value: 'kte_bkk' },
@@ -121,6 +120,26 @@ export default {
                 this.modalButtonDisabled = false;
             } else {
                 this.modalButtonDisabled = true;
+            }
+        },
+
+        accessType(newVal, oldVal) {
+            if (newVal === 'user') {
+                this.options = [
+                    { label: 'TTCL (User)', value: 'ttcl_user' },
+                    { label: 'NICHIDEN TRADING', value: 'nichiden' },
+                    { label: 'TSUBACO KTE (BKK)', value: 'kte_bkk' },
+                    { label: 'TSUBACO KTE (SRIRACHA)', value: 'kte_sri' },
+                    { label: 'KTE CORPORATION', value: 'kte_corp' },
+                    { label: 'HRD', value: 'hrd' },
+                    { label: 'PLANET T AND S', value: 'planet' },
+                ];
+                this.selectedOption = '';
+            } else if (newVal === 'admin') {
+                this.options = [
+                    { label: 'TTCL (Admin)', value: 'ttcl_admin' },
+                ];
+                this.selectedOption = 'ttcl_admin';
             }
         },
     },
@@ -200,9 +219,19 @@ export default {
                 this.errorText = 'Please input the email.';
                 return false;
             }
+
+            // ⭐ 新增：TTCL Admin / User 必须用 @tsubakimoto.co.th
+            const ttclTypes = ['ttcl_admin', 'ttcl_user'];
+            if (ttclTypes.includes(this.selectedOption)) {
+                const emailLower = this.email.trim().toLowerCase();
+                if (!emailLower.endsWith('@tsubakimoto.co.th')) {
+                    this.errorText = 'For TTCL users, email must end with @tsubakimoto.co.th!';
+                    return false;
+                }
+            }
         
             if (!this.selectedOption) {
-                this.errorText = 'Please select a user type.';
+                this.errorText = 'Please select a company type.';
                 return false;
             }
 

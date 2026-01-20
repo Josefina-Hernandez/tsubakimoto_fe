@@ -32,7 +32,7 @@
                     <tr v-for="(row, rowIndex) in tableData" :key="rowIndex">
                         <td v-for="(cell, cellIndex) in row" :key="cellIndex">
 
-                            <template v-if="[4, 9, 11, 17, 18].includes(cellIndex)">
+                            <template v-if="[4, 9, 11, 16, 17, 18].includes(cellIndex)">
                                 <select v-model="row[cellIndex]" 
                                         :class="getInputClass(cell, cellIndex)">
                                 <option :value="['17', '18'].includes(String(cellIndex)) ? '' : ''">
@@ -215,14 +215,14 @@ export default {
             let value = event.target.value;
             
             // 自动大写逻辑
-            if ([0, 2, 3, 16].includes(cellIndex)) {
+            if ([0, 1, 2, 3, 16].includes(cellIndex)) {
                 value = value.toUpperCase();
             }
 
             // 仅数字（整数）
-            if (cellIndex === 1) {
-                value = value.replace(/[^0-9]/g, '');
-            }
+            // if (cellIndex === 1) {
+            //     value = value.replace(/[^0-9]/g, '');
+            // }
 
             // 整数或小数
             if ([5, 6, 7, 8, 12, 13, 14].includes(cellIndex)) {
@@ -253,7 +253,25 @@ export default {
                 'PTUC PRODUCT',
                 'SUGAR STOCK',
             ];
-            
+            if (cellIndex === 16) return [
+                'TC - A',
+                'TC - B1',
+                'TC - B2',
+                'TC - C1',
+                'TC - D',
+                'TC - E',
+                'TC - K',
+                'TC - G',
+                'TTC',
+                'MC',
+                'MC - TTCL',
+                'MC - PTNET',
+                'TMS',
+                'TINT',
+                'TKG',
+                'TC - TTCL',
+                'TC - PTNET',
+            ];
             if (cellIndex === 17) return ['YES', 'TBD'];
             if (cellIndex === 18) return ['YES'];
             return [];

@@ -10,7 +10,7 @@
         
         <div v-if="loginMode === 'Tsubakimoto'" class="contents">
             <div class="company-wrapper">
-                <div class="company-name">TSUBAKIMOTO THAILAND CO., LTD.</div>
+                <div class="company-name">TSUBAKIMOTO (THAILAND) CO., LTD.</div>
                 <div class="content-wrapper">
                     <div class="label">Address:</div>
                     <div class="content-text">388 EXCHANGE TOWER, 19TH FLOOR UNIT 1902, SUKHUMVIT ROAD, KLONGTOEY, BANGKOK 10110 THAILAND</div>
@@ -54,7 +54,7 @@
         </div>
         <div v-else class="contents">
             <div class="company-wrapper">
-                <div class="company-name">TSUBAKIMOTO THAILAND CO., LTD.</div>
+                <div class="company-name">TSUBAKIMOTO (THAILAND) CO., LTD.</div>
                 <div class="content-wrapper">
                     <div class="label">Address:</div>
                     <div class="content-text">388 EXCHANGE TOWER, 19TH FLOOR UNIT 1902, SUKHUMVIT ROAD, KLONGTOEY, BANGKOK 10110 THAILAND</div>

@@ -49,7 +49,7 @@
                 <button @click="toHistory"><span>History</span></button>
             </div>
             <div class="middle">
-                <button>Distributor - Products List</button>
+                <button @click="toDistributorProducts">Distributor - Products List</button>
             </div>
             <div class="right">
                 <div class="label">Price List Code Updating</div>
@@ -494,6 +494,10 @@ export default {
 
         toHistory() {
             this.$router.push('/admin/history');
+        },
+
+        toDistributorProducts() {
+            this.$router.push('/admin/distributor-products');
         },
 
         toggleDropdown() {

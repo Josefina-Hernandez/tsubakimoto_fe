@@ -242,12 +242,12 @@ export default {
                 } else if (this.companyCode === 'kte_corp') {
                     companyId = 8;
                     companyName = 'KTE CORPORATION CO., LTD.';
-                    companyAddress = "6 SUKHAPIBAN 2 SOI 11 YAEK 2-1, PRAWET,\nBANGKOK 10250\nTHAILAND";
+                    companyAddress = "37 SUKHAPIBAN 2 SOI 10, PRAWET, PRAWET,\nBANGKOK 10250\nTHAILAND";
                     paymentTerms = '60 days Aft Mth End Close';
                 } else if (this.companyCode === 'nichiden') {
                     companyId = 12;
                     companyName = 'NICHIDEN TRADING (THAILAND) CO., LTD.';
-                    companyAddress = "159/18 SERM-MIT TOWER, 11TH FL. UNIT 1103\nSUKHUMVIT 21 (ASOKE) RD., KLONGTOEY NUA,\nWATTANA,\nBANGKOK 10110\nTHAILAND";
+                    companyAddress = "2556, 66 TOWER, 7TH FLOOR, UNIT 704-705, SUKHUMVIT ROAD, BANG NA NUE, BANGNA,\nBANGKOK 10260\nTHAILAND";
                     paymentTerms = '30 days Aft Mth End Close';
                 } else if (this.companyCode === 'hrd') {
                     companyId = 11;
