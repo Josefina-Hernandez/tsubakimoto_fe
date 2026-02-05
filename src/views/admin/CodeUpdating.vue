@@ -125,8 +125,8 @@ export default {
             tableHeaders: [
                 'Category',
                 'Part No.',
-                'Old Model No.',
-                'New Chain/Model No.',
+                'Previous Model No.',
+                'New Model No.',
                 'Pricelist Name',
                 'Stock Reference (RPP)',
                 'Cutting Assembly',

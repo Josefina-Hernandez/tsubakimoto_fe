@@ -15,6 +15,7 @@
     "flatpickr": "^4.6.13",
     "html2canvas": "^1.4.1",
     "jspdf": "^2.5.1",
+    "pdfjs-dist": "^2.6.347",
     "vue": "^3.2.13",
     "vue-flatpickr-component": "^12.0.0",
     "vue-router": "^4.0.3",

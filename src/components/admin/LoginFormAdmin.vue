@@ -97,22 +97,41 @@
 
 
 <script>
+import axios from 'axios';
+import config from '@/config';
+
 export default {
         name: 'LoginForm',
         data(){
             return{
                 username: '',
                 password: '',
-                errorMessage: null
+                errorMessage: null,
+
+                apiUrl: config.apiUrl,
             }
         },
         methods: {
-            login(){
-                //登录逻辑
-                if(this.username === "admin" & this.password === "admin"){
+            // login(){
+            //     //登录逻辑
+            //     if(this.username === "admin" & this.password === "admin"){
+            //         this.$router.push('/admin/select');
+            //     }
+            //     else{
+            //         this.errorMessage = 'Invalid username or password!';
+            //     }
+            // }
+            async login () {
+                try {
+                    const response = await axios.post(this.apiUrl + '/user-login', {
+                        username: this.username,
+                        password: this.password,
+                    });
+
+                    this.$store.dispatch('updateToken', response.data.token);
+                    this.$store.dispatch('updateUserName', response.data.user_name); //更新用户
                     this.$router.push('/admin/select');
-                }
-                else{
+                } catch (error) {
                     this.errorMessage = 'Invalid username or password!';
                 }
             }

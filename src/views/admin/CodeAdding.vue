@@ -98,8 +98,8 @@ export default {
             tableHeaders: [
                 'Category',
                 'Part No.',
-                'Old Model No.',
-                'New Chain/Model No.',
+                'Previous Model No.',
+                'New Model No.',
                 'Unit',
                 'Manufacturer\'s Suggested Retail Price',
                 'Converse on to FT',

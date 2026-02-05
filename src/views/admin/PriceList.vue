@@ -53,7 +53,7 @@
             </div>
             <div class="right">
                 <div class="label">Price List Code Updating</div>
-                <button @click="toCodeUpdating"><span>Upldate/Delete</span></button>
+                <button @click="toCodeUpdating"><span>Update/Delete</span></button>
                 <button @click="toCodeAdding"><span>Add</span></button>
             </div>
         </div>
@@ -136,19 +136,19 @@ export default {
             tableHeaders: [
                 'Category',
                 'Part No.',
-                'Old Model No.',
+                'Previous Model No.',
                 'New Chain/Model No.',
                 'Unit',
                 'Manufacturer\'s Suggested Retail Price',
-                'New Cost',
-                '% Diff for Cost',
-                'PO Multiplier',
-                'PO Price JPY/USD',
-                'Cost THB',
-                'GP',
-                'SP THB(Show in PLS)',
-                'SP THB After Cost Update',
-                '% Diff for SP',
+                "(New) Manufacturer'\s suggested retail price",
+                '% dif for cost',
+                'PO MUL',
+                '(TTCL Internal Use) PO Price',
+                '(TTCL Internal Use) THB Cost',
+                '(TTCL Internal Use) GP',
+                'Unit Price (THB)',
+                '(NEW) Unit Price (THB)',
+                '% dif for Unit price (SP)',
                 'Pricelist Name',
             ],
 
