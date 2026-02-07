@@ -111,8 +111,50 @@ export default {
                     }
                 }
             }
-
-
-        
         }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .footer {
+            position: relative;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            bottom: auto;
+
+            .back,
+            .previous,
+            .next {
+                width: 100%;
+                max-width: 280px;
+                height: 40px;
+                margin: 0;
+                font-size: 16px;
+            }
+
+            .right {
+                flex-direction: column;
+                gap: 10px;
+                width: 100%;
+                align-items: center;
+
+                .previous,
+                .next {
+                    width: 100%;
+                    max-width: 280px;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .footer {
+            .back,
+            .previous,
+            .next {
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+    }
 </style>

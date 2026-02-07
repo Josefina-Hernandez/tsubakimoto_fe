@@ -391,5 +391,154 @@ export default {
             }
         }
 
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        h3 {
+            margin-left: 3%;
+            font-size: 18px;
+            margin-top: 60px;
+        }
+
+        .radios {
+            margin-left: 3%;
+            margin-top: 15px;
+            gap: 8px;
+
+            .custom-radio {
+                padding-left: 35px;
+
+                .radio-circle {
+                    width: 18px;
+                    height: 18px;
+                }
+
+                input[type="radio"]:checked + .radio-circle::after {
+                    width: 8px;
+                    height: 8px;
+                }
+
+                .text {
+                    font-size: 15px;
+                }
+            }
+        }
+
+        .nav-price {
+            flex-direction: column;
+            margin-left: 3%;
+            margin-right: 3%;
+            margin-top: 20px;
+            gap: 10px;
+
+            button {
+                width: 100%;
+                max-width: 300px;
+                height: 38px;
+                font-size: 15px;
+            }
+
+            input {
+                width: 100%;
+                margin: 0;
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+
+        .table-container {
+            margin: 15px 2%;
+            width: 96%;
+            height: auto;
+            max-height: 350px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 600px;
+
+                thead {
+                    height: 40px;
+
+                    tr th {
+                        font-size: 13px;
+                    }
+                }
+
+                tbody tr {
+                    height: 45px;
+
+                    .btn-td {
+                        width: auto;
+                        padding-right: 10px;
+
+                        button {
+                            margin-left: 10px;
+                            width: 80px;
+                            height: 26px;
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .lower-btn {
+            justify-content: center;
+            padding: 15px 3%;
+
+            button {
+                margin-left: 0;
+                width: 100%;
+                max-width: 300px;
+                height: 40px;
+                font-size: 15px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        h3 {
+            font-size: 16px;
+        }
+
+        .radios .custom-radio .text {
+            font-size: 14px;
+        }
+
+        .nav-price {
+            button, input {
+                height: 36px;
+                font-size: 14px;
+            }
+        }
+
+        .table-container {
+            max-height: 300px;
+
+            table {
+                min-width: 500px;
+
+                thead tr th {
+                    font-size: 12px;
+                }
+
+                tbody tr {
+                    height: 40px;
+
+                    .btn-td button {
+                        width: 70px;
+                        height: 24px;
+                        font-size: 11px;
+                    }
+                }
+            }
+        }
+
+        .lower-btn button {
+            height: 38px;
+            font-size: 14px;
+        }
+    }
+
 </style>
 

@@ -600,4 +600,231 @@ export default {
         }
     }
 
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .container {
+            .filters {
+                flex-direction: column;
+                margin: 60px 15px 0 15px;
+                gap: 15px;
+
+                .left {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                    font-size: 16px;
+
+                    :deep(.date-picker) {
+                        width: 100%;
+                        max-width: 250px;
+                        height: 36px;
+                        font-size: 16px;
+                        margin: 0;
+                    }
+
+                    span {
+                        display: none;
+                    }
+                }
+
+                .middle {
+                    button {
+                        width: 100%;
+                        max-width: 250px;
+                        margin-left: 0;
+                        height: 38px;
+                        font-size: 15px;
+                    }
+                }
+
+                .right {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    margin: 0;
+                    gap: 8px;
+
+                    label {
+                        font-size: 16px;
+                        margin-right: 0;
+                    }
+
+                    input[type="text"] {
+                        width: 100%;
+                        max-width: 250px;
+                        height: 36px;
+                        font-size: 16px;
+                        margin: 0;
+                    }
+
+                    button {
+                        width: 100%;
+                        max-width: 250px;
+                        margin: 0;
+                        height: 38px;
+                        font-size: 15px;
+                    }
+                }
+            }
+
+            .user-table {
+                margin: 15px 10px;
+                height: auto;
+                max-height: 350px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+
+                table {
+                    min-width: 700px;
+
+                    thead th {
+                        padding: 6px;
+                        font-size: 13px;
+                        line-height: 24px;
+                    }
+
+                    thead .id-column {
+                        width: 50px;
+                    }
+
+                    thead .no-column {
+                        width: 180px;
+                    }
+
+                    tbody {
+                        height: auto;
+                        max-height: 300px;
+                        font-size: 12px;
+
+                        td {
+                            padding: 6px;
+                            line-height: 24px;
+                        }
+
+                        .id-column {
+                            width: 50px;
+                        }
+
+                        .no-column {
+                            width: 180px;
+                        }
+
+                        .btn-download {
+                            width: 80px;
+                            height: 22px;
+                            font-size: 11px;
+                        }
+                    }
+                }
+            }
+
+            .page-btn {
+                margin-top: 10px;
+
+                button {
+                    width: 70px;
+                    height: 28px;
+                    font-size: 12px;
+                }
+
+                span {
+                    margin: 0 10px;
+                    font-size: 14px;
+                }
+            }
+
+            .grafics {
+                flex-direction: column;
+                margin: 20px 10px;
+                gap: 20px;
+
+                .pie, .bar {
+                    width: 100%;
+                    max-width: 350px;
+                    height: 300px;
+                    margin: 0 auto;
+                }
+            }
+
+            .lower-btn {
+                flex-direction: column;
+                gap: 10px;
+                align-items: center;
+                padding: 15px;
+
+                button {
+                    margin: 0;
+                    width: 100%;
+                    max-width: 300px;
+                    height: 40px;
+                    font-size: 15px;
+                }
+
+                .save {
+                    margin: 0;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .container {
+            .filters {
+                .left {
+                    font-size: 14px;
+
+                    :deep(.date-picker) {
+                        height: 34px;
+                        font-size: 14px;
+                    }
+                }
+
+                .middle button, .right button {
+                    height: 36px;
+                    font-size: 14px;
+                }
+
+                .right {
+                    label {
+                        font-size: 14px;
+                    }
+
+                    input[type="text"] {
+                        height: 34px;
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            .user-table table {
+                min-width: 600px;
+
+                thead th {
+                    font-size: 12px;
+                }
+
+                tbody {
+                    font-size: 11px;
+
+                    .btn-download {
+                        width: 65px;
+                        height: 20px;
+                        font-size: 10px;
+                    }
+                }
+            }
+
+            .grafics {
+                .pie, .bar {
+                    max-width: 300px;
+                    height: 250px;
+                }
+            }
+
+            .lower-btn button {
+                height: 38px;
+                font-size: 14px;
+            }
+        }
+    }
+
 </style>

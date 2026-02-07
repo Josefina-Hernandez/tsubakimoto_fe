@@ -82,4 +82,51 @@ export default {
     }
   }
 
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .logo-container {
+      flex-wrap: wrap;
+      padding: 10px 15px;
+      justify-content: center;
+
+      img {
+        width: 180px;
+        margin-left: 0;
+      }
+
+      .welcome {
+        width: 100%;
+        text-align: center;
+        margin: 8px 0 0 0;
+        font-size: 14px;
+        margin-right: 0;
+        float: none;
+      }
+    }
+
+    .banner-container {
+      height: 40px;
+
+      .text {
+        font-size: 18px;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .logo-container {
+      img {
+        width: 150px;
+      }
+
+      .welcome {
+        font-size: 12px;
+      }
+    }
+
+    .banner-container .text {
+      font-size: 16px;
+    }
+  }
+
 </style>

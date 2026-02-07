@@ -270,5 +270,143 @@ export default {
         }
     }
 
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .user-container {
+            padding-bottom: 100px;
+            padding-top: 50px;
+
+            :deep(.top .logo img) {
+                visibility: hidden;
+            }
+        }
+
+        .upper-btn {
+            flex-direction: column;
+            margin-top: 5px;
+            gap: 15px;
+            padding: 0 15px;
+
+            button {
+                width: 100%;
+                max-width: 300px;
+                height: 45px;
+                margin: 0 auto;
+                font-size: 16px;
+            }
+        }
+
+        .user-table {
+            display: block;
+            margin: 10px 10px;
+            height: auto;
+            max-height: calc(100vh - 4vh - 40px - 5px - 180px);
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 600px;
+                width: 100%;
+                table-layout: fixed;
+
+                thead {
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                    position: sticky;
+                    top: 0;
+                    z-index: 2;
+
+                    th {
+                        padding: 8px 10px;
+                        font-size: 13px;
+                        line-height: 24px;
+                        text-align: center;
+                        word-wrap: break-word;
+                        white-space: normal;
+                    }
+                }
+
+                tbody {
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                    height: auto;
+
+                    tr {
+                        display: table-row;
+                    }
+
+                    td {
+                        padding: 8px 10px;
+                        font-size: 13px;
+                        line-height: 1.4;
+                        text-align: left;
+                        vertical-align: middle;
+                        white-space: normal;
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
+                    }
+                }
+            }
+        }
+
+        .lower-btn {
+            position: fixed;
+            bottom: 4vh;
+            left: 0;
+            right: 0;
+            justify-content: center;
+            padding: 0 15px;
+
+            button {
+                margin-left: 0;
+                margin-bottom: 0;
+                width: 100%;
+                max-width: 400px;
+                height: 40px;
+                font-size: 16px;
+                background-color: #BE0505;
+
+                &:hover {
+                    background-color: #970000;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .upper-btn {
+            button {
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+
+        .user-table {
+            table {
+                min-width: 550px;
+
+                thead th {
+                    padding: 6px 8px;
+                    font-size: 12px;
+                }
+
+                tbody td {
+                    padding: 6px 8px;
+                    font-size: 12px;
+                }
+            }
+        }
+
+        .lower-btn {
+            button {
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+    }
+
 </style>
 

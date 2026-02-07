@@ -48,9 +48,11 @@
 
                 </div>
                 <div class="divider"></div>
-                <span>Search</span>
-                <input v-model="searchText" type="text" placeholder="Pevious/New Model No." @keyup.enter="searchPrice">
-                <button @click="searchPrice"><span>Search</span></button>
+                <div class="search-row">
+                  <span>Search</span>
+                  <input v-model="searchText" type="text" placeholder="Pevious/New Model No." @keyup.enter="searchPrice">
+                  <button @click="searchPrice"><span>Search</span></button>
+                </div>
               </div>
               <div class="warning" v-show="showWarning">
                 <span>Please select all the filters or input the item code!</span>
@@ -140,7 +142,7 @@
                   </div>
                 </div>
                 <div class="form-group special-css">
-                  <label class="title" for="pcode">Product Code:</label>
+                  <label class="title" for="pcode">Product Code<span class="colon">:</span></label>
                   <label class="unit">New Model No.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;: &nbsp;&nbsp;&nbsp;&nbsp;{{newCode}}<br><br>Previous Model No.: &nbsp;&nbsp;&nbsp;&nbsp;{{oldCode}}</label>
                 </div>
               </form>
@@ -425,6 +427,12 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+
+        .search-row {
+          display: flex;
+          align-items: center;
+        }
+
         span{
           font-size: 19px;
           font-weight:550;
@@ -1495,6 +1503,539 @@
   // .footer{
   //   position: absolute;
   // }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .selection {
+    .mainNav {
+      flex-direction: column;
+      padding-left: 15px;
+      padding-right: 15px;
+      gap: 12px;
+
+      .dropdown {
+        width: 100%;
+
+        .title {
+          height: 32px;
+          line-height: 32px;
+          font-size: 15px;
+        }
+
+        .custom-select {
+          width: 100%;
+          height: 36px;
+
+          .selected {
+            font-size: 14px;
+          }
+
+          .dropdown-list .dropdown-item {
+            height: 36px;
+            font-size: 14px;
+          }
+        }
+      }
+
+      .search {
+        margin-left: 0;
+        width: 100%;
+
+        .upper {
+          flex-wrap: wrap;
+          gap: 8px;
+
+          .checks {
+            width: 100%;
+            justify-content: center;
+            margin-bottom: 5px;
+
+            .check1 div,
+            .check2 div {
+              font-size: 15px;
+            }
+          }
+
+          .divider {
+            display: none;
+          }
+
+          .search-row {
+            display: flex;
+            width: 100%;
+            align-items: center;
+            gap: 4px;
+          }
+
+          span {
+            font-size: 15px;
+            white-space: nowrap;
+          }
+
+          input {
+            flex: 1;
+            min-width: 0;
+            height: 38px;
+            font-size: 14px;
+            margin: 0;
+          }
+
+          button {
+            width: 80px;
+            height: 38px;
+            flex-shrink: 0;
+            margin: 0;
+
+            span {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    .table-container {
+      margin-left: 8px;
+      margin-right: 8px;
+      margin-top: 15px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+
+      table {
+        min-width: 900px;
+
+        .sticky-header th {
+          height: 38px;
+          font-size: 11px;
+          padding: 4px;
+        }
+
+        tbody tr td {
+          padding: 6px 4px;
+          font-size: 11px;
+        }
+      }
+    }
+
+    .empty-warning {
+      font-size: 14px;
+      margin-left: 15px;
+      margin-right: 15px;
+    }
+
+    .slider-wrapper {
+      flex-wrap: wrap;
+      padding: 10px;
+      gap: 8px;
+      justify-content: center;
+
+      .slider {
+        width: 100%;
+        max-width: 250px;
+      }
+
+      .page-text,
+      .part-text,
+      .total-text {
+        font-size: 12px;
+      }
+    }
+
+    .modal-mask .modal-wrapper .modal-container,
+    .modal-mask2 .modal-wrapper2 .modal-container2 {
+      width: 95%;
+      max-width: 500px;
+      padding: 12px;
+      max-height: 90vh;
+      overflow-y: auto;
+
+      .modal-body,
+      .modal-body2 {
+        margin: 8px 0;
+
+        .form-group {
+          flex-direction: column;
+          gap: 5px;
+
+          .title {
+            width: 100%;
+            min-width: auto;
+            font-size: 14px;
+          }
+
+          .textbox {
+            margin-left: 0;
+            width: 100%;
+          }
+
+          .unit {
+            font-size: 13px;
+          }
+
+          .radios1-container {
+            margin-left: 0;
+            width: 100%;
+            flex-direction: column;
+            align-items: flex-start;
+            height: auto;
+            gap: 8px;
+
+            .radio1-option:last-child {
+              margin-left: 0;
+            }
+          }
+        }
+
+        .name-qty {
+          flex-direction: column;
+          gap: 8px;
+
+          .name {
+            font-size: 16px;
+          }
+        }
+
+        .details {
+          flex-direction: column;
+          gap: 12px;
+
+          .detail-left,
+          .detail-right {
+            width: 100%;
+
+            div {
+              font-size: 13px;
+            }
+          }
+
+          .linknum-area,
+          .a-dropdown,
+          .b-dropdown,
+          .offset-dropdown {
+            flex-wrap: wrap;
+            gap: 5px;
+
+            input,
+            .a-select,
+            .b-select,
+            .offset-select {
+              width: 100%;
+              max-width: 200px;
+            }
+          }
+        }
+      }
+
+      .finalcode-area {
+        flex-direction: column;
+        gap: 8px;
+        padding: 8px;
+
+        .final-left,
+        .final-right {
+          width: 100%;
+        }
+      }
+
+      .modal-footer,
+      .modal-footer2 {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+
+        button,
+        div {
+          margin: 0 !important;
+          width: 100% !important;
+          position: static !important;
+          float: none !important;
+        }
+
+        button {
+          width: 100% !important;
+        }
+      }
+    }
+
+    /* 第一个弹出窗口（非link单位）移动端优化 */
+    .modal-mask .modal-wrapper .modal-container {
+      .modal-body .form-group {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        align-items: center;
+        width: 100%;
+
+        .title {
+          width: auto !important;
+          flex-shrink: 0;
+          white-space: nowrap;
+        }
+
+        .textbox {
+          flex: 1;
+          min-width: 0;
+          margin: 0 8px !important;
+        }
+
+        .unit {
+          flex-shrink: 0;
+          white-space: nowrap;
+        }
+
+        .radios1-container {
+          display: none;
+        }
+
+        &.special-css {
+          flex-direction: column !important;
+          align-items: flex-start;
+
+          .title {
+            display: none;
+          }
+
+          .unit {
+            white-space: normal;
+          }
+        }
+      }
+    }
+
+    /* 第二个弹出窗口（link单位）移动端优化 */
+    .modal-mask2 .modal-wrapper2 .modal-container2 {
+      width: 100% !important;
+      max-width: 100% !important;
+      margin: 0 !important;
+      border-radius: 0 !important;
+      padding: 10px 10px 30px 10px !important;
+      box-sizing: border-box !important;
+      overflow-x: hidden !important;
+
+      .modal-body2 {
+        margin: 10px 5px !important;
+
+        .name-qty .name {
+          font-size: 14px !important;
+          word-break: break-all;
+        }
+
+        .details {
+          flex-direction: column !important;
+          position: static !important;
+
+          .detail-left {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            width: 100% !important;
+            position: static !important;
+
+            > div {
+              font-size: 13px !important;
+              word-break: break-word;
+            }
+
+            .category-dropdown {
+              margin-top: 10px !important;
+            }
+
+            .linknum-area {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 5px;
+              margin-top: 10px !important;
+
+              .linknum-label {
+                flex-shrink: 0;
+                margin: 0 !important;
+              }
+
+              .linknum-input {
+                width: 70px !important;
+                margin: 0 5px !important;
+              }
+
+              .linknum-unit {
+                flex-shrink: 0;
+                margin: 0 !important;
+              }
+
+              .red-label {
+                width: 100% !important;
+                margin: 5px 0 0 0 !important;
+                font-size: 13px !important;
+              }
+            }
+
+            .a-dropdown,
+            .b-dropdown,
+            .offset-dropdown {
+              display: flex;
+              flex-wrap: wrap;
+              align-items: center;
+              gap: 5px;
+              margin-top: 10px !important;
+
+              .a-label,
+              .b-label,
+              .offset-label {
+                flex-shrink: 0;
+              }
+
+              .a-select,
+              .b-select,
+              .offset-select {
+                width: auto !important;
+                min-width: 100px;
+                flex: 1;
+                margin-left: 5px !important;
+              }
+            }
+          }
+
+          .detail-right {
+            position: static !important;
+            width: 100% !important;
+            margin-top: 15px;
+            top: auto !important;
+            left: auto !important;
+
+            .radio-text {
+              font-size: 13px !important;
+              margin-bottom: 8px;
+            }
+
+            .radios {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+
+              label {
+                font-size: 13px !important;
+                margin-top: 0 !important;
+              }
+            }
+
+            .remark-text {
+              font-size: 12px !important;
+              margin-top: 8px;
+            }
+          }
+        }
+      }
+
+      .finalcode-area {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: flex-start !important;
+        justify-content: flex-start !important;
+        padding: 8px !important;
+        gap: 5px;
+        margin: 5px 0 !important;
+
+        .final-left {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: flex-start !important;
+          gap: 5px;
+          width: 100% !important;
+          position: static !important;
+
+          .final-label,
+          .final-code {
+            font-size: 13px !important;
+          }
+        }
+
+        .final-right {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: flex-start !important;
+          gap: 5px;
+          width: 100% !important;
+          position: static !important;
+          top: auto !important;
+          left: auto !important;
+          margin-top: 5px;
+
+          .qty-label {
+            flex-shrink: 0;
+          }
+
+          .qty-input {
+            width: 60px !important;
+            margin: 0 5px !important;
+          }
+
+          .qty-unit {
+            flex-shrink: 0;
+          }
+        }
+      }
+
+      .hr {
+        margin: 10px 0 !important;
+      }
+
+      .modal-footer2 {
+        margin: 15px 0 0 0 !important;
+        padding: 0 !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        height: auto !important;
+      }
+
+      .modal-footer2 button {
+        height: 70px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        float: none !important;
+        position: static !important;
+      }
+
+      .modal-footer2 .modal2-default-button1 {
+        height: 70px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        float: none !important;
+        position: static !important;
+      }
+
+      .modal-footer2 .modal2-default-button2 {
+        height: 70px !important;
+        width: 100% !important;
+        margin: 0 !important;
+        float: none !important;
+        position: static !important;
+        right: auto !important;
+        top: auto !important;
+      }
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .selection {
+    .mainNav .search .upper {
+      button {
+        width: 70px;
+        font-size: 13px;
+      }
+    }
+
+    .table-container table {
+      min-width: 800px;
+
+      .sticky-header th,
+      tbody tr td {
+        font-size: 10px;
+      }
+    }
+  }
 }
 
 </style>

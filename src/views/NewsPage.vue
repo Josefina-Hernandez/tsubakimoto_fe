@@ -154,4 +154,93 @@
             }
         }
     }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .index .main-contents {
+            h3 {
+                margin-top: 15px;
+                font-size: 18px;
+            }
+
+            .list {
+                margin-left: 3%;
+                margin-right: 3%;
+                margin-top: 20px;
+                height: auto;
+                max-height: 70vh;
+                border-top: 10px solid transparent;
+                border-bottom: 10px solid transparent;
+
+                .item {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    padding: 15px;
+                    min-height: auto;
+                    font-size: 14px;
+                    gap: 8px;
+
+                    &:first-child {
+                        margin-top: 10px;
+                    }
+
+                    .decoration {
+                        width: 100%;
+                        height: 4px;
+                        flex: none;
+                    }
+
+                    .title {
+                        margin-left: 0;
+                        flex: none;
+                        width: 100%;
+                        font-size: 15px;
+                    }
+
+                    .contents {
+                        margin-left: 0;
+                        flex: none;
+                        width: 100%;
+                        font-size: 13px;
+                        white-space: normal;
+                        overflow: visible;
+                        text-overflow: unset;
+                    }
+
+                    .date {
+                        flex: none;
+                        width: 100%;
+                        text-align: left;
+                        font-size: 12px;
+                        color: #888;
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .index .main-contents {
+            h3 {
+                font-size: 16px;
+            }
+
+            .list .item {
+                padding: 12px;
+                font-size: 13px;
+
+                .title {
+                    font-size: 14px;
+                }
+
+                .contents {
+                    font-size: 12px;
+                }
+
+                .date {
+                    font-size: 11px;
+                }
+            }
+        }
+    }
 </style>

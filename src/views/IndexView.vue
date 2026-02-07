@@ -225,4 +225,85 @@
       }
     }
   }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .index .content-container {
+      padding: 20px 15px;
+
+      .news {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        margin-left: 2%;
+        margin-right: 2%;
+        padding: 12px;
+
+        .news-title,
+        .news-content,
+        .news-date {
+          flex: none;
+          width: 100%;
+          margin-left: 0;
+          white-space: normal;
+          text-overflow: unset;
+          overflow: visible;
+        }
+
+        .news-title {
+          font-size: 14px;
+        }
+
+        .news-content {
+          font-size: 13px;
+        }
+
+        .news-date {
+          font-size: 12px;
+          color: #888;
+        }
+      }
+
+      .buttons {
+        flex-direction: column;
+        height: auto;
+        gap: 20px;
+        padding: 20px 0;
+
+        .online,
+        .result {
+          width: 100%;
+          max-width: 300px;
+          height: 70px;
+          margin: 0;
+          font-size: 16px;
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .index .content-container {
+      padding: 15px 10px;
+
+      .news {
+        .news-title {
+          font-size: 13px;
+        }
+
+        .news-content,
+        .news-date {
+          font-size: 12px;
+        }
+      }
+
+      .buttons {
+        .online,
+        .result {
+          height: 60px;
+          font-size: 15px;
+        }
+      }
+    }
+  }
 </style>

@@ -91,7 +91,45 @@ export default {
                     }
                 }
             }
-    
+
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .selection .buttons {
+            flex-direction: column;
+            margin-top: 80px;
+            gap: 25px;
+            padding: 0 20px;
+
+            .b-child {
+                width: 100%;
+                max-width: 320px;
+                height: 80px;
+                margin: 0;
+                font-size: 16px;
+            }
+        }
+
+        .selection .footer {
+            margin-top: 25px;
+        }
+    }
+
+    @media (max-width: 480px) {
+        .selection .buttons {
+            margin-top: 60px;
+            gap: 20px;
+
+            .b-child {
+                height: 70px;
+                font-size: 15px;
+            }
+        }
+
+        .selection .footer {
+            margin-top: 20px;
+        }
     }
 
 </style>

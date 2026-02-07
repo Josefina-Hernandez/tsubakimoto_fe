@@ -76,7 +76,7 @@ export default {
                     pointer-events: none;
                     background-color: #BFBFBF;
                     user-select: none;
-                    
+
                     &:hover{
                         pointer-events: none;
                         background-color: #BFBFBF;
@@ -85,6 +85,46 @@ export default {
                 }
             }
 
-        
+
         }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .footer {
+            position: fixed;
+            bottom: 30px;
+            left: 0;
+            right: 0;
+            flex-direction: column;
+            align-items: center;
+            padding: 0 20px;
+
+            .back, .quotation {
+                width: 100%;
+                max-width: 320px;
+                margin: 0;
+                height: 45px;
+                font-size: 16px;
+            }
+
+            .back {
+                background-color: #DD0000;
+
+                &:hover {
+                    background-color: #AA0000;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .footer {
+            bottom: 25px;
+
+            .back, .quotation {
+                height: 40px;
+                font-size: 15px;
+            }
+        }
+    }
 </style>

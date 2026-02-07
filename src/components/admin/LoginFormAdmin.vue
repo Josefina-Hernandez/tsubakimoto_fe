@@ -93,6 +93,85 @@
             }
         }
     }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .outer-container {
+            width: 90%;
+            max-width: 400px;
+            border-width: 6px;
+            padding: 8px;
+        }
+
+        .login-container {
+            margin: 10px;
+            border-width: 6px;
+            padding: 8px;
+
+            img {
+                padding: 15px;
+                max-width: 70%;
+                height: auto;
+            }
+
+            h4 {
+                font-size: 18px;
+            }
+
+            form {
+                padding-top: 15px;
+
+                input {
+                    width: 100%;
+                    max-width: 250px;
+                    margin-bottom: 15px;
+                }
+
+                button {
+                    width: 100%;
+                    max-width: 200px;
+                    margin-top: 15px;
+                    margin-bottom: 30px;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .outer-container {
+            width: 95%;
+            border-width: 5px;
+            padding: 5px;
+        }
+
+        .login-container {
+            margin: 8px;
+            border-width: 5px;
+
+            img {
+                padding: 10px;
+            }
+
+            h4 {
+                font-size: 16px;
+            }
+
+            form {
+                input {
+                    padding: 8px;
+                    font-size: 14px;
+                }
+
+                button {
+                    padding: 8px;
+
+                    span {
+                        font-size: 14px;
+                    }
+                }
+            }
+        }
+    }
 </style>
 
 
@@ -130,10 +209,37 @@ export default {
 
                     this.$store.dispatch('updateToken', response.data.token);
                     this.$store.dispatch('updateUserName', response.data.user_name); //更新用户
+                    this.$store.dispatch('updateUserId', response.data.user_id);
+
+                    // 设置 loginMode，用于 Admin 页面的权限判断
+                    const companyCode = response.data.company_name;
+                    const loginModePayload = this.getLoginModePayload(companyCode);
+                    this.$store.dispatch('updateLoginMode', loginModePayload);
+
                     this.$router.push('/admin/select');
                 } catch (error) {
                     this.errorMessage = 'Invalid username or password!';
                 }
+            },
+
+            getLoginModePayload(companyCode) {
+                const modeMap = {
+                    'ttcl_admin': 'Tsubakimoto',
+                    'ttcl_user': 'Tsubakimoto',
+                    'kte_bkk': 'KTE Bangkok',
+                    'kte_sri': 'KTE Pattaya',
+                    'kte_corp': 'KTE Corporation',
+                    'nichiden': 'NICHIDEN',
+                    'hrd': 'HRD',
+                    'planet': 'PLANET',
+                };
+                return {
+                    mode: modeMap[companyCode] || companyCode,
+                    companyId: 0,
+                    companyName: '',
+                    companyAddress: '',
+                    paymentTerms: '',
+                };
             }
         }
     }   

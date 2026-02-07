@@ -147,6 +147,56 @@
             }
         }
     }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .login-container {
+            width: 90vw;
+            max-width: 400px;
+            height: auto;
+            min-height: 450px;
+            padding-bottom: 30px;
+
+            img {
+                padding: 20px;
+                max-width: 200px;
+            }
+
+            h4 {
+                margin-top: 20px;
+                font-size: 16px;
+            }
+
+            form {
+                padding-top: 15px;
+
+                input {
+                    width: 80%;
+                    max-width: 250px;
+                }
+
+                .custom-dropdown {
+                    width: 80%;
+                    max-width: 250px;
+                }
+
+                button {
+                    width: 80%;
+                    max-width: 200px;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .login-container {
+            width: 95vw;
+
+            img {
+                max-width: 160px;
+            }
+        }
+    }
 </style>
 
 <script>

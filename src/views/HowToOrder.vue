@@ -5,7 +5,7 @@
 
       <div class="main-contents">
         <div class="title">
-            <h3>How to Order</h3>
+            <h3>User Manual</h3>
         </div>
 
         <div class="pdf-viewer-container" ref="pdfContainer">
@@ -389,8 +389,18 @@
             margin-left: 3%;
             margin-right: 3%;
 
+            .title h3 {
+                font-size: 18px;
+                text-align: center;
+                margin-top: 15px;
+            }
+
             .pdf-viewer-container {
                 padding: 12px;
+
+                .pdf-controls:first-child {
+                    display: none;
+                }
             }
 
             .pdf-controls {
@@ -412,6 +422,14 @@
             .page-info {
                 font-size: 13px;
                 min-width: 85px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .index .main-contents {
+            .title h3 {
+                font-size: 16px;
             }
         }
     }

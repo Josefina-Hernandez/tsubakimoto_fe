@@ -125,5 +125,67 @@ export default {
     }
   }
 }
- 
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .select-container {
+        padding: 0 15px;
+    }
+
+    .buttons {
+        flex-direction: column;
+        margin-top: 120px;
+        gap: 40px;
+
+        .button {
+            margin: 0;
+            width: 100%;
+            max-width: 300px;
+            height: 67px;
+            font-size: 16px;
+        }
+    }
+
+    .footer {
+        position: fixed;
+        bottom: 4vh;
+        left: 0;
+        right: 0;
+        margin: 0;
+        text-align: center;
+
+        button {
+            width: 100%;
+            max-width: 300px;
+            margin: 0;
+            height: 45px;
+            font-size: 16px;
+            background-color: #BE0505;
+
+            &:hover {
+                background-color: #970000;
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .buttons {
+        margin-top: 120px;
+        gap: 40px;
+
+        .button {
+            height: 67px;
+            font-size: 15px;
+        }
+    }
+
+    .footer {
+        button {
+            height: 40px;
+            font-size: 15px;
+        }
+    }
+}
+
 </style>

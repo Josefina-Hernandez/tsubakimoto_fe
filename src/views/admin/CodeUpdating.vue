@@ -776,5 +776,226 @@ export default {
             }
         }
 
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        h3 {
+            margin-left: 3%;
+            font-size: 17px;
+            margin-top: 60px;
+        }
+
+        .filter-wrapper {
+            margin-left: 3%;
+            margin-right: 3%;
+            margin-top: 15px;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+
+            .label {
+                width: 150px;
+                font-size: 13px;
+                padding: 5px 10px;
+            }
+
+            input {
+                width: 100%;
+                margin-left: 0;
+                height: 36px;
+                font-size: 15px;
+            }
+
+            button {
+                width: 100%;
+                max-width: 300px;
+                height: 36px;
+                margin-left: 0;
+
+                span {
+                    font-size: 15px;
+                }
+            }
+        }
+
+        .table-container {
+            margin: 15px 2%;
+            width: 96%;
+            height: auto;
+            max-height: 50vh;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 900px;
+
+                thead {
+                    height: 30px;
+
+                    tr th {
+                        font-size: 11px;
+                        padding: 0 5px;
+                    }
+                }
+
+                tbody tr {
+                    height: 32px;
+
+                    td {
+                        input {
+                            font-size: 11px;
+                            height: 32px;
+                            padding: 0 5px;
+                        }
+
+                        select {
+                            height: 32px;
+                            font-size: 11px;
+                            padding: 0 5px;
+                        }
+                    }
+
+                    .btn-save, .btn-delete {
+                        width: 70px;
+                        padding-right: 5px;
+
+                        button {
+                            margin-left: 5px;
+                            width: 65px;
+                            height: 24px;
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .slider-wrapper {
+            margin: 10px 3%;
+            flex-wrap: wrap;
+            gap: 8px;
+
+            .slider-btn {
+                padding: 3px 10px;
+                font-size: 13px;
+                margin: 0 2px;
+
+                i {
+                    font-size: 13px;
+                }
+            }
+
+            .slider {
+                flex: 1 1 100%;
+                order: 1;
+                height: 12px;
+
+                &::-webkit-slider-thumb {
+                    width: 18px;
+                    height: 18px;
+                }
+
+                &::-moz-range-thumb {
+                    width: 18px;
+                    height: 18px;
+                }
+            }
+
+            .page-text, .part-text, .total-text {
+                flex: 1 1 auto;
+                font-size: 12px;
+                text-align: center;
+                min-width: auto;
+            }
+        }
+
+        .lower-btn {
+            justify-content: center;
+            padding: 10px 3%;
+
+            button {
+                margin-left: 0;
+                width: 100%;
+                max-width: 300px;
+                height: 36px;
+                font-size: 15px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        h3 {
+            font-size: 15px;
+        }
+
+        .filter-wrapper {
+            .label {
+                width: 120px;
+                font-size: 12px;
+            }
+
+            input {
+                height: 34px;
+                font-size: 14px;
+            }
+
+            button {
+                height: 34px;
+
+                span {
+                    font-size: 14px;
+                }
+            }
+        }
+
+        .table-container {
+            max-height: 45vh;
+
+            table {
+                min-width: 800px;
+
+                thead tr th {
+                    font-size: 10px;
+                }
+
+                tbody tr {
+                    height: 30px;
+
+                    td {
+                        input, select {
+                            height: 30px;
+                            font-size: 10px;
+                        }
+                    }
+
+                    .btn-save, .btn-delete {
+                        width: 60px;
+
+                        button {
+                            width: 55px;
+                            height: 22px;
+                            font-size: 11px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .slider-wrapper {
+            .slider-btn {
+                padding: 2px 8px;
+                font-size: 12px;
+            }
+
+            .page-text, .part-text, .total-text {
+                font-size: 11px;
+            }
+        }
+
+        .lower-btn button {
+            height: 34px;
+            font-size: 14px;
+        }
+    }
+
 </style>
 

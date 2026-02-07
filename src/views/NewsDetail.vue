@@ -264,4 +264,81 @@
             transform: translateX(100%);
         }
     }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .index .main-contents {
+            margin-left: 3%;
+            margin-right: 3%;
+            margin-top: 15px;
+            height: calc(68vh);
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+
+            .title {
+                margin-left: 10px;
+                margin-right: 10px;
+                height: auto;
+                min-height: 50px;
+
+                .decoration {
+                    height: 40px;
+                    flex: 0.3;
+                }
+
+                h3 {
+                    font-size: 18px;
+                    padding-left: 5%;
+                    flex: 20;
+                }
+            }
+
+            .contents {
+                margin-top: 30px;
+                margin-left: 10px;
+                margin-right: 10px;
+
+                .text {
+                    font-size: 16px;
+                    padding-left: 5%;
+                    padding-right: 5%;
+                }
+
+                .date {
+                    font-size: 14px;
+                    padding-left: 5%;
+                    margin-top: 30px;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .index .main-contents {
+            height: calc(65vh);
+
+            .title {
+                .decoration {
+                    height: 30px;
+                }
+
+                h3 {
+                    font-size: 16px;
+                }
+            }
+
+            .contents {
+                margin-top: 20px;
+
+                .text {
+                    font-size: 14px;
+                }
+
+                .date {
+                    font-size: 13px;
+                    margin-top: 20px;
+                }
+            }
+        }
+    }
 </style>

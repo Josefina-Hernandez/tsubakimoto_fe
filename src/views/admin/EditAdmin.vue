@@ -653,7 +653,204 @@ export default {
                 }
 
             }
-        } 
+        }
 
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .main {
+            margin-top: 70px;
+            padding: 0 15px;
+
+            h5 {
+                font-size: 20px;
+            }
+
+            .fill-area {
+                width: 100%;
+                max-width: 400px;
+
+                .name, .email, .password, .usertype, .accesstype {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 8px;
+                    margin-top: 20px;
+
+                    span {
+                        font-size: 16px;
+                        flex: none;
+                    }
+
+                    input, select {
+                        width: 100%;
+                        flex: none;
+                        height: 38px;
+                        font-size: 16px;
+                    }
+                }
+
+                .name {
+                    margin-top: 0;
+                }
+
+                .error-text {
+                    font-size: 14px;
+                    margin-top: 15px;
+                    height: auto;
+                    min-height: 30px;
+                }
+            }
+        }
+
+        .footer {
+            position: fixed;
+            bottom: 4vh;
+            left: 0;
+            right: 0;
+            width: 100%;
+            max-width: none;
+            padding: 0 15px;
+            box-sizing: border-box;
+            margin: 0;
+            gap: 10px;
+            flex-direction: column;
+            align-items: center;
+
+            a {
+                width: 100%;
+                max-width: 400px;
+                order: 2;
+            }
+
+            .back {
+                width: 100%;
+                height: 40px;
+                font-size: 15px;
+                background-color: #BE0505;
+
+                &:hover {
+                    background-color: #970000;
+                }
+            }
+
+            .register {
+                width: 100%;
+                max-width: 400px;
+                height: 40px;
+                font-size: 15px;
+                order: 1;
+                background-color: #4472C4;
+
+                &:hover {
+                    background-color: #284782;
+                }
+            }
+        }
+
+        .modal-mask .modal-wrapper .modal-container {
+            width: 95%;
+            max-width: 400px;
+            padding: 15px;
+            border-radius: 10px;
+
+            .modal-body {
+                margin: 10px 10px 0 10px;
+
+                .instruct {
+                    font-size: 15px;
+                }
+
+                .modal-checkbox {
+                    font-size: 14px;
+                    margin-top: 15px;
+
+                    input[type="checkbox"] {
+                        width: 22px;
+                        height: 22px;
+                    }
+                }
+            }
+
+            .modal-footer {
+                margin-top: 15px;
+                margin-bottom: 10px;
+
+                .modal-btn-grant, .modal-btn-cancel {
+                    width: 100%;
+                    max-width: 280px;
+                    height: 40px;
+                    font-size: 15px;
+                }
+
+                .modal-btn-cancel {
+                    margin-top: 10px;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .main {
+            margin-top: 60px;
+
+            h5 {
+                font-size: 18px;
+            }
+
+            .fill-area {
+                .name, .email, .password, .usertype, .accesstype {
+                    margin-top: 15px;
+
+                    span {
+                        font-size: 15px;
+                    }
+
+                    input, select {
+                        height: 36px;
+                        font-size: 15px;
+                    }
+                }
+            }
+        }
+
+        .footer {
+            a {
+                width: 100%;
+            }
+
+            .back, .register {
+                height: 38px;
+                font-size: 14px;
+            }
+
+            .register {
+                width: 100%;
+            }
+        }
+
+        .modal-mask .modal-wrapper .modal-container {
+            .modal-body {
+                .instruct {
+                    font-size: 14px;
+                }
+
+                .modal-checkbox {
+                    font-size: 13px;
+
+                    input[type="checkbox"] {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+
+            .modal-footer {
+                .modal-btn-grant, .modal-btn-cancel {
+                    height: 38px;
+                    font-size: 14px;
+                }
+            }
+        }
     }
 </style>

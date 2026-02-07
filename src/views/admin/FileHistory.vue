@@ -253,5 +253,100 @@ export default {
             }
         }
 
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        h3 {
+            margin-left: 3%;
+            font-size: 17px;
+            margin-top: 60px;
+        }
+
+        .table-container {
+            margin: 15px 2%;
+            height: auto;
+            max-height: 70vh;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 600px;
+
+                thead tr th {
+                    font-size: 13px;
+                    padding: 0 8px;
+                }
+
+                tbody tr {
+                    height: 45px;
+
+                    td {
+                        font-size: 13px;
+                        padding: 3px 8px;
+                    }
+
+                    .btn-td {
+                        width: auto;
+                        padding-right: 10px;
+
+                        button {
+                            margin-left: 10px;
+                            width: 100px;
+                            height: 24px;
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .lower-btn {
+            justify-content: center;
+            padding: 15px;
+
+            button {
+                margin-left: 0;
+                width: 100%;
+                max-width: 300px;
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        h3 {
+            font-size: 16px;
+        }
+
+        .table-container {
+            table {
+                min-width: 500px;
+
+                thead tr th {
+                    font-size: 12px;
+                }
+
+                tbody tr {
+                    height: 40px;
+
+                    td {
+                        font-size: 12px;
+                    }
+
+                    .btn-td button {
+                        width: 80px;
+                        height: 22px;
+                        font-size: 11px;
+                    }
+                }
+            }
+        }
+
+        .lower-btn button {
+            height: 36px;
+            font-size: 14px;
+        }
+    }
+
 </style>
 

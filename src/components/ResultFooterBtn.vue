@@ -99,8 +99,55 @@ export default {
                     }
                 }
             }
-
-
-        
         }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .footer {
+            position: relative;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            bottom: auto;
+
+            > a {
+                width: 100%;
+            }
+
+            .back,
+            .download {
+                width: 100%;
+                height: 40px;
+                margin: 0;
+                font-size: 16px;
+            }
+
+            .back {
+                background-color: #DD0000;
+
+                &:hover {
+                    background-color: #AA0000;
+                }
+            }
+
+            .right {
+                width: 100%;
+                justify-content: center;
+
+                .download {
+                    width: 100%;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .footer {
+            .back,
+            .download {
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+    }
 </style>

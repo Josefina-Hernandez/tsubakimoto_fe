@@ -393,6 +393,26 @@ export default {
                 return;
             }
 
+            // 获取文件名（不含扩展名）
+            const fileName = this.file1.name;
+            const fileNameWithoutExt = fileName.replace(/\.[^/.]+$/, '');
+
+            try {
+                // 先获取有效的文件名列表
+                const validResponse = await axios.get(`${this.apiUrl}/cost/get-valid-filenames`);
+                const validFilenames = validResponse.data.valid_filenames || [];
+
+                // 检查文件名是否精确匹配
+                if (!validFilenames.includes(fileNameWithoutExt)) {
+                    alert(`Invalid JPY Cost filename!\n\nFilename must be one of:\n${validFilenames.join('\n')}`);
+                    return;
+                }
+            } catch (error) {
+                console.error('Failed to get valid filenames:', error);
+                alert('Failed to validate filename. Please try again.');
+                return;
+            }
+
             const confirmUpload = confirm(`Upload cost file: ${this.file1.name}?`);
             if (!confirmUpload) return;
 
@@ -400,7 +420,7 @@ export default {
             this.filePath1 = 'Uploading...';
 
             try {
-                // 3️⃣ 构建 FormData
+                // 构建 FormData
                 const formData = new FormData();
                 formData.append('file', this.file1);
 
@@ -420,7 +440,9 @@ export default {
                 const data = response.data;
 
                 if (data.status) {
-                    await this.getOptions();
+                    // 使用返回的 pricelist_names 更新下拉菜单
+                    this.options = data.pricelist_names || [];
+                    this.selectedOption = this.options.length > 0 ? this.options[0] : '';
                     await this.fetchData();
                     alert(`✅ Cost upload success!\nSaved to: ${data.upload_excel["full uploaded file path"]}`);
                 } else {
@@ -956,6 +978,7 @@ export default {
                 text-align: left;
                 width: 200px;
                 white-space: nowrap;
+                margin-left: 15px;
             }
             button {
                 margin-left: 1vw;
@@ -1219,6 +1242,7 @@ export default {
         flex: 1.4;
         text-align: right;
         font-size: 15px;
+        white-space: nowrap;
       }
     }
 
@@ -1257,6 +1281,308 @@ export default {
                 }
             }
         }
+
+    @media (max-width: 768px) {
+        h3 {
+            font-size: 16px;
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .jpy-banner, .master-banner-wrapper .master-banner {
+            width: 140px;
+            font-size: 14px;
+            padding: 5px 15px;
+            box-sizing: border-box;
+        }
+
+        .jpy-banner {
+            margin-left: 3%;
+        }
+
+        .jpy-wrapper, .master-dl-wrapper, .master-up-wrapper {
+            flex-direction: column;
+            align-items: center;
+            margin-left: 3%;
+            margin-right: 3%;
+            gap: 8px;
+
+            .label {
+                width: auto;
+                font-size: 14px;
+                align-self: flex-start;
+            }
+
+            button {
+                width: 70%;
+                max-width: none;
+                height: 32px;
+                margin-left: 0;
+
+                span {
+                    font-size: 14px;
+                }
+            }
+
+            input {
+                width: 100%;
+                max-width: none;
+                height: 32px;
+                margin-left: 0;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+        }
+
+        .master-banner-wrapper {
+            flex-direction: column;
+            align-items: flex-start;
+            margin-left: 3%;
+            margin-right: 3%;
+            gap: 10px;
+
+            .master-banner {
+                min-width: auto;
+                width: 140px;
+            }
+
+            .custom-dropdown {
+                width: 100%;
+                max-width: none;
+                margin-left: 0;
+
+                .dropdown-selected {
+                    width: 100%;
+                    height: 32px;
+                    box-sizing: border-box;
+                }
+
+                .dropdown-options {
+                    width: 100%;
+                    max-height: 250px;
+                }
+            }
+        }
+
+        .last-wrapper {
+            flex-direction: column;
+            margin: 15px 3%;
+            gap: 15px;
+
+            .left, .middle, .right {
+                flex: none;
+                width: 100%;
+                flex-direction: column;
+                align-items: center;
+                gap: 8px;
+
+                .label {
+                    width: auto;
+                    font-size: 14px;
+                    align-self: flex-start;
+                }
+
+                button {
+                    width: 70%;
+                    max-width: none;
+                    height: 32px;
+                    margin-left: 0;
+                }
+            }
+        }
+
+        .filter-wrapper {
+            flex-direction: column;
+            align-items: center;
+            margin: 15px 3%;
+            gap: 8px;
+
+            .label {
+                width: auto;
+                font-size: 14px;
+                align-self: flex-start;
+            }
+
+            input {
+                width: 100%;
+                max-width: none;
+                height: 32px;
+                margin-left: 0;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+
+            button {
+                width: 70%;
+                max-width: none;
+                height: 32px;
+                margin-left: 0;
+            }
+        }
+
+        .table-container {
+            margin: 10px 3%;
+            width: 94%;
+            height: 50vh;
+            overflow-x: auto;
+
+            table {
+                min-width: 1000px;
+
+                thead tr th {
+                    font-size: 11px;
+                    padding: 0 5px;
+                }
+
+                tbody tr td {
+                    font-size: 11px;
+                    padding: 5px;
+                }
+            }
+        }
+
+        .slider-wrapper {
+            flex-wrap: wrap;
+            margin: 15px 3%;
+            gap: 5px;
+
+            &::before {
+                content: '';
+                order: 5;
+                flex-basis: 100%;
+                height: 0;
+            }
+
+            .slider-btn {
+                padding: 3px 8px;
+                font-size: 11px;
+                flex-shrink: 0;
+            }
+
+            input[type="range"] {
+                flex: 1;
+                min-width: 60px;
+            }
+
+            .part-text {
+                order: 6;
+                font-size: 12px;
+            }
+
+            .page-text {
+                order: 7;
+                font-size: 12px;
+            }
+
+            .total-text {
+                order: 8;
+                font-size: 12px;
+            }
+        }
+
+        .lower-btn {
+            position: relative;
+            bottom: auto;
+            justify-content: center;
+            padding: 15px 3%;
+
+            button {
+                margin-left: 0;
+                width: 100%;
+                max-width: 300px;
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        h3 {
+            font-size: 15px;
+        }
+
+        .jpy-banner, .master-banner-wrapper .master-banner {
+            font-size: 13px;
+        }
+
+        .jpy-wrapper, .master-dl-wrapper, .master-up-wrapper {
+            .label {
+                font-size: 13px;
+            }
+
+            button {
+                height: 30px;
+
+                span {
+                    font-size: 13px;
+                }
+            }
+
+            input {
+                height: 30px;
+                font-size: 13px;
+            }
+        }
+
+        .last-wrapper {
+            .left, .middle, .right {
+                .label {
+                    font-size: 13px;
+                }
+
+                button {
+                    height: 30px;
+                }
+            }
+        }
+
+        .filter-wrapper {
+            .label {
+                font-size: 13px;
+            }
+
+            input {
+                height: 30px;
+                font-size: 13px;
+            }
+
+            button {
+                height: 30px;
+
+                span {
+                    font-size: 13px;
+                }
+            }
+        }
+
+        .table-container table {
+            min-width: 1000px;
+
+            thead tr th {
+                font-size: 10px;
+            }
+
+            tbody tr td {
+                font-size: 10px;
+            }
+        }
+
+        .slider-wrapper {
+            .slider-btn {
+                padding: 2px 8px;
+                font-size: 11px;
+            }
+
+            .page-text, .part-text, .total-text {
+                font-size: 11px;
+            }
+        }
+
+        .lower-btn button {
+            height: 36px;
+            font-size: 14px;
+        }
+    }
 
 </style>
 

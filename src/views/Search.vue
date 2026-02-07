@@ -811,6 +811,227 @@
     }
   }
 
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .selection {
+      .mainNav {
+        flex-direction: column;
+        padding-left: 15px;
+        padding-right: 15px;
+        gap: 15px;
+
+        .dropdown {
+          width: 100%;
+
+          .title {
+            height: 35px;
+            line-height: 35px;
+            font-size: 16px;
+          }
+
+          .custom-select {
+            width: 100%;
+            height: 38px;
+
+            .selected {
+              font-size: 15px;
+            }
+
+            .dropdown-list .dropdown-item {
+              height: 38px;
+              font-size: 15px;
+            }
+          }
+        }
+
+        .search {
+          margin-left: 0;
+          width: 100%;
+
+          .upper {
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+
+            .checks {
+              width: 100%;
+              justify-content: center;
+              margin-bottom: 5px;
+
+              .check1 div,
+              .check2 div {
+                font-size: 16px;
+              }
+            }
+
+            span {
+              font-size: 16px;
+            }
+
+            input {
+              width: 100%;
+              max-width: 250px;
+              height: 40px;
+              margin-left: 10px;
+              font-size: 16px;
+            }
+
+            button {
+              width: 80px;
+              height: 40px;
+              margin-left: 10px;
+              font-size: 15px;
+            }
+          }
+        }
+      }
+
+      .table-container {
+        margin-left: 10px;
+        margin-right: 10px;
+        margin-top: 20px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        table {
+          min-width: 800px;
+
+          .sticky-header th {
+            height: 40px;
+            font-size: 12px;
+            padding: 5px;
+          }
+
+          tbody tr td {
+            padding: 8px 5px;
+            font-size: 12px;
+          }
+        }
+      }
+
+      .empty-warning {
+        font-size: 16px;
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+
+      .modal-mask .modal-wrapper .modal-container,
+      .modal-mask2 .modal-wrapper2 .modal-container2 {
+        width: 95%;
+        max-width: 500px;
+        padding: 15px;
+
+        .modal-body,
+        .modal-body2 {
+          margin: 10px 0;
+
+          .form-group {
+            flex-direction: column;
+            gap: 5px;
+
+            .title {
+              width: 100%;
+              min-width: auto;
+            }
+
+            .textbox {
+              margin-left: 0;
+              width: 100%;
+            }
+
+            .radios1-container {
+              margin-left: 0;
+              width: 100%;
+              flex-direction: column;
+              align-items: flex-start;
+              height: auto;
+              gap: 10px;
+
+              .radio1-option:last-child {
+                margin-left: 0;
+              }
+            }
+          }
+        }
+
+        .modal-footer,
+        .modal-footer2 {
+          flex-direction: column;
+          gap: 10px;
+
+          .modal-default-button1,
+          .modal-default-button2,
+          .modal2-default-button1,
+          .modal2-default-button2 {
+            margin: 0;
+            width: 100%;
+            max-width: 200px;
+            position: static;
+            float: none;
+          }
+        }
+      }
+
+      .modal-mask2 .modal-wrapper2 .modal-container2 {
+        .modal-body2 {
+          margin: 10px 15px;
+
+          .title {
+            font-size: 18px;
+          }
+
+          .name-qty {
+            flex-direction: column;
+            gap: 10px;
+
+            .name {
+              font-size: 18px;
+            }
+
+            .qty {
+              font-size: 16px;
+            }
+          }
+
+          .details {
+            flex-direction: column;
+            gap: 15px;
+          }
+        }
+      }
+
+      .footer {
+        position: relative;
+        top: auto !important;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .selection {
+      .mainNav {
+        .search .upper {
+          input {
+            max-width: 180px;
+          }
+
+          button {
+            width: 70px;
+          }
+        }
+      }
+
+      .table-container table {
+        min-width: 700px;
+
+        .sticky-header th,
+        tbody tr td {
+          font-size: 11px;
+        }
+      }
+    }
+  }
+
 </style>
 
 <script>

@@ -95,7 +95,7 @@ export default {
                     pointer-events: none;
                     background-color: #BFBFBF;
                     user-select: none;
-                    
+
                     &:hover{
                         pointer-events: none;
                         background-color: #BFBFBF;
@@ -104,6 +104,30 @@ export default {
                 }
             }
 
-        
+
         }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .footer {
+            position: relative;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            bottom: auto;
+
+            .spacer {
+                display: none;
+            }
+
+            .back, .add, .quotation {
+                width: 100% !important;
+                max-width: none !important;
+                margin: 0;
+                height: 40px;
+                font-size: 16px;
+                flex: none;
+            }
+        }
+    }
 </style>

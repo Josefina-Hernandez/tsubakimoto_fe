@@ -943,5 +943,59 @@
     //margin: 20mm;
   }
 }
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  #quote {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px;
+  }
+
+  .quotation {
+    width: 794px;
+    min-width: 794px;
+    margin: 15px auto;
+    transform-origin: top left;
+  }
+
+  .button-area1,
+  .button-area2 {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    padding: 10px 15px;
+    flex-direction: column;
+    gap: 10px;
+
+    button {
+      width: 100%;
+      max-width: 300px;
+      height: 40px;
+      font-size: 15px;
+    }
+  }
+
+  .button-area1 {
+    margin-top: 20px;
+  }
+
+  .button-area2 {
+    margin-bottom: 30px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .button-area1,
+  .button-area2 {
+    padding: 10px;
+
+    button {
+      height: 38px;
+      font-size: 14px;
+    }
+  }
+}
 </style>
   

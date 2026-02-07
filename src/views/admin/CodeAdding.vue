@@ -775,5 +775,143 @@ export default {
             }
         }
 
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        h3 {
+            margin-left: 3%;
+            font-size: 17px;
+            margin-top: 60px;
+        }
+
+        .filter-wrapper {
+            margin-left: 3%;
+            margin-top: 15px;
+
+            .label {
+                width: 150px;
+                font-size: 13px;
+                padding: 5px 10px;
+            }
+        }
+
+        .table-container {
+            margin: 15px 2%;
+            width: 96%;
+            max-height: 60vh;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 1800px;
+                table-layout: auto;
+
+                thead {
+                    height: 30px;
+
+                    tr th {
+                        font-size: 11px;
+                        padding: 0 5px;
+                    }
+                }
+
+                tbody tr {
+                    td {
+                        textarea {
+                            font-size: 11px;
+                            min-height: 40px;
+                        }
+
+                        select {
+                            min-height: 40px;
+                            font-size: 10px;
+                        }
+
+                        .circle-rm-btn {
+                            width: 26px;
+                            height: 26px;
+                            font-size: 20px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .add-btn-wrapper {
+            margin: 10px 3%;
+            flex-direction: column;
+            gap: 10px;
+
+            .circle-add-btn {
+                width: 28px;
+                height: 28px;
+                font-size: 22px;
+            }
+
+            .btn-add {
+                width: 100%;
+                max-width: 300px;
+                height: 36px;
+                margin-left: 0;
+            }
+        }
+
+        .lower-btn {
+            justify-content: center;
+            padding: 10px 3%;
+
+            button {
+                margin-left: 0;
+                width: 100%;
+                max-width: 300px;
+                height: 36px;
+                font-size: 15px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        h3 {
+            font-size: 15px;
+        }
+
+        .filter-wrapper .label {
+            width: 120px;
+            font-size: 12px;
+        }
+
+        .table-container {
+            max-height: 55vh;
+
+            table {
+                min-width: 1600px;
+
+                thead tr th {
+                    font-size: 10px;
+                }
+
+                tbody tr td {
+                    textarea {
+                        font-size: 10px;
+                        min-height: 35px;
+                    }
+
+                    select {
+                        min-height: 35px;
+                        font-size: 9px;
+                    }
+                }
+            }
+        }
+
+        .add-btn-wrapper .btn-add {
+            height: 34px;
+        }
+
+        .lower-btn button {
+            height: 34px;
+            font-size: 14px;
+        }
+    }
+
 </style>
 

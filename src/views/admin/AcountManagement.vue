@@ -2,6 +2,8 @@
     <div class="user-container">
         <BannerAdmin />
 
+        <h5>User Management</h5>
+
         <div class="user-table">
             <table>
                 <thead>
@@ -166,13 +168,17 @@ export default {
 </script>
 
 <style scoped lang="less">
+    h5 {
+        display: none;
+    }
+
     .user-table{
     display: flex;
     justify-content: center;
     margin-top: 50px;
     margin-left: 100px;
     margin-right: 100px;
-    height: calc(83.5vh - 20px);
+    height: calc(70vh - 20px);
     overflow: hidden;
     box-shadow: 0 3px 15px rgba(0, 0, 0, 0.3);
 
@@ -203,7 +209,7 @@ export default {
 
         tbody{
             display: block;
-            height: calc(83.5vh - 65px);
+            height: calc(70vh - 65px);
             overflow: auto;
             border-bottom: 10px solid transparent;
 
@@ -300,6 +306,160 @@ export default {
             &:hover span{
                 top: 2px;
                 left: 2px;
+            }
+        }
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .user-container {
+            padding-bottom: 80px;
+            padding-top: 50px;
+
+            :deep(.top) {
+                margin-top: 0;
+
+                .logo img {
+                    display: none;
+                }
+            }
+        }
+
+        h5 {
+            display: block;
+            font-size: 20px;
+            margin: 3px 0 7px 0;
+        }
+
+        .user-table {
+            display: block;
+            margin: 5px 10px;
+            height: auto;
+            max-height: calc(100vh - 4vh - 40px - 5px - 95px);
+            overflow-x: auto;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 700px;
+                width: 100%;
+                table-layout: auto;
+
+                thead {
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                    position: sticky;
+                    top: 0;
+                    z-index: 2;
+
+                    th {
+                        padding: 8px 10px;
+                        font-size: 13px;
+                        line-height: 24px;
+                        text-align: center;
+                        word-wrap: break-word;
+                        white-space: normal;
+                    }
+                }
+
+                tbody {
+                    display: table;
+                    width: 100%;
+                    table-layout: fixed;
+                    height: auto;
+
+                    tr {
+                        display: table-row;
+                    }
+
+                    td {
+                        padding: 8px 10px;
+                        font-size: 13px;
+                        line-height: 1.4;
+                        text-align: left;
+                        vertical-align: middle;
+                        white-space: normal;
+                        word-wrap: break-word;
+                        overflow-wrap: break-word;
+                    }
+
+                    .btns {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: stretch;
+                        justify-content: center;
+                        gap: 0.5vh;
+                        padding: 2px !important;
+
+                        .edit, .delete {
+                            width: 100% !important;
+                            min-width: 60px;
+                            height: 26px;
+                            font-size: 12px;
+                            margin: 0 !important;
+                            box-sizing: border-box;
+                        }
+                    }
+                }
+            }
+        }
+
+        .lower-btn {
+            position: fixed;
+            bottom: 4vh;
+            left: 0;
+            right: 0;
+            justify-content: center;
+            padding: 0 15px;
+
+            button {
+                margin-left: 0;
+                margin-bottom: 0;
+                width: 100%;
+                max-width: 400px;
+                height: 40px;
+                font-size: 16px;
+                background-color: #BE0505;
+
+                &:hover {
+                    background-color: #970000;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .user-table {
+            table {
+                min-width: 650px;
+
+                thead th {
+                    padding: 6px 8px;
+                    font-size: 12px;
+                }
+
+                tbody {
+                    td {
+                        padding: 6px 8px;
+                        font-size: 12px;
+                    }
+
+                    .btns {
+                        .edit, .delete {
+                            width: 50px;
+                            height: 22px;
+                            font-size: 11px;
+                        }
+                    }
+                }
+            }
+        }
+
+        .lower-btn {
+            button {
+                height: 38px;
+                font-size: 15px;
             }
         }
     }

@@ -680,5 +680,265 @@
         100% { color: #eceff0; }
       }
     }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+      .index {
+        .lower-area {
+          flex-direction: column;
+          padding-bottom: 0;
+
+          .content-container {
+            padding: 10px 5px 10px 3px;
+            margin: 0;
+
+            .pulldown-wrapper {
+              flex-direction: column;
+              gap: 10px;
+
+              .title {
+                font-size: 18px;
+                text-align: center;
+                margin-top: 20px;
+              }
+
+              .custom-dropdown {
+                margin-left: 0;
+                width: 100%;
+
+                .dropdown-selected {
+                  width: 100%;
+                  font-size: 16px;
+                  padding: 8px;
+                  box-sizing: border-box;
+                }
+
+                .dropdown-options {
+                  width: 100%;
+                  font-size: 16px;
+                  max-height: 300px;
+                }
+              }
+
+              .updated-text {
+                font-size: 14px;
+                text-align: center;
+              }
+            }
+
+            .table-area {
+              overflow-x: auto;
+              -webkit-overflow-scrolling: touch;
+
+              table {
+                width: 100%;
+                min-width: 350px;
+                margin-top: 20px;
+
+                thead {
+                  display: flex;
+                  width: 100%;
+
+                  th {
+                    font-size: 14px;
+                    flex: none;
+                    width: 90px;
+                    min-width: 90px;
+                  }
+
+                  .flag-icon {
+                    flex: 1;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+
+                    .line-flag {
+                      width: 40px;
+                      height: 25px;
+                      margin-right: 5px;
+                    }
+                  }
+                }
+
+                tbody {
+                  display: block;
+                  width: 100%;
+
+                  tr {
+                    display: flex;
+                    width: 100%;
+                    height: 45px;
+                    margin-top: 10px;
+
+                    .currency-txt {
+                      flex: none;
+                      width: 90px;
+                      min-width: 90px;
+                      font-size: 12px;
+                      white-space: nowrap;
+                    }
+
+                    .rate-txt, .amount-txt {
+                      flex: 1;
+                      font-size: 14px;
+                      margin: 0 5px;
+                      padding-right: 8px;
+                    }
+                  }
+                }
+              }
+            }
+
+            .remark {
+              margin-left: 0;
+              margin-top: 15px;
+
+              h3 {
+                font-size: 16px;
+              }
+
+              div {
+                font-size: 14px;
+              }
+            }
+          }
+
+          .btn-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 10px 15px 0 15px;
+            margin-top: 10px;
+
+            .update {
+              width: 100%;
+              max-width: 300px;
+              height: 40px;
+              font-size: 16px;
+              border-radius: 5px;
+            }
+          }
+        }
+
+        .lower-btn {
+          position: relative;
+          justify-content: center;
+          padding: 20px 15px 15px 15px;
+          bottom: auto;
+
+          button {
+            margin-left: 0;
+            margin-bottom: 0;
+            width: 100%;
+            max-width: 300px;
+            height: 40px;
+            font-size: 16px;
+            background-color: #BE0505;
+
+            &:hover {
+              background-color: #970000;
+            }
+          }
+        }
+      }
+
+      .modal-loading {
+        .spinner {
+          width: 50px;
+          height: 50px;
+          border-width: 8px;
+        }
+
+        .upload-msg {
+          font-size: 16px;
+          padding: 0 20px;
+          text-align: center;
+        }
+      }
+    }
+
+    @media (max-width: 480px) {
+      .index {
+        .lower-area {
+          .content-container {
+            padding: 10px;
+
+            .pulldown-wrapper {
+              .title {
+                font-size: 16px;
+              }
+
+              .custom-dropdown {
+                .dropdown-selected {
+                  font-size: 14px;
+                }
+
+                .dropdown-options {
+                  font-size: 14px;
+                }
+              }
+
+              .updated-text {
+                font-size: 13px;
+              }
+            }
+
+            .table-area {
+              table {
+                thead th {
+                  font-size: 12px;
+                  width: 80px;
+                  min-width: 80px;
+                }
+
+                thead .flag-icon .line-flag {
+                  width: 35px;
+                  height: 22px;
+                }
+
+                tbody tr {
+                  height: 40px;
+
+                  .currency-txt {
+                    width: 80px;
+                    min-width: 80px;
+                    font-size: 11px;
+                  }
+
+                  .rate-txt, .amount-txt {
+                    font-size: 13px;
+                    margin: 0 3px;
+                    padding-right: 5px;
+                  }
+                }
+              }
+            }
+          }
+
+          .btn-area {
+            .update {
+              width: 100%;
+              max-width: 280px;
+              height: 40px;
+              font-size: 15px;
+            }
+          }
+        }
+
+        .lower-btn {
+          button {
+            height: 38px;
+            font-size: 15px;
+          }
+        }
+      }
+
+      .modal-loading {
+        .upload-msg {
+          font-size: 14px;
+        }
+      }
+    }
   </style>
   

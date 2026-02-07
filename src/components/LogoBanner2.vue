@@ -87,7 +87,7 @@ export default {
     justify-content: center;
     align-items: center;
     position: relative;
-    
+
     .text{
         font-size: 23px;
         color: white;
@@ -115,6 +115,79 @@ export default {
             border-radius: 50%;
             padding: 3px 7px;
             line-height: 1;
+        }
+    }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .logo-container {
+        flex-wrap: wrap;
+        padding: 10px 15px;
+        justify-content: center;
+
+        img {
+            width: 180px;
+            margin-left: 0;
+        }
+
+        .welcome {
+            width: 100%;
+            text-align: center;
+            margin: 8px 0 0 0;
+            font-size: 14px;
+            margin-right: 0;
+            float: none;
+        }
+    }
+
+    .banner-container {
+        height: 40px;
+
+        .text {
+            font-size: 18px;
+            padding-right: 50px;
+        }
+
+        .sheet-icon {
+            right: 15px;
+
+            img {
+                width: 32px;
+            }
+
+            .badge {
+                font-size: 14px;
+                padding: 2px 5px;
+                top: -6px;
+                right: -6px;
+            }
+        }
+    }
+}
+
+@media (max-width: 480px) {
+    .logo-container {
+        img {
+            width: 150px;
+        }
+
+        .welcome {
+            font-size: 12px;
+        }
+    }
+
+    .banner-container {
+        .text {
+            font-size: 16px;
+        }
+
+        .sheet-icon {
+            right: 10px;
+
+            img {
+                width: 28px;
+            }
         }
     }
 }

@@ -586,5 +586,193 @@ export default {
             }
         }
 
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        h3 {
+            margin-left: 3%;
+            font-size: 20px;
+            margin-top: 60px;
+        }
+
+        .regbtn-container {
+            margin-right: 3%;
+            margin-top: 10px;
+
+            .btn-reg {
+                font-size: 14px;
+                padding: 8px 20px;
+            }
+        }
+
+        .main-area {
+            flex-direction: column;
+            margin: 15px 3%;
+
+            .left-list {
+                ul {
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    gap: 10px;
+                    font-size: 16px;
+
+                    li {
+                        margin-bottom: 10px;
+                    }
+                }
+            }
+
+            .right-area {
+                margin-top: 15px;
+
+                .checks-container {
+                    flex-direction: column;
+                    align-items: flex-start;
+                    gap: 10px;
+
+                    .check1, .check2, .check3 {
+                        label {
+                            input[type="checkbox"] {
+                                width: 24px;
+                                height: 24px;
+                                margin-left: 0;
+                            }
+
+                            div {
+                                font-size: 14px;
+                                margin-right: 0;
+                            }
+                        }
+
+                        input[type="checkbox"] {
+                            width: 24px;
+                            height: 24px;
+                        }
+
+                        input[type="checkbox"]:checked::after {
+                            width: 8px;
+                            height: 12px;
+                            margin-left: 6px;
+                            margin-top: 3px;
+                        }
+                    }
+                }
+
+                .table-container {
+                    height: 350px;
+                    overflow-x: auto;
+                    -webkit-overflow-scrolling: touch;
+
+                    .data-table {
+                        min-width: 600px;
+                        font-size: 14px;
+
+                        thead {
+                            height: 40px;
+
+                            th {
+                                font-size: 12px;
+                            }
+                        }
+
+                        td {
+                            padding: 8px;
+                            font-size: 13px;
+
+                            .custom-select {
+                                width: 120px;
+                                height: 35px;
+
+                                .selected {
+                                    font-size: 14px;
+                                    padding: 0 10px;
+                                }
+
+                                .selected::after {
+                                    border-left-width: 6px;
+                                    border-right-width: 6px;
+                                    border-top-width: 6px;
+                                }
+
+                                .dropdown-list .dropdown-item {
+                                    height: 35px;
+                                    font-size: 14px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .lower-btn {
+            flex-direction: column;
+            gap: 10px;
+            align-items: center;
+            padding: 15px 3%;
+
+            button {
+                margin: 0;
+                width: 100%;
+                max-width: 300px;
+                height: 40px;
+                font-size: 15px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        h3 {
+            font-size: 18px;
+        }
+
+        .regbtn-container .btn-reg {
+            font-size: 13px;
+            padding: 6px 15px;
+        }
+
+        .main-area {
+            .left-list ul {
+                font-size: 14px;
+            }
+
+            .right-area {
+                .checks-container .check1, .checks-container .check2, .checks-container .check3 {
+                    label {
+                        input[type="checkbox"] {
+                            width: 20px;
+                            height: 20px;
+                        }
+
+                        div {
+                            font-size: 13px;
+                        }
+                    }
+                }
+
+                .table-container {
+                    height: 300px;
+
+                    .data-table {
+                        font-size: 12px;
+
+                        td .custom-select {
+                            width: 100px;
+                            height: 30px;
+
+                            .selected {
+                                font-size: 12px;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        .lower-btn button {
+            height: 38px;
+            font-size: 14px;
+        }
+    }
+
 </style>
 

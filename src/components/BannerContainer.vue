@@ -9,21 +9,28 @@
       </div>
 
       <div class="banner-container">
-        <div class="banner-options">
-          <div class="dropdown" @mouseenter="showDropdown = true" @mouseleave="showDropdown = false">
+        <!-- 汉堡菜单按钮（移动端显示） -->
+        <div class="hamburger-btn" @click="toggleMobileMenu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <div class="banner-options" :class="{ 'mobile-open': mobileMenuOpen }">
+          <div class="dropdown" @mouseenter="handleMouseEnter" @mouseleave="handleMouseLeave" @click="toggleMobileDropdown">
             <a class="first-link" href="#/index" @click.prevent="freezeClick">{{ firstLabel }}</a>
-            <div class="dropdown-content" v-show="showDropdown">
-              <a href="#/exchange"  @click="hideItself">Monthly Exchange</a>
-              <a href="#/formation-chain" @click="hideItself">Product Info</a>
-              <!-- <a href="#/packing-chain" @click="hideItself">Standard Packing of Chain</a> -->
-              <!-- <a href="https://www.akaganethailand.co.th/" target="_blank" @click="hideItself">RPP Website</a> -->
-              <!-- <a href="https://www.akaganethailand.co.th/" target="_blank" @click="hideItself">Catalog</a> -->
+            <div class="dropdown-content" v-show="showDropdown || mobileDropdownOpen">
+              <a href="#/exchange" @click="closeMobileMenu">Monthly Exchange</a>
+              <a href="#/formation-chain" @click="closeMobileMenu">Product Info</a>
+              <!-- <a href="#/packing-chain" @click="closeMobileMenu">Standard Packing of Chain</a> -->
+              <!-- <a href="https://www.akaganethailand.co.th/" target="_blank" @click="closeMobileMenu">RPP Website</a> -->
+              <!-- <a href="https://www.akaganethailand.co.th/" target="_blank" @click="closeMobileMenu">Catalog</a> -->
             </div>
             <!-- <i class="fa fa-caret-down"></i> -->
           </div>
-          <a class="link-label" href="#/news-page">News</a>
-          <a class="link-label" href="#/how-to-order">How to Order</a>
-          <a class="link-label" href="#/contact-us">Contact Us</a>
+          <a class="link-label" href="#/news-page" @click="closeMobileMenu">News</a>
+          <a class="link-label" href="#/how-to-order" @click="closeMobileMenu">User Manual</a>
+          <a class="link-label" href="#/contact-us" @click="closeMobileMenu">Contact Us</a>
         </div>
       </div>
 </template>
@@ -63,6 +70,8 @@
     data() {
         return{
             showDropdown: false,
+            mobileMenuOpen: false,
+            mobileDropdownOpen: false,
         };
     },
     props: {
@@ -84,6 +93,32 @@
         },
         backToLogin() {
           this.$router.push({path: '/'})
+        },
+        toggleMobileMenu() {
+          this.mobileMenuOpen = !this.mobileMenuOpen;
+          if (!this.mobileMenuOpen) {
+            this.mobileDropdownOpen = false;
+          }
+        },
+        toggleMobileDropdown() {
+          if (window.innerWidth <= 768) {
+            this.mobileDropdownOpen = !this.mobileDropdownOpen;
+          }
+        },
+        handleMouseEnter() {
+          if (window.innerWidth > 768) {
+            this.showDropdown = true;
+          }
+        },
+        handleMouseLeave() {
+          if (window.innerWidth > 768) {
+            this.showDropdown = false;
+          }
+        },
+        closeMobileMenu() {
+          this.mobileMenuOpen = false;
+          this.mobileDropdownOpen = false;
+          this.showDropdown = false;
         },
     }
 
@@ -144,6 +179,11 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        position: relative;
+
+        .hamburger-btn {
+          display: none;
+        }
     
         .banner-options {
           display: flex;
@@ -223,6 +263,156 @@
             border-bottom: 0 solid transparent;
             border-left: 10px solid transparent;
             vertical-align: middle;
+          }
+        }
+      }
+
+      /* 移动端适配 */
+      @media (max-width: 768px) {
+        .logo-container {
+          flex-wrap: wrap;
+          padding: 10px 15px;
+          justify-content: center;
+
+          img {
+            width: 180px;
+            margin-left: 0;
+          }
+
+          .btn-back {
+            order: 3;
+            margin-left: 0;
+            margin-top: 10px;
+            width: 100%;
+            text-align: center;
+
+            button {
+              width: 100%;
+              max-width: 280px;
+              height: 40px;
+              font-size: 15px;
+            }
+          }
+
+          .welcome {
+            order: 2;
+            width: 100%;
+            text-align: center;
+            margin: 8px 0;
+            font-size: 14px;
+            margin-right: 0;
+          }
+        }
+
+        .banner-container {
+          height: auto;
+          min-height: 50px;
+          padding: 8px 0;
+          flex-direction: column;
+
+          .hamburger-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            width: 45px;
+            height: 24px;
+            cursor: pointer;
+            padding: 10px;
+            align-self: flex-start;
+            margin-left: 15px;
+            box-sizing: content-box;
+
+            span {
+              display: block;
+              width: 100%;
+              height: 4px;
+              background-color: white;
+              border-radius: 2px;
+            }
+          }
+
+          .banner-options {
+            display: none;
+            flex-direction: column;
+            width: 100%;
+            padding: 0;
+            margin: 0;
+            font-size: 24px;
+            background-color: #53C5F4;
+
+            &.mobile-open {
+              display: flex;
+            }
+
+            .dropdown {
+              width: 100%;
+              text-align: center;
+              padding: 14px 0;
+              border-top: 1px solid rgba(255, 255, 255, 0.2);
+
+              .first-link {
+                display: block;
+              }
+
+              .dropdown-content {
+                position: static;
+                transform: none;
+                min-width: 100%;
+                box-shadow: none;
+                background-color: #3EBCF2;
+                font-size: 16px;
+                padding: 5px 0;
+
+                a {
+                  width: 100%;
+                  padding: 12px;
+                }
+              }
+            }
+
+            .link-label {
+              display: block;
+              width: 100%;
+              text-align: center;
+              padding: 14px 0;
+              border-top: 1px solid rgba(255, 255, 255, 0.2);
+            }
+
+            .first-link::after {
+              border-top-width: 7px;
+              border-right-width: 7px;
+              border-left-width: 7px;
+              margin-left: 5px;
+            }
+          }
+        }
+      }
+
+      @media (max-width: 480px) {
+        .logo-container {
+          img {
+            width: 150px;
+          }
+
+          .welcome {
+            font-size: 12px;
+          }
+
+          .btn-back button {
+            font-size: 14px;
+            height: 36px;
+          }
+        }
+
+        .banner-container .banner-options {
+          font-size: 16px;
+
+          .link-label, .dropdown {
+            padding: 10px 0;
+          }
+
+          .dropdown-content {
+            font-size: 15px;
           }
         }
       }

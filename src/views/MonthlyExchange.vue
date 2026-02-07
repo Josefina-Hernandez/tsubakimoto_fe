@@ -631,5 +631,176 @@
         100% { color: #eceff0; }
       }
     }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+      .index .lower-area {
+        flex-direction: column;
+
+        .content-container {
+          padding: 10px 5px 10px 3px;
+          margin: 0;
+
+          .pulldown-wrapper {
+            flex-direction: column;
+            gap: 10px;
+            align-items: flex-start;
+
+            .title {
+              font-size: 18px;
+              text-align: center;
+              width: 100%;
+            }
+
+            .custom-dropdown {
+              margin-left: 0;
+              width: 100%;
+
+              .dropdown-selected {
+                width: 100%;
+                font-size: 16px;
+                padding: 8px;
+              }
+
+              .dropdown-options {
+                width: 100%;
+                font-size: 16px;
+                max-height: 300px;
+              }
+            }
+
+            .updated-text {
+              font-size: 14px;
+              text-align: left;
+            }
+          }
+
+          .table-area {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+              width: 100%;
+              min-width: 350px;
+              margin-top: 20px;
+
+              thead {
+                display: flex;
+                width: 100%;
+
+                th {
+                  font-size: 14px;
+                  flex: none;
+                  width: 90px;
+                  min-width: 90px;
+                }
+
+                .flag-icon {
+                  flex: 1;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+
+                  .line-flag {
+                    width: 40px;
+                    height: 25px;
+                    margin-right: 5px;
+                  }
+                }
+              }
+
+              tbody {
+                display: block;
+                width: 100%;
+
+                tr {
+                  display: flex;
+                  width: 100%;
+                  height: 45px;
+                  margin-top: 10px;
+
+                  .currency-txt {
+                    flex: none;
+                    width: 90px;
+                    min-width: 90px;
+                    font-size: 12px;
+                    white-space: nowrap;
+                  }
+
+                  .rate-txt,
+                  .amount-txt {
+                    flex: 1;
+                    font-size: 14px;
+                    margin: 0 5px;
+                    padding-right: 8px;
+                  }
+                }
+              }
+            }
+          }
+
+          .remark {
+            margin-left: 0;
+            margin-top: 15px;
+            font-size: 14px;
+          }
+        }
+
+        .btn-area {
+          padding: 15px;
+
+          .update {
+            height: 45px;
+            font-size: 16px;
+          }
+        }
+      }
+
+      .modal-loading .upload-msg {
+        font-size: 18px;
+        padding: 0 20px;
+        text-align: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .index .lower-area .content-container {
+        padding: 10px 5px 10px 3px;
+
+        .pulldown-wrapper .title {
+          font-size: 16px;
+        }
+
+        .table-area table {
+          thead th {
+            font-size: 12px;
+            width: 80px;
+            min-width: 80px;
+          }
+
+          thead .flag-icon .line-flag {
+            width: 35px;
+            height: 22px;
+          }
+
+          tbody tr {
+            height: 40px;
+
+            .currency-txt {
+              width: 80px;
+              min-width: 80px;
+              font-size: 11px;
+            }
+
+            .rate-txt,
+            .amount-txt {
+              font-size: 13px;
+              margin: 0 3px;
+              padding-right: 5px;
+            }
+          }
+        }
+      }
+    }
   </style>
   

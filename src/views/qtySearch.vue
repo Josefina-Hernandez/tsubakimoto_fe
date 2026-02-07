@@ -507,6 +507,195 @@
       margin-bottom: 5px;
     }
   }
+
+  /* 移动端适配 */
+  @media (max-width: 768px) {
+    .selection {
+      .mainNav {
+        padding-left: 15px;
+        padding-right: 15px;
+        margin-top: 20px;
+
+        .search-item,
+        .qty {
+          margin-bottom: 15px;
+
+          span {
+            font-size: 14px;
+            height: 40px;
+            line-height: 40px;
+            width: 100%;
+            float: none;
+            display: block;
+            margin-bottom: 5px;
+          }
+
+          input {
+            width: calc(100% - 20px);
+            height: 40px;
+            margin-left: 0;
+            font-size: 16px;
+            float: none;
+          }
+
+          .checkbox {
+            float: none;
+            margin-right: 0;
+            padding-right: 0;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+
+            .checkbox-son {
+              width: 24px;
+              height: 24px;
+            }
+
+            .checkbox-span {
+              font-size: 14px;
+              padding-left: 10px;
+              line-height: normal;
+            }
+          }
+        }
+
+        .check-button {
+          .button {
+            float: none;
+            margin-right: 0;
+
+            button {
+              width: 100%;
+              height: 40px;
+              font-size: 16px;
+            }
+          }
+        }
+      }
+
+      .table-container {
+        margin: 20px 10px;
+        max-height: 300px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+
+        table {
+          min-width: 500px;
+          font-size: 13px;
+
+          .sticky-header th {
+            height: 40px;
+            font-size: 12px;
+          }
+
+          tbody tr td {
+            padding: 8px;
+            height: 60px;
+            font-size: 12px;
+          }
+        }
+      }
+
+      .empty-warning {
+        font-size: 16px;
+        margin: 20px 15px;
+      }
+
+      .modal-mask,
+      .modal-mask2 {
+        .modal-wrapper .modal-container {
+          width: 95%;
+          padding: 15px;
+
+          .modal-body {
+            margin: 20px 10px;
+
+            .form-group {
+              flex-direction: column;
+              align-items: flex-start;
+
+              .title {
+                width: 100%;
+                font-size: 14px;
+                margin-bottom: 5px;
+              }
+
+              input {
+                width: 100%;
+                height: 35px;
+              }
+
+              .unit {
+                margin-left: 0;
+                margin-top: 5px;
+                font-size: 13px;
+              }
+
+              div {
+                margin-left: 0;
+                margin-top: 10px;
+
+                .checking {
+                  width: 24px;
+                  height: 24px;
+                }
+
+                .checktext {
+                  font-size: 13px;
+                }
+              }
+            }
+          }
+
+          .modal-footer {
+            flex-direction: column;
+            gap: 10px;
+
+            .modal-default-button1,
+            .modal-default-button2 {
+              width: 100%;
+              margin: 0;
+              height: 35px;
+              font-size: 15px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    .selection {
+      .mainNav {
+        .search-item span,
+        .qty span {
+          font-size: 13px;
+        }
+
+        .search-item input,
+        .qty input {
+          height: 36px;
+          font-size: 14px;
+        }
+      }
+
+      .table-container {
+        max-height: 250px;
+
+        table {
+          font-size: 11px;
+
+          .sticky-header th {
+            font-size: 11px;
+          }
+        }
+      }
+
+      .empty-warning {
+        font-size: 14px;
+      }
+    }
+  }
 </style>
 
 <script>

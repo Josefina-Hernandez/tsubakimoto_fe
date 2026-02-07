@@ -114,7 +114,7 @@ export default {
                 transition: background-color 0.3s, transform 0.3s; /* 添加 transform 过渡效果 */
 
                 span {
-                    position: relative; 
+                    position: relative;
                     top: 0;
                     left: 0;
                     transition: top 0.2s ease, left 0.2s ease;
@@ -126,11 +126,33 @@ export default {
                 }
 
                 &:hover span {
-                    top: 2px; 
-                    left: 2px; 
+                    top: 2px;
+                    left: 2px;
                 }
             }
 
-        
+
         }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .footer {
+            position: relative;
+            flex-direction: column;
+            gap: 10px;
+            padding: 15px;
+            bottom: auto;
+
+            .spacer {
+                display: none;
+            }
+
+            .back, .quotation, .switch {
+                width: 100%;
+                margin: 0;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+    }
 </style>

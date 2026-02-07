@@ -180,4 +180,108 @@
             }
         }
     }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .index .main-contents {
+            h3 {
+                margin-top: 25px;
+                font-size: 18px;
+            }
+
+            h4 {
+                margin-top: 25px;
+                margin-left: 3%;
+                font-size: 16px;
+            }
+
+            .list {
+                margin-left: 3%;
+                margin-right: 3%;
+                width: 94%;
+                margin-top: 20px;
+
+                .item {
+                    font-size: 16px;
+
+                    div {
+                        .item-label {
+                            height: 55px;
+                            margin-left: 15px;
+
+                            &::after {
+                                margin-right: 15px;
+                                border-top-width: 8px;
+                                border-right-width: 8px;
+                                border-left-width: 8px;
+                            }
+                        }
+
+                        .item-detail {
+                            flex-direction: column;
+                            padding: 15px 0;
+                            font-size: 14px;
+
+                            .detail-image {
+                                width: 100%;
+                                margin-right: 0;
+                                text-align: center;
+
+                                img {
+                                    width: 100%;
+                                    max-width: 350px;
+                                }
+                            }
+
+                            .detail-text {
+                                padding: 15px;
+
+                                p {
+                                    font-size: 13px;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .index .main-contents {
+            h3 {
+                margin-top: 20px;
+                font-size: 16px;
+            }
+
+            h4 {
+                margin-top: 20px;
+                font-size: 14px;
+            }
+
+            .list .item {
+                font-size: 14px;
+
+                div {
+                    .item-label {
+                        height: 50px;
+                        margin-left: 10px;
+
+                        &::after {
+                            margin-right: 10px;
+                        }
+                    }
+
+                    .item-detail {
+                        padding: 10px 0;
+                        font-size: 13px;
+
+                        .detail-text p {
+                            font-size: 12px;
+                        }
+                    }
+                }
+            }
+        }
+    }
 </style>

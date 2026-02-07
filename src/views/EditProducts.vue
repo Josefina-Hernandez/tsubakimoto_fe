@@ -665,8 +665,191 @@ export default {
                     }
 
                 }
-            } 
+            }
 
+        }
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .selection {
+            .table-container {
+                margin: 20px 10px;
+                max-height: calc(55vh);
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+
+                table {
+                    min-width: 700px;
+                    font-size: 12px;
+
+                    .sticky-header th {
+                        height: 40px;
+                        font-size: 11px;
+                        padding: 5px;
+                    }
+
+                    tbody tr td {
+                        padding: 5px;
+                        font-size: 12px;
+
+                        &:nth-child(6) {
+                            width: 80px;
+
+                            input {
+                                width: 70px;
+                                height: 22px;
+                                font-size: 13px;
+                                margin: 0 5px;
+                            }
+                        }
+
+                        &:nth-child(8),
+                        &:nth-child(9) {
+                            width: 100px;
+                        }
+
+                        &:nth-child(10) {
+                            width: 80px;
+
+                            button {
+                                width: 65px;
+                                height: 22px;
+                                font-size: 11px;
+                            }
+                        }
+                    }
+                }
+            }
+
+            .total-area {
+                margin: 0 10px;
+                flex-wrap: wrap;
+
+                .total-label {
+                    flex: 3;
+                    height: 40px;
+                    font-size: 14px;
+                }
+
+                .total-value {
+                    flex: 2;
+                    height: 40px;
+                    font-size: 14px;
+                }
+
+                .remove-all {
+                    flex: 0 0 100%;
+                    margin-top: 10px;
+
+                    button {
+                        width: 100%;
+                        margin-right: 0;
+                        height: 35px;
+                        font-size: 14px;
+                    }
+                }
+            }
+
+            .modal-mask .modal-wrapper .modal-container {
+                width: 95%;
+                padding: 15px;
+
+                .modal-body {
+                    margin: 20px 10px;
+
+                    .enduser-group,
+                    .name-group,
+                    .remark-group {
+                        flex-direction: column;
+                        align-items: flex-start;
+
+                        .enduser-label,
+                        .name-label,
+                        .remark-label {
+                            width: 100%;
+                            margin-bottom: 5px;
+                            font-size: 14px;
+                        }
+
+                        .enduser-val,
+                        .name-val {
+                            margin-left: 0;
+                            width: 100%;
+                            height: 35px;
+                        }
+
+                        .remark-val {
+                            margin-left: 0;
+                            width: 100%;
+                            height: 100px;
+                        }
+                    }
+                }
+
+                .modal-footer {
+                    flex-direction: column !important;
+                    gap: 10px !important;
+                    margin-top: 20px !important;
+
+                    .modal-default-button1,
+                    .modal-clear-button {
+                        margin: 0 !important;
+                        width: 100% !important;
+                        height: 40px !important;
+                        font-size: 14px !important;
+                        float: none !important;
+                    }
+
+                    > div {
+                        width: 100% !important;
+                    }
+
+                    .modal-default-button2 {
+                        margin: 0 !important;
+                        width: 100% !important;
+                        height: 40px !important;
+                        font-size: 14px !important;
+                        float: none !important;
+                        position: static !important;
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .selection {
+            .table-container {
+                max-height: calc(50vh);
+
+                table {
+                    min-width: 600px;
+                    font-size: 11px;
+
+                    .sticky-header th {
+                        font-size: 10px;
+                    }
+                }
+            }
+
+            .total-area {
+                .total-label,
+                .total-value {
+                    font-size: 13px;
+                    height: 35px;
+                }
+            }
+
+            .modal-mask .modal-wrapper .modal-container {
+                .modal-footer {
+                    .modal-default-button1,
+                    .modal-clear-button,
+                    .modal-default-button2 {
+                        font-size: 13px;
+                    }
+                }
+            }
         }
     }
 

@@ -264,9 +264,154 @@ export default {
     }
 
     &:hover span {
-        top: 2px; 
-        left: 2px; 
+        top: 2px;
+        left: 2px;
     }
+  }
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .quotation {
+    width: 95%;
+    margin: 15px auto;
+    font-size: 14px;
+    min-height: auto;
+
+    .top {
+      flex-direction: column;
+      align-items: flex-start;
+      margin: 15px;
+      gap: 10px;
+
+      .logo {
+        font-size: 20px;
+      }
+
+      .customer-name {
+        font-size: 18px;
+        width: 100%;
+      }
+    }
+
+    .address {
+      flex-direction: column;
+      margin: 0 15px;
+      gap: 15px;
+
+      .left-address,
+      .right-address {
+        width: 100%;
+        font-size: 13px;
+      }
+    }
+
+    .person-name {
+      margin-left: 15px;
+      font-size: 15px;
+      margin-top: 30px;
+      margin-bottom: 20px;
+    }
+
+    .hr {
+      margin: 10px 15px 25px 15px;
+    }
+
+    .details {
+      margin: 0 15px 15px 15px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+
+      table {
+        min-width: 400px;
+        font-size: 13px;
+        line-height: 25px;
+
+        thead th {
+          padding: 6px;
+          font-size: 12px;
+        }
+
+        tbody td {
+          padding: 6px;
+        }
+      }
+
+      .total {
+        font-size: 16px;
+        margin-top: 30px;
+      }
+    }
+
+    .remarks {
+      font-size: 13px;
+      margin: 30px 15px 50px 15px;
+    }
+  }
+
+  .button-area {
+    position: relative;
+    bottom: auto;
+    left: auto;
+    right: auto;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    margin-bottom: 20px;
+
+    button {
+      width: 100%;
+      max-width: 300px;
+      height: 40px;
+      font-size: 15px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .quotation {
+    font-size: 13px;
+
+    .top {
+      .logo {
+        font-size: 18px;
+      }
+
+      .customer-name {
+        font-size: 16px;
+      }
+    }
+
+    .address {
+      .left-address,
+      .right-address {
+        font-size: 12px;
+      }
+    }
+
+    .person-name {
+      font-size: 14px;
+    }
+
+    .details {
+      table {
+        min-width: 350px;
+        font-size: 12px;
+      }
+
+      .total {
+        font-size: 14px;
+      }
+    }
+
+    .remarks {
+      font-size: 12px;
+    }
+  }
+
+  .button-area button {
+    font-size: 14px;
+    height: 38px;
   }
 }
 

@@ -299,5 +299,117 @@ export default {
             }
         }
 
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        h3 {
+            margin-left: 3%;
+            font-size: 17px;
+            margin-top: 60px;
+        }
+
+        .label2 {
+            margin-left: 3%;
+            font-size: 17px;
+        }
+
+        .table-container {
+            margin: 10px 2%;
+            width: 96%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 1000px;
+
+                thead tr th {
+                    font-size: 11px;
+                    padding: 2px 3px;
+                }
+
+                tbody tr {
+                    height: 28px;
+
+                    td {
+                        font-size: 11px;
+                        padding: 0 5px;
+                    }
+                }
+            }
+        }
+
+        .table-container2 {
+            margin: 10px 2%;
+            width: 96%;
+            height: auto;
+            max-height: 40vh;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 400px;
+
+                thead tr th {
+                    font-size: 13px;
+                }
+
+                tbody tr {
+                    td {
+                        font-size: 12px;
+                    }
+                }
+            }
+        }
+
+        .lower-btn {
+            justify-content: center;
+            padding: 15px;
+
+            button {
+                margin-left: 0;
+                width: 100%;
+                max-width: 300px;
+                height: 38px;
+                font-size: 15px;
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        h3, .label2 {
+            font-size: 15px;
+        }
+
+        .table-container {
+            table {
+                min-width: 800px;
+
+                thead tr th {
+                    font-size: 10px;
+                }
+
+                tbody tr td {
+                    font-size: 10px;
+                }
+            }
+        }
+
+        .table-container2 table {
+            min-width: 350px;
+
+            thead tr th {
+                font-size: 12px;
+            }
+
+            tbody tr td {
+                font-size: 11px;
+            }
+        }
+
+        .lower-btn button {
+            height: 36px;
+            font-size: 14px;
+        }
+    }
+
 </style>
 

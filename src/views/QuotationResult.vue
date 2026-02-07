@@ -1182,13 +1182,208 @@ import DistributorsPageVue from './admin/DistributorsPage.vue';
                                 }
 
                                 &:hover span {
-                                    top: 2px; 
-                                    left: 2px; 
+                                    top: 2px;
+                                    left: 2px;
                                 }
                             }
                         }
                      }
                 }
+            }
+        }
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .index .nav {
+            flex-direction: column;
+            gap: 15px;
+            margin-top: 15px;
+
+            .nav-left {
+                flex-wrap: wrap;
+                gap: 10px;
+                justify-content: flex-start;
+
+                .text-left {
+                    width: 100%;
+                    text-align: left;
+                    font-size: 14px;
+                }
+
+                #date-picker1,
+                #date-picker2 {
+                    width: calc(50% - 20px);
+                    margin-left: 0;
+                    font-size: 13px;
+                    height: 35px;
+                }
+
+                .bar {
+                    font-size: 16px;
+                    margin: 0 5px;
+                }
+            }
+
+            .nav-middle {
+                flex-direction: row;
+                margin-left: 0;
+                gap: 15px;
+
+                label {
+                    font-size: 13px;
+
+                    input {
+                        width: 16px;
+                        margin: 0 5px;
+                    }
+                }
+            }
+
+            .nav-right {
+                flex-wrap: wrap;
+                margin-left: 0;
+                gap: 8px;
+
+                .text-right {
+                    font-size: 12px;
+                    width: auto;
+                }
+
+                #cust-input,
+                #number-input {
+                    width: calc(50% - 60px);
+                    height: 35px;
+                    font-size: 12px;
+                }
+
+                .search {
+                    width: 100%;
+                    margin-left: 0;
+                    margin-top: 5px;
+                    height: 38px;
+                }
+            }
+        }
+
+        .index .table-container {
+            margin-left: 2%;
+            margin-right: 2%;
+            width: 96%;
+            height: calc(55vh);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+
+            table {
+                min-width: 900px;
+                font-size: 11px;
+
+                thead {
+                    height: 40px;
+
+                    th {
+                        padding: 0 3px;
+                        font-size: 11px;
+
+                        .sort-indicator {
+                            font-size: 12px;
+                        }
+                    }
+                }
+
+                tbody tr {
+                    height: 40px;
+
+                    td {
+                        padding: 0 3px;
+                    }
+
+                    .btn-td {
+                        width: 70px;
+                        padding: 0 5px;
+
+                        button {
+                            width: 65px;
+                            height: 26px;
+                            font-size: 11px;
+                        }
+                    }
+
+                    .select-col {
+                        width: 120px;
+
+                        .custom-select {
+                            width: 110px;
+                            height: 26px;
+
+                            .selected {
+                                font-size: 12px;
+                                padding: 0 8px;
+                            }
+                        }
+                    }
+
+                    .revision-col,
+                    .delete-col {
+                        width: 60px;
+                        padding-right: 5px;
+
+                        button {
+                            width: 55px;
+                            height: 26px;
+                            font-size: 11px;
+                            margin-left: 3px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .index .nav {
+            .nav-left {
+                #date-picker1,
+                #date-picker2 {
+                    width: 100%;
+                    margin-top: 5px;
+                }
+
+                .bar {
+                    display: none;
+                }
+            }
+
+            .nav-middle {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+
+                label {
+                    font-size: 12px;
+                }
+            }
+
+            .nav-right {
+                .text-right {
+                    width: 100%;
+                    text-align: left;
+                    margin-top: 5px;
+                }
+
+                #cust-input,
+                #number-input {
+                    width: 100%;
+                }
+            }
+        }
+
+        .index .table-container {
+            height: calc(50vh);
+
+            table {
+                min-width: 800px;
+                font-size: 10px;
             }
         }
     }

@@ -51,4 +51,67 @@ export default {
             padding-right: 40px;
         }
     }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .blue-box {
+            width: 100%;
+            height: 45px;
+            border-radius: 0;
+
+            .circle {
+                left: 12px;
+                top: 10px;
+                width: 20px;
+                height: 20px;
+            }
+
+            p {
+                top: 12px;
+                left: 45px;
+                font-size: 14px;
+            }
+        }
+
+        .top {
+            margin-top: 3px;
+
+            .logo {
+                padding-right: 0;
+                text-align: center;
+
+                img {
+                    max-width: 28%;
+                    height: auto;
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .blue-box {
+            height: 40px;
+
+            .circle {
+                left: 10px;
+                top: 9px;
+                width: 18px;
+                height: 18px;
+            }
+
+            p {
+                top: 10px;
+                left: 38px;
+                font-size: 13px;
+            }
+        }
+
+        .top {
+            margin-top: 3px;
+
+            .logo img {
+                max-width: 25%;
+            }
+        }
+    }
 </style>

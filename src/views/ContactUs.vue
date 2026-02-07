@@ -261,7 +261,85 @@
                             }
                         }
                     }
-                }   
+                }
+            }
+        }
+    }
+
+    /* 移动端适配 */
+    @media (max-width: 768px) {
+        .index .main-contents {
+            margin-left: 3%;
+            margin-right: 3%;
+
+            .title {
+                margin-top: 15px;
+                h3 {
+                    font-size: 18px;
+                }
+            }
+
+            .contents {
+                margin-top: -20px;
+                padding-left: 3%;
+                padding-right: 3%;
+                margin-bottom: 50px;
+
+                .company-wrapper {
+                    margin-top: 40px;
+
+                    .company-name {
+                        font-size: 16px;
+                        margin-bottom: 15px;
+                    }
+
+                    .content-wrapper {
+                        flex-direction: column;
+                        align-items: flex-start;
+                        height: auto;
+                        margin-top: 12px;
+                        font-size: 14px;
+                        gap: 4px;
+
+                        .label {
+                            flex: none;
+                            width: 100%;
+                            margin-bottom: 2px;
+                        }
+
+                        .content-text {
+                            flex: none;
+                            width: 100%;
+                            font-size: 13px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @media (max-width: 480px) {
+        .index .main-contents {
+            .title h3 {
+                font-size: 16px;
+            }
+
+            .contents .company-wrapper {
+                margin-top: 30px;
+
+                .company-name {
+                    font-size: 15px;
+                    margin-bottom: 12px;
+                }
+
+                .content-wrapper {
+                    font-size: 13px;
+                    margin-top: 10px;
+
+                    .content-text {
+                        font-size: 12px;
+                    }
+                }
             }
         }
     }
