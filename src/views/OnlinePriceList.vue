@@ -187,7 +187,7 @@
                         <div v-show="false" class="red-label">Attachment Unit: {{ this.stat }}</div>
                     </div>
                     <div class="a-dropdown" @mouseleave="hideADropdown">
-                        <div class="a-label">End-link A side:</div>
+                        <div class="a-label">End-link A side</div>
                         <div class="a-select">
                             <div class="selected" @click="toggleADropdown">{{ selectedAItem }}</div>
                             <div class="dropdown-list" v-show="aDropdownOpen">
@@ -198,7 +198,7 @@
                         </div>
                     </div>
                     <div class="b-dropdown" @mouseleave="hideBDropdown">
-                        <div class="b-label">End-link B side:</div>
+                        <div class="b-label">End-link B side /<br>Connecting option</div>
                         <div class="b-select">
                             <div class="selected" @click="toggleBDropdown">{{ selectedBItem }}</div>
                             <div class="dropdown-list" v-show="bDropdownOpen">
@@ -209,7 +209,7 @@
                         </div>
                     </div>
                     <div class="offset-dropdown" @mouseleave="hideOffsetDropdown">
-                        <div class="offset-label">Other offset link:</div>
+                        <div class="offset-label">Additional<br>End-link B side</div>
                         <div class="offset-select">
                             <div class="selected" @click="toggleOffsetDropdown">{{ selectedOffsetItem ? selectedOffsetItem : '---'}}</div>
                             <div class="dropdown-list" v-show="offsetDropdownOpen">
@@ -226,7 +226,7 @@
                     <div class="radios">
                       <label>
                         <input type="radio" value="option2" v-model="selectedOption" :disabled="!isEnabledNoOption">
-                        <span>&nbsp;No Opthion</span>
+                        <span>&nbsp;No Option</span>
                       </label>
                       <label>
                         <input type="radio" value="option1" v-model="selectedOption" :disabled="!isEnabledLongLength">
@@ -993,20 +993,22 @@
                     .linknum-label{
                         font-size: 14px;
                         font-weight: bold;
-
+                        width: 160px;
+                        min-width: 160px;
+                        text-align: left;
                         display: flex;
                         align-items: center;
                     }
                     .linknum-input{
                         font-size: 16px;
                         height: 30px;
-                        width: 130px;
+                        width: 140px;
                         text-align: right;
                         background: #E7E6E6;
                         border-radius: 5px;
                         border: 1px solid #2b2a2a;
                         padding: 0 5px;
-                        margin-left: 40px;
+                        margin-left: 10px;
                         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3); // 阴影效果
                         transition: background-color 0.3s ease, box-shadow 0.3s ease; /* 添加过渡效果 */
                         &:hover {
@@ -1042,12 +1044,15 @@
 
                     .a-label{
                         font-weight: bold;
+                        width: 160px;
+                        min-width: 160px;
+                        text-align: left;
                     }
 
                     .a-select {
                         position: relative;
                         display: inline-block;
-                        width: 125px;
+                        width: 140px;
                         height: 30px;
                         border-radius: 5px;
                         background-color: #E7E6E6;
@@ -1113,12 +1118,15 @@
 
                     .b-label{
                         font-weight: bold;
+                        width: 160px;
+                        min-width: 160px;
+                        text-align: left;
                     }
 
                     .b-select {
                         position: relative;
                         display: inline-block;
-                        width: 125px;
+                        width: 140px;
                         height: 30px;
                         border-radius: 5px;
                         background-color: #E7E6E6;
@@ -1133,7 +1141,7 @@
                             height: 100%;
                             padding: 0 10px 0 10px;
                             font-size: 14px;
-                            color: #333;                           
+                            color: #333;
                         }
 
                         .selected::after {
@@ -1185,13 +1193,15 @@
 
                     .offset-label{
                         font-weight: bold;
-                        margin-left: -5px;
+                        width: 160px;
+                        min-width: 160px;
+                        text-align: left;
                     }
 
                     .offset-select {
                         position: relative;
                         display: inline-block;
-                        width: 125px;
+                        width: 140px;
                         height: 30px;
                         border-radius: 5px;
                         background-color: #E7E6E6;
@@ -1255,7 +1265,7 @@
                 position: absolute;
 
                 top: 200px;
-                left: 300px;
+                left: 400px;
                 .radio-text{
                   font-size: 16px;
                 }
@@ -1966,7 +1976,7 @@
             }
 
             .qty-input {
-              width: 60px !important;
+              width: 90px !important;
               margin: 0 5px !important;
             }
 
