@@ -23,4 +23,6 @@ pnpm-debug.log*
 *.sln
 *.sw?
 CLAUDE.md
+.claude/
 /for_test
+/src/config.js
